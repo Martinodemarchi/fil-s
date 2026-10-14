@@ -6869,8 +6869,16 @@ function showInviteBanner(inv, key){
   banner.remove();
   // Rimuovi l'invito da Firebase
   try{fbRemove(fbRef(fbDB,"filos_invites/"+key));}catch(e){}
-  // Vai alla home — il giocatore trova il gioco da lì
-  S.screen="home";S.cat=null;S.game=null;render();
+  // Prova ad avviare direttamente il gioco della sfida
+  var catId = inv.cat || null;
+  if(catId && typeof GAMES !== "undefined" && GAMES[catId] && GAMES[catId].length > 0){
+   S.cat = catId;
+   S.game = 0; // primo gioco della categoria
+   S.screen = "game";
+  } else {
+   S.screen = "home"; S.cat = null; S.game = null;
+  }
+  render();
  };
 
  var ref = document.createElement("button");
