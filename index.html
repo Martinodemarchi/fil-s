@@ -6869,12 +6869,12 @@ function showInviteBanner(inv, key){
   banner.remove();
   // Rimuovi l'invito da Firebase
   try{fbRemove(fbRef(fbDB,"filos_invites/"+key));}catch(e){}
-  // Prova ad avviare direttamente il gioco della sfida
+  // Apri la lista giochi della categoria sfidante
   var catId = inv.cat || null;
   if(catId && typeof GAMES !== "undefined" && GAMES[catId] && GAMES[catId].length > 0){
    S.cat = catId;
-   S.game = 0; // primo gioco della categoria
-   S.screen = "game";
+   S.game = null;
+   S.screen = "games";
   } else {
    S.screen = "home"; S.cat = null; S.game = null;
   }
@@ -6966,10 +6966,10 @@ function showChallengeModal(){
 
  // Giochi rapidi da sfidare
  var games=[
-  {name:"Quizzone",cat:"quiz"},
-  {name:"Quanto vale?",cat:"quantovale"},
-  {name:"Indovinelli",cat:"indovinelli"},
-  {name:"Mr. White",cat:"mrwhite"},
+  {name:"Con gli amici",cat:"amici"},
+  {name:"In coppia",cat:"coppia"},
+  {name:"Indovinelli",cat:"ndovinelli"},
+  {name:"Azione",cat:"azione"},
  ];
  games.forEach(function(g){
   var row=document.createElement("button");
