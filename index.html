@@ -210,8 +210,8 @@ h1,h2,h3,.logo,.splash-logo,.home-title,.sec-title,.dtitle,.gn,.end-title,
 .me-tab.on{background:var(--dark);border-color:var(--dark);color:#fff;}
 .me-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .me-row{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.me-row input{border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);background:var(--surface2);}
-.me-row input:focus{outline:none;border-color:var(--accent);}
+.me-row input{border:none;border-bottom:1px solid var(--border);border-radius:0;padding:4px 0;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);background:transparent;}
+.me-row input:focus{outline:none;border-bottom-color:var(--dark);}
 .me-inp-name{flex:2;min-width:100px;}
 .me-inp-desc{flex:2;min-width:100px;}
 .me-inp-price{flex:0.7;min-width:60px;text-align:right;}
@@ -363,11 +363,13 @@ h1,h2,h3,.logo,.splash-logo,.home-title,.sec-title,.dtitle,.gn,.end-title,
  .nc-letters{gap:16px;}
 }
 
-.player-names-grid{display:flex;flex-direction:column;gap:10px;margin:20px 0;}
-.player-name-row{display:flex;align-items:center;gap:12px;}
-.player-name-label{font-weight:700;font-size:15px;color:var(--dark);min-width:90px;}
-.player-name-input{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--dark);background:var(--surface);outline:none;}
-.player-name-input:focus{border-color:var(--accent);}
+.player-names-grid{display:flex;flex-direction:column;gap:0;margin:20px 0;}
+.player-name-row{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid #e8e8e8;padding:10px 0;}
+.player-name-row:last-child{border-bottom:none;}
+.player-name-label{font-weight:600;font-size:13px;letter-spacing:0.5px;color:#999;min-width:80px;text-transform:uppercase;}
+.player-name-input{flex:1;border:none;border-bottom:none;border-radius:0;padding:2px 0;font-family:'DM Sans',sans-serif;font-size:17px;font-weight:500;color:var(--dark);background:transparent;outline:none;-webkit-appearance:none;}
+.player-name-input::placeholder{color:#ccc;font-weight:400;}
+.player-name-input:focus{color:var(--dark);}
 
 .dado-wrap{max-width:700px;margin:0 auto;padding:28px 44px;text-align:center;}
 .dado-box{width:120px;height:120px;border:2px solid var(--border);border-radius:18px;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;background:var(--surface);cursor:pointer;transition:transform 0.1s;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
@@ -466,8 +468,8 @@ h1,h2,h3,.logo,.splash-logo,.home-title,.sec-title,.dtitle,.gn,.end-title,
 .connect-section-title{font-size:11px;font-weight:700;letter-spacing:2px;color:#999;text-transform:uppercase;margin-bottom:10px;}
 .connect-code-display{font-size:56px;font-weight:900;letter-spacing:14px;color:var(--orange);text-align:center;padding:8px 0;font-family:'Space Grotesk',sans-serif;}
 .connect-code-sub{text-align:center;font-size:13px;color:#888;margin-top:2px;}
-.connect-input{width:100%;padding:14px;font-size:32px;font-weight:700;text-align:center;letter-spacing:10px;border:2px solid #ddd;border-radius:14px;font-family:'Space Grotesk',sans-serif;outline:none;background:#fff;box-sizing:border-box;}
-.connect-input:focus{border-color:var(--orange);}
+.connect-input{width:100%;padding:8px 0;font-size:32px;font-weight:700;text-align:center;letter-spacing:10px;border:none;border-bottom:2px solid #ddd;border-radius:0;font-family:'Space Grotesk',sans-serif;outline:none;background:transparent;box-sizing:border-box;}
+.connect-input:focus{border-bottom-color:var(--orange);}
 .connect-btn-main{width:100%;padding:16px;background:var(--dark);color:#fff;border:none;border-radius:14px;font-family:inherit;font-weight:700;font-size:16px;letter-spacing:1px;cursor:pointer;margin-top:10px;text-transform:uppercase;}
 .connect-btn-main:hover{background:var(--orange);}
 .connect-btn-sec{width:100%;padding:13px;background:transparent;color:var(--dark);border:2px solid #ddd;border-radius:14px;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;margin-top:10px;text-transform:uppercase;}
@@ -2928,6 +2930,10 @@ var logoTaps=0,logoTimer=null,idleTimer=null,IDLE_MS=5*60*1000;
 // ── NOME GIOCATORE ──────────────────────────────
 var FILOS_NAME = "";
 try { FILOS_NAME = localStorage.getItem("filos_player_name") || ""; } catch(e){}
+var FILOS_PUB_CODE = "";
+try { FILOS_PUB_CODE = localStorage.getItem("filos_pub_code") || ""; } catch(e){}
+var FILOS_PUB_NAME = "";
+try { FILOS_PUB_NAME = localStorage.getItem("filos_pub_name") || ""; } catch(e){}
 
 var S={screen: FILOS_NAME ? "splash" : "onboarding",players:0,cat:null,game:null,stars:0,prevScreen:"home",rFilter:"tutti",revealed:{},pinOK:false,pinInput:"",pinErr:false,lastGame:"",menuTab:"drink",menuEdTab:"drink",quizGame:null,quizIdx:0,quizRevealed:false,quizScore:0,quizQuestions:[],quizLevel:null,starterGame:null,starterIdx:0,fromStarter:false,bFilter:"gruppo",mwWord:"",mwSimilar:"",mwWhiteIdx:-1,mwSeen:[],mwRevealing:-1,mwNumPlayers:0,intesaLevel:"facile",intesaWords:[],intesaIdx:0,intesaScore:0,intesaTimer:0,intesaRunning:false,intesaRound:1,intesaTeamScores:[],alfaLetter:"",alfaTimer:0,alfaRunning:false,alfaScores:{},alfaNumPlayers:0,alfaTarget:5,ncLetterN:"",ncLetterC:"",ncScores:{},ncNumPlayers:0,ncTarget:5,dadoValue:0,dadoPlayers:[],dadoScores:{},dadoCurrentIdx:0,dadoTarget:15,dadoRolled:false,dadoNumPlayers:0,dadoPlayerNames:[],codicePlayers:[],codiceCodes:{},codiceFound:{},codiceAsked:{},codiceCurrentIdx:0,codiceQuestion:null,codiceWaiting:false};
 
@@ -2966,23 +2972,9 @@ function updateHdr(){
  if(!right)return;
  right.innerHTML="";
  
- // Header right: show connect icon when on home/games/category
+ // Header right
  {
- if(S.screen==="home"||S.screen==="games"){
- var icon=document.createElement("button");
- icon.className="hdr-connect-btn";
- // Show room code if connected
- if(fbRoomCode){
- icon.innerHTML='<span class="hdr-room-badge">'+fbRoomCode+'</span>';
- icon.style.cssText="background:var(--orange);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:1px;";
- } else {
- icon.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M10.54 16.1a6 6 0 0 1 2.92 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg> '+T('connect');
- icon.style.cssText="background:var(--dark);color:#fff;border:none;border-radius:20px;padding:8px 14px;font-family:inherit;font-weight:700;font-size:12px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,0.25);";
- }
- icon.onclick=function(){S.prevScreen=S.screen;S.screen="connect";render();};
- right.innerHTML="";
- right.appendChild(icon);
- } else if(S.screen==="connect"){
+ if(S.screen==="connect"){
  right.innerHTML="";
  var left=document.getElementById("hdrLeft");
  if(left){
@@ -4447,347 +4439,347 @@ function renderQvSetup(){
  var card=div("dcard");card.appendChild(hdr);
  var body=div("dbody");card.appendChild(body);
 
- // ── MODALITÀ A DISTANZA (con Firebase) ──
- var modeWrap=document.createElement("div");
- modeWrap.style.cssText="display:flex;gap:10px;justify-content:center;margin-bottom:20px;margin-top:16px;";
- var btnLocal=document.createElement("button");
- btnLocal.style.cssText="padding:10px 22px;border-radius:30px;border:2px solid var(--dark);font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.15s;background:"+(S.qvMode!=='distanza'?'var(--dark)':'#fff')+";color:"+(S.qvMode!=='distanza'?'#fff':'var(--dark)')+";";
- btnLocal.textContent=T("modeLocal");
- var btnDist=document.createElement("button");
- btnDist.style.cssText="padding:10px 22px;border-radius:30px;border:2px solid var(--dark);font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.15s;background:"+(S.qvMode==='distanza'?'var(--dark)':'#fff')+";color:"+(S.qvMode==='distanza'?'#fff':'var(--dark)')+";";
- btnDist.textContent=T("modeDist");
- btnLocal.onclick=function(){S.qvMode='locale';renderQvSetup();};
- btnDist.onclick=function(){S.qvMode='distanza';renderQvSetup();};
- modeWrap.appendChild(btnLocal);modeWrap.appendChild(btnDist);
- body.appendChild(modeWrap);
+ // ── STATO DISTANZA: HOST in attesa ──
+ if(S.qvMode==='distanza' && fbRoomCode && fbIsHost){
+  var waitTitle=document.createElement("div");
+  waitTitle.style.cssText="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;text-align:center;margin:20px 0 6px;";
+  waitTitle.textContent="In attesa degli altri";
+  body.appendChild(waitTitle);
 
- if(S.qvMode==='distanza'){
- body.appendChild(div("rlabel",T("qvMultiDevice")));
- body.appendChild(div("rtext",T("qvMultiDesc")));
+  var playersDiv=document.createElement("div");
+  playersDiv.id="qv-players-list";
+  playersDiv.style.cssText="text-align:center;font-size:15px;color:#444;min-height:32px;margin-bottom:20px;font-weight:500;";
+  playersDiv.textContent="Nessun giocatore ancora…";
+  body.appendChild(playersDiv);
 
- // ── STATO: nessuna connessione ──
- if(!fbRoomCode){
- // Input nome (per tutti)
- var nameWrap=document.createElement("div");
- nameWrap.style.cssText="margin:16px 0 8px;";
- var nameLabel=div("",T("yourName"));
- nameLabel.style.cssText="font-size:13px;font-weight:700;color:#888;margin-bottom:6px;text-align:center;letter-spacing:1px;text-transform:uppercase;";
- var nameInp=document.createElement("input");
- nameInp.type="text";nameInp.placeholder=T("yourNamePH");nameInp.maxLength=16;
- nameInp.style.cssText="width:100%;padding:12px;font-size:18px;border:2px solid #ddd;border-radius:12px;font-family:inherit;box-sizing:border-box;text-align:center;outline:none;margin-bottom:4px;";
- if(S.qvMyName)nameInp.value=S.qvMyName;
- nameInp.oninput=function(){S.qvMyName=this.value.trim();};
- nameWrap.appendChild(nameLabel);
- nameWrap.appendChild(nameInp);
- body.appendChild(nameWrap);
+  if(fbDB && !window._qvPlayersListening){
+   window._qvPlayersListening=true;
+   fbOnValue(fbRef(fbDB,'rooms/'+fbRoomCode+'/qv_players'),function(snap){
+    var pl=snap.val();
+    var el=document.getElementById("qv-players-list");
+    if(!el){window._qvPlayersListening=false;return;}
+    if(pl){
+     var names=Object.keys(pl);
+     el.innerHTML='<span style="font-weight:700;color:var(--dark);">'+names.join(" · ")+'</span>';
+    } else {
+     el.textContent="Nessun giocatore ancora…";
+    }
+   });
+  }
 
- var errDiv=document.createElement("div");
- errDiv.style.cssText="font-size:13px;color:#c62828;min-height:20px;text-align:center;margin-bottom:8px;";
- body.appendChild(errDiv);
-
- var btnRow=document.createElement("div");
- btnRow.style.cssText="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;";
-
- // CREA STANZA
- var createBtn=document.createElement("button");
- createBtn.style.cssText="flex:1;min-width:140px;padding:14px;background:var(--dark);color:#fff;border:none;border-radius:14px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;";
- createBtn.textContent=T("qvCreateRoom");
- createBtn.onclick=function(){
- var nick=nameInp.value.trim()||S.qvMyName;
- if(!nick){errDiv.textContent=T("qvEnterName");return;}
- S.qvMyName=nick;
- createBtn.textContent="\u23F3";createBtn.disabled=true;
- fbCreateRoom(function(code,err){
- if(err){errDiv.textContent=T("connErr");createBtn.textContent=T("qvCreateRoom");createBtn.disabled=false;return;}
- // Host si registra come giocatore
- if(fbDB)fbSet(fbRef(fbDB,'rooms/'+code+'/qv_players/'+nick),{joined:Date.now(),isHost:true});
- renderQvSetup();
- });
- };
-
- // Separatore
- var sep=document.createElement("div");
- sep.style.cssText="display:flex;align-items:center;gap:8px;width:100%;margin:4px 0;";
- sep.innerHTML='<div style="flex:1;height:1px;background:#ddd;"></div><span style="font-size:12px;color:#aaa;font-weight:700;">'+T("oppure")+'</span><div style="flex:1;height:1px;background:#ddd;"></div>';
-
- // CODICE STANZA
- var codeIn=document.createElement("input");
- codeIn.type="tel";codeIn.inputMode="numeric";codeIn.placeholder=T("codeRoomPH2");codeIn.maxLength=4;
- codeIn.style.cssText="width:100%;padding:10px;font-size:28px;font-weight:900;text-align:center;letter-spacing:8px;border:2px solid #ddd;border-radius:12px;font-family:'Space Grotesk',sans-serif;outline:none;background:#fff;box-sizing:border-box;";
- codeIn.oninput=function(){this.value=this.value.replace(/[^0-9]/g,"").slice(0,4);};
-
- var joinBtn=document.createElement("button");
- joinBtn.style.cssText="flex:1;min-width:140px;padding:14px;background:#fff;color:var(--dark);border:2px solid var(--dark);border-radius:14px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;";
- joinBtn.textContent=T("joinBtn");
- joinBtn.onclick=function(){
- var nick=nameInp.value.trim()||S.qvMyName;
- var code=codeIn.value.trim();
- if(!nick){errDiv.textContent=T("qvEnterName");return;}
- if(code.length<4){errDiv.textContent=T("codeError4");return;}
- S.qvMyName=nick;
- joinBtn.textContent="\u23F3";joinBtn.disabled=true;
- fbJoinRoom(code,function(ok,err){
- if(!ok){errDiv.textContent="\u274C "+(err||T("roomNotFound2"));joinBtn.textContent=T("joinBtn");joinBtn.disabled=false;return;}
- if(fbDB)fbSet(fbRef(fbDB,'rooms/'+code+'/qv_players/'+nick),{joined:Date.now()});
- renderQvSetup();
- });
- };
-
- btnRow.appendChild(createBtn);
- body.appendChild(btnRow);
- body.appendChild(sep);
- body.appendChild(codeIn);
- var joinRow=document.createElement("div");
- joinRow.style.cssText="display:flex;justify-content:center;margin-top:8px;";
- joinRow.appendChild(joinBtn);
- body.appendChild(joinRow);
-
- } else if(fbIsHost){
- // ── HOST: mostra codice + giocatori + INIZIA ──
- var codeBox=document.createElement("div");
- codeBox.style.cssText="text-align:center;padding:20px;background:#fff;border-radius:20px;border:2px solid var(--border);margin:16px 0;";
- codeBox.innerHTML='<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#aaa;text-transform:uppercase;margin-bottom:6px;">'+T("roomCode")+'</div>'+
- '<div style="font-size:60px;font-weight:900;letter-spacing:12px;color:var(--orange);font-family:\'Space Grotesk\',sans-serif;line-height:1.1;">'+fbRoomCode+'</div>'+
- '<div style="font-size:13px;color:#888;margin-top:6px;">'+T("qvShareCode")+'</div>';
- body.appendChild(codeBox);
-
- var playersDiv=document.createElement("div");
- playersDiv.id="qv-players-list";
- playersDiv.style.cssText="text-align:center;font-size:14px;color:#666;min-height:30px;margin-bottom:12px;";
- playersDiv.textContent=T("waitingPlayers");
- body.appendChild(playersDiv);
-
- // Listener giocatori (unico, non ricreato)
- if(fbDB && !window._qvPlayersListening){
- window._qvPlayersListening=true;
- fbOnValue(fbRef(fbDB,'rooms/'+fbRoomCode+'/qv_players'),function(snap){
- var pl=snap.val();
- var el=document.getElementById("qv-players-list");
- if(!el){window._qvPlayersListening=false;return;}
- if(pl){
- var names=Object.keys(pl);
- el.innerHTML='<span style="font-weight:700;color:var(--dark);">'+names.length+' '+(names.length===1?T('qvPlayer1'):T('qvPlayerN'))+'</span>: '+names.join(", ");
- } else {
- el.textContent=T("waitingPlayers");
- }
- });
- }
-
- var startBtn=document.createElement("button");
- startBtn.style.cssText="width:100%;padding:16px;background:var(--dark);color:#fff;border:none;border-radius:16px;font-family:inherit;font-weight:800;font-size:18px;cursor:pointer;margin-top:4px;";
- startBtn.textContent=T("qvStart");
- startBtn.onclick=function(){
- if(!fbDB||!fbRoomCode)return;
- fbGet(fbRef(fbDB,'rooms/'+fbRoomCode+'/qv_players')).then(function(snap){
- var pl=snap.val()||{};
- var playerNames=Object.keys(pl);
- if(playerNames.length<1){alert(T("waitPlayer"));return;}
- window._qvPlayersListening=false;
- startQuantoValeDistanza(playerNames);
- });
- };
- body.appendChild(startBtn);
-
- var leaveBtn=document.createElement("button");
- leaveBtn.style.cssText="width:100%;padding:10px;background:transparent;border:2px solid #ddd;border-radius:14px;font-family:inherit;font-weight:600;font-size:13px;cursor:pointer;color:#aaa;margin-top:10px;";
- leaveBtn.textContent=T("closeRoom");
- leaveBtn.onclick=function(){window._qvPlayersListening=false;fbLeaveRoom();renderQvSetup();};
- body.appendChild(leaveBtn);
-
- } else {
- // ── CLIENT: connesso, in attesa ──
- var waitBox=document.createElement("div");
- waitBox.style.cssText="text-align:center;padding:24px;background:#fff;border-radius:20px;border:2px solid var(--border);margin:16px 0;";
- waitBox.innerHTML='<div style="font-size:13px;color:#aaa;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">'+T("inRoom")+'</div>'+
- '<div style="font-size:60px;font-weight:900;letter-spacing:12px;color:var(--teal);font-family:\'Space Grotesk\',sans-serif;line-height:1.1;">'+fbRoomCode+'</div>'+
- '<div style="font-size:15px;color:#888;margin-top:10px;">\u23F3 '+T("waitingHost2")+'</div>';
- body.appendChild(waitBox);
-
- var discBtn=document.createElement("button");
- discBtn.style.cssText="width:100%;padding:10px;background:transparent;border:2px solid #ddd;border-radius:14px;font-family:inherit;font-weight:600;font-size:13px;cursor:pointer;color:#aaa;margin-top:8px;";
- discBtn.textContent=T("qvDisconnect");
- discBtn.onclick=function(){fbLeaveRoom();renderQvSetup();};
- body.appendChild(discBtn);
- }
-
- } else {
- // ── MODALITÀ LOCALE ──
- body.appendChild(div("rlabel",T("howMany")));
- body.appendChild(div("rtext",T("qvLocalDesc")));
-
- // ── PULSANTE COLLEGA (invita a distanza via popup) ──
- if(fbDB){
-  var collegaWrap=document.createElement("div");
-  collegaWrap.style.cssText="margin-bottom:16px;";
-  var collegaBtn=document.createElement("button");
-  collegaBtn.style.cssText="width:100%;padding:13px;background:#fff;color:var(--teal,#2bbfa0);border:2.5px solid var(--teal,#2bbfa0);border-radius:14px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;";
-  collegaBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 11a4 4 0 0 0 5.66 0l2-2a4 4 0 0 0-5.65-5.66l-1 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M11 7a4 4 0 0 0-5.66 0l-2 2a4 4 0 0 0 5.65 5.66l1-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> COLLEGA dispositivo';
-  var collegaStatus=document.createElement("div");
-  collegaStatus.style.cssText="font-size:12px;color:#aaa;text-align:center;margin-top:6px;min-height:16px;";
-  collegaBtn.onclick=function(){
-   collegaBtn.disabled=true;
-   collegaBtn.style.opacity="0.6";
-   collegaBtn.textContent="⏳ Creazione stanza...";
-   sendQvChallenge(function(code){
-    // Passa automaticamente alla modalità distanza (host)
-    S.qvMode='distanza';
-    renderQvSetup();
+  var startBtn=document.createElement("button");
+  startBtn.style.cssText="width:100%;padding:16px;background:var(--dark);color:#fff;border:none;border-radius:16px;font-family:inherit;font-weight:800;font-size:18px;cursor:pointer;margin-top:4px;";
+  startBtn.textContent="Inizia";
+  startBtn.onclick=function(){
+   if(!fbDB||!fbRoomCode)return;
+   fbGet(fbRef(fbDB,'rooms/'+fbRoomCode+'/qv_players')).then(function(snap){
+    var pl=snap.val()||{};
+    var playerNames=Object.keys(pl);
+    if(playerNames.length<2){alert("Aspetta che si colleghi almeno un altro giocatore.");return;}
+    window._qvPlayersListening=false;
+    startQuantoValeDistanza(playerNames);
    });
   };
-  collegaWrap.appendChild(collegaBtn);
-  collegaWrap.appendChild(collegaStatus);
-  body.appendChild(collegaWrap);
- }
+  body.appendChild(startBtn);
 
- var selectedNum=S.qvNumPlayers||2;
- if(!S.qvNumPlayers)S.qvNumPlayers=2;
- var numWrap=div("filter-row");numWrap.style.justifyContent="center";numWrap.style.marginBottom="20px";
- for(var n=2;n<=8;n++){
- (function(num){
- var t=div("ftag"+(selectedNum===num?" on":""));t.textContent=num;
- t.onclick=function(){S.qvNumPlayers=num;renderQvSetup();};
- numWrap.appendChild(t);
- })(n);
- }
- body.appendChild(numWrap);
+  var leaveBtn=document.createElement("button");
+  leaveBtn.style.cssText="width:100%;padding:10px;background:transparent;border:none;font-family:inherit;font-weight:600;font-size:13px;cursor:pointer;color:#bbb;margin-top:14px;";
+  leaveBtn.textContent="Annulla sfida";
+  leaveBtn.onclick=function(){window._qvPlayersListening=false;fbLeaveRoom();S.qvMode='locale';renderQvSetup();};
+  body.appendChild(leaveBtn);
 
- var namesGrid=div("player-names-grid");
- var inputs=[];
- for(var i=0;i<selectedNum;i++){
- (function(pidx){
- var row=div("player-name-row");
- var lbl=div("player-name-label");lbl.textContent=T("qvPlayer")+(pidx+1);row.appendChild(lbl);
- var inp=document.createElement("input");
- inp.type="text";inp.className="player-name-input";
- inp.placeholder=T("playerNamePH")+(pidx+1);inp.maxLength=16;
- if(S.qvPlayerNames&&S.qvPlayerNames[pidx])inp.value=S.qvPlayerNames[pidx];
- row.appendChild(inp);inputs.push(inp);
- namesGrid.appendChild(row);
- })(i);
- }
- body.appendChild(namesGrid);
+ // ── STATO DISTANZA: CLIENT in attesa ──
+ } else if(S.qvMode==='distanza' && fbRoomCode && !fbIsHost){
+  var clientTitle=document.createElement("div");
+  clientTitle.style.cssText="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;text-align:center;margin:20px 0 6px;";
+  clientTitle.textContent="Connesso";
+  body.appendChild(clientTitle);
 
- var startWrap=div("");startWrap.style.cssText="text-align:center;margin-top:20px;";
- startWrap.appendChild(btn("ebtn",T("qvStart"),function(){
- var names=inputs.map(function(inp,i){return inp.value.trim()||(T("qvPlayer")+(i+1));});
- S.qvPlayerNames=names;
- S.qvNumPlayers=selectedNum;
- S.qvDistanza=false;
- startQuantoVale(names);
- }));
- body.appendChild(startWrap);
+  var waitMsg=document.createElement("div");
+  waitMsg.style.cssText="text-align:center;font-size:16px;color:#666;margin-bottom:24px;";
+  waitMsg.textContent="⏳ Aspetta che l'altro giocatore avvii la partita…";
+  body.appendChild(waitMsg);
+
+  var discBtn=document.createElement("button");
+  discBtn.style.cssText="width:100%;padding:10px;background:transparent;border:none;font-family:inherit;font-weight:600;font-size:13px;cursor:pointer;color:#bbb;margin-top:8px;";
+  discBtn.textContent="Esci dalla stanza";
+  discBtn.onclick=function(){fbLeaveRoom();S.qvMode='locale';renderQvSetup();};
+  body.appendChild(discBtn);
+
+ // ── SCHERMATA PRINCIPALE: selezione giocatori ──
+ } else {
+  // Numero giocatori: stepper
+  if(!S.qvNumPlayers)S.qvNumPlayers=2;
+  var selectedNum=S.qvNumPlayers;
+
+  var numLabel=document.createElement("div");
+  numLabel.style.cssText="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;text-align:center;margin:20px 0 14px;";
+  numLabel.textContent="Quanti siete?";
+  body.appendChild(numLabel);
+
+  var stepper=document.createElement("div");
+  stepper.style.cssText="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:24px;";
+
+  var minusBtn=document.createElement("button");
+  minusBtn.style.cssText="width:48px;height:48px;border-radius:50%;border:2px solid #e0e0e0;background:#fff;font-size:24px;font-weight:300;cursor:pointer;color:#555;display:flex;align-items:center;justify-content:center;font-family:inherit;";
+  minusBtn.textContent="−";
+  minusBtn.onclick=function(){if(S.qvNumPlayers>2){S.qvNumPlayers--;renderQvSetup();}};
+
+  var numDisp=document.createElement("div");
+  numDisp.style.cssText="width:72px;text-align:center;font-size:40px;font-weight:900;color:var(--dark);font-family:'Space Grotesk',sans-serif;";
+  numDisp.textContent=selectedNum;
+
+  var plusBtn=document.createElement("button");
+  plusBtn.style.cssText="width:48px;height:48px;border-radius:50%;border:2px solid #e0e0e0;background:#fff;font-size:24px;font-weight:300;cursor:pointer;color:#555;display:flex;align-items:center;justify-content:center;font-family:inherit;";
+  plusBtn.textContent="+";
+  plusBtn.onclick=function(){S.qvNumPlayers++;renderQvSetup();};
+
+  stepper.appendChild(minusBtn);stepper.appendChild(numDisp);stepper.appendChild(plusBtn);
+  body.appendChild(stepper);
+
+  // Nomi giocatori
+  var namesGrid=div("player-names-grid");
+  var inputs=[];
+  for(var i=0;i<selectedNum;i++){
+   (function(pidx){
+    var row=div("player-name-row");
+    var lbl=div("player-name-label");lbl.textContent=T("qvPlayer")+(pidx+1);row.appendChild(lbl);
+    var inp=document.createElement("input");
+    inp.type="text";inp.className="player-name-input";
+    inp.placeholder=T("playerNamePH")+(pidx+1);inp.maxLength=16;
+    if(S.qvPlayerNames&&S.qvPlayerNames[pidx])inp.value=S.qvPlayerNames[pidx];
+    row.appendChild(inp);inputs.push(inp);
+    namesGrid.appendChild(row);
+   })(i);
+  }
+  body.appendChild(namesGrid);
+
+  // INIZIA (locale)
+  var startWrap=div("");startWrap.style.cssText="text-align:center;margin-top:20px;";
+  startWrap.appendChild(btn("ebtn",T("qvStart"),function(){
+   var names=inputs.map(function(inp,i){return inp.value.trim()||(T("qvPlayer")+(i+1));});
+   S.qvPlayerNames=names;
+   S.qvNumPlayers=selectedNum;
+   S.qvDistanza=false;
+   startQuantoVale(names);
+  }));
+  body.appendChild(startWrap);
+
+  // SFIDA UN ALTRO TAVOLO
+  if(fbDB){
+   var sfidaSep=document.createElement("div");
+   sfidaSep.style.cssText="display:flex;align-items:center;gap:10px;margin:20px 0 16px;";
+   sfidaSep.innerHTML='<div style="flex:1;height:1px;background:#eee;"></div><span style="font-size:12px;color:#ccc;font-weight:600;white-space:nowrap;">oppure</span><div style="flex:1;height:1px;background:#eee;"></div>';
+   body.appendChild(sfidaSep);
+
+   var sfidaBtn=document.createElement("button");
+   sfidaBtn.style.cssText="width:100%;padding:14px;background:#fff;color:#555;border:1.5px solid #e0e0e0;border-radius:14px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;";
+   sfidaBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 1 1 0 16A8 8 0 0 1 10 2z" stroke="#aaa" stroke-width="1.8"/><path d="M6 10h8M10 6v8" stroke="#aaa" stroke-width="1.8" stroke-linecap="round"/></svg><span>Sfida un altro tavolo</span>';
+
+   var sfidaHint=document.createElement("div");
+   sfidaHint.style.cssText="font-size:12px;color:#c0c0c0;text-align:center;margin-top:8px;margin-bottom:4px;";
+   sfidaHint.textContent="Gli altri dispositivi riceveranno una notifica";
+
+   sfidaBtn.onclick=function(){
+    sfidaBtn.disabled=true;
+    sfidaBtn.style.opacity="0.5";
+    sfidaBtn.querySelector("span").textContent="Invio sfida…";
+    sendQvChallenge(function(code){
+     S.qvMode='distanza';
+     renderQvSetup();
+    });
+   };
+   body.appendChild(sfidaBtn);
+   body.appendChild(sfidaHint);
+  }
  }
 
  wrap.appendChild(card);
  document.getElementById("root").appendChild(wrap);
 }
-
 function renderChiPaga(){
- // Full-screen multitouch game — lock body scroll
  clr();
  document.body.style.overflow='hidden';
  document.body.style.userSelect='none';
  document.body.style.webkitUserSelect='none';
 
  var wrap=document.createElement('div');
- wrap.style.cssText='position:fixed;inset:0;background:#0a0a0a;touch-action:none;overflow:hidden;';
+ wrap.style.cssText='position:fixed;inset:0;background:#1a0000;touch-action:none;overflow:hidden;font-family:inherit;';
  document.getElementById('root').appendChild(wrap);
 
- // Canvas
+ // Canvas per esplosione
  var canvas=document.createElement('canvas');
  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
- canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;';
+ canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
  wrap.appendChild(canvas);
  var ctx=canvas.getContext('2d');
-
  window.addEventListener('resize',function(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
 
- // Overlay
- var overlay=document.createElement('div');
- overlay.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;gap:12px;padding:32px;font-family:inherit;';
- wrap.appendChild(overlay);
-
+ // Messaggio centrale
  var msgEl=document.createElement('div');
- msgEl.style.cssText='font-size:clamp(20px,5vw,34px);font-weight:700;text-align:center;color:#555;line-height:1.3;white-space:pre-line;';
+ msgEl.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(18px,4.5vw,28px);font-weight:700;text-align:center;color:rgba(255,255,255,0.25);line-height:1.4;white-space:pre-line;pointer-events:none;transition:opacity 0.4s;width:80%;';
  msgEl.textContent=T('chiPagaInstr');
- overlay.appendChild(msgEl);
+ wrap.appendChild(msgEl);
 
+ // Conto alla rovescia
  var cdEl=document.createElement('div');
- cdEl.style.cssText='font-size:clamp(80px,22vw,150px);font-weight:800;color:#e8c84a;line-height:1;opacity:0;transition:opacity 0.3s;font-variant-numeric:tabular-nums;';
- overlay.appendChild(cdEl);
+ cdEl.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(100px,30vw,180px);font-weight:900;color:#cc0000;opacity:0;transition:opacity 0.2s;pointer-events:none;font-family:"Space Grotesk",sans-serif;text-shadow:0 0 60px rgba(200,0,0,0.8);';
+ wrap.appendChild(cdEl);
 
  // Back button
  var backBtn2=document.createElement('button');
- backBtn2.style.cssText='position:absolute;top:env(safe-area-inset-top,0px);left:0;padding:14px 18px;background:transparent;color:#555;border:none;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.05em;z-index:10;';
- backBtn2.textContent=T('chiPagaBack');
+ backBtn2.style.cssText='position:absolute;top:env(safe-area-inset-top,16px);left:16px;padding:10px 16px;background:transparent;color:rgba(255,255,255,0.3);border:none;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.05em;z-index:20;';
+ backBtn2.textContent='← '+T('chiPagaBack');
  backBtn2.onclick=function(){cleanup();document.body.style.overflow='';document.body.style.userSelect='';document.body.style.webkitUserSelect='';S.screen='games';render();};
  wrap.appendChild(backBtn2);
 
- // Loser banner
+ // Banner perdente
  var banner=document.createElement('div');
- banner.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,10,0.93);opacity:0;pointer-events:none;transition:opacity 0.5s;gap:16px;padding:40px;font-family:inherit;';
+ banner.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.88);opacity:0;pointer-events:none;transition:opacity 0.6s;gap:12px;padding:40px;z-index:15;';
  wrap.appendChild(banner);
 
  var bLabel=document.createElement('div');
- bLabel.style.cssText='font-size:clamp(12px,3vw,16px);font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#555;';
+ bLabel.style.cssText='font-size:13px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,0.4);';
  bLabel.textContent=T('chiPagaLoser');
  banner.appendChild(bLabel);
 
  var bName=document.createElement('div');
- bName.style.cssText='font-size:clamp(52px,15vw,110px);font-weight:800;color:#e84a4a;text-align:center;line-height:1.1;letter-spacing:-.03em;';
+ bName.style.cssText='font-size:clamp(60px,18vw,120px);font-weight:900;color:#ff2222;text-align:center;line-height:1;letter-spacing:-.03em;text-shadow:0 0 40px rgba(255,30,30,0.7);';
  banner.appendChild(bName);
 
  var bSub=document.createElement('div');
- bSub.style.cssText='font-size:clamp(18px,4vw,26px);color:#f0f0f0;opacity:.75;text-align:center;';
+ bSub.style.cssText='font-size:clamp(16px,4vw,22px);color:rgba(255,255,255,0.6);text-align:center;margin-top:8px;';
  bSub.textContent=T('chiPagaSub');
  banner.appendChild(bSub);
 
  var rBtn=document.createElement('button');
- rBtn.style.cssText='margin-top:16px;padding:16px 42px;background:#f0f0f0;color:#0a0a0a;border:none;border-radius:100px;font-family:inherit;font-size:18px;font-weight:800;cursor:pointer;pointer-events:auto;';
+ rBtn.style.cssText='margin-top:28px;padding:16px 44px;background:#cc0000;color:#fff;border:none;border-radius:100px;font-family:inherit;font-size:17px;font-weight:800;cursor:pointer;pointer-events:auto;letter-spacing:.05em;';
  rBtn.textContent=T('chiPagaRestart');
  rBtn.onclick=resetGame;
  rBtn.ontouchend=function(ev){ev.stopPropagation();resetGame();};
  banner.appendChild(rBtn);
 
- // State
- var phase='waiting'; // waiting | countdown | result
+ // Stato
+ var phase='waiting';
  var touches2={};
- var colorIdx2=0;
  var cdVal=4;
  var cdTimer=null;
  var loserTouchId=null;
  var animId=null;
- var lastTs=0;
- var COLORS=['#e84a4a','#4a9ee8','#4ac87a','#e8c84a','#c84ae8','#e87a4a','#4ae8c8','#e84a9e','#7ae84a','#4a4ae8'];
+ var particles=[];
+ var shakeT=0;
 
- function nc(){ var c=COLORS[colorIdx2%COLORS.length]; colorIdx2++; return c; }
+ // — Bottoni DOM per ogni touch —
+ var btns={}; // id → elemento DOM
+
+ function makeBtnEl(id, x, y){
+  var outer=document.createElement('div');
+  var R=56; // raggio base
+  outer.dataset.tid=id;
+  outer.style.cssText='position:absolute;left:'+(x-R)+'px;top:'+(y-R)+'px;width:'+(R*2)+'px;height:'+(R*2*1.35)+'px;pointer-events:none;';
+
+  // Cilindro corpo (parte superiore rossa)
+  var body=document.createElement('div');
+  body.className='cpbody';
+  body.style.cssText=[
+   'position:absolute;left:0;right:0;',
+   'top:0;height:'+Math.round(R*0.55)+'px;',
+   'background:radial-gradient(ellipse at 35% 30%, #ff4444 0%, #cc0000 55%, #880000 100%);',
+   'border-radius:'+R+'px '+R+'px 0 0;',
+   'box-shadow:inset 0 6px 14px rgba(255,120,120,0.35), inset 0 -4px 8px rgba(0,0,0,0.4);',
+   'transition:height 0.08s, top 0.08s;'
+  ].join('');
+  outer.appendChild(body);
+
+  // Ellisse top
+  var top=document.createElement('div');
+  top.className='cptop';
+  top.style.cssText=[
+   'position:absolute;left:0;right:0;',
+   'top:-'+Math.round(R*0.22)+'px;',
+   'height:'+Math.round(R*0.44)+'px;',
+   'background:radial-gradient(ellipse at 40% 30%, #ff6666 0%, #dd1111 60%, #990000 100%);',
+   'border-radius:50%;',
+   'box-shadow:0 4px 18px rgba(200,0,0,0.7), inset 0 3px 8px rgba(255,150,150,0.4);',
+   'transition:top 0.08s;'
+  ].join('');
+  outer.appendChild(top);
+
+  // Pedana base scura
+  var base=document.createElement('div');
+  base.style.cssText=[
+   'position:absolute;left:-6px;right:-6px;',
+   'bottom:0;height:'+Math.round(R*0.55)+'px;',
+   'background:linear-gradient(180deg,#3a0000 0%,#1a0000 100%);',
+   'border-radius:0 0 '+(R+6)+'px '+(R+6)+'px;',
+   'box-shadow:0 8px 24px rgba(0,0,0,0.8);'
+  ].join('');
+  outer.appendChild(base);
+
+  wrap.insertBefore(outer,canvas);
+  return outer;
+ }
+
+ function pressBtnEl(el, pressed){
+  var body=el.querySelector('.cpbody');
+  var top=el.querySelector('.cptop');
+  var R=56;
+  if(pressed){
+   body.style.height=Math.round(R*0.35)+'px';
+   body.style.top=Math.round(R*0.18)+'px';
+   top.style.top='-'+Math.round(R*0.13)+'px';
+  } else {
+   body.style.height=Math.round(R*0.55)+'px';
+   body.style.top='0px';
+   top.style.top='-'+Math.round(R*0.22)+'px';
+  }
+ }
+
+ function removeBtnEl(id){
+  if(btns[id]){btns[id].remove();delete btns[id];}
+ }
 
  function onTouchStart(ev){
- ev.preventDefault();
- if(phase==='result')return;
- for(var i=0;i<ev.changedTouches.length;i++){
- var t=ev.changedTouches[i];
- if(!touches2[t.identifier])touches2[t.identifier]={x:t.clientX,y:t.clientY,color:nc(),r:0,pulse:0,alive:true};
+  ev.preventDefault();
+  if(phase==='result')return;
+  for(var i=0;i<ev.changedTouches.length;i++){
+   var t=ev.changedTouches[i];
+   if(!touches2[t.identifier]){
+    touches2[t.identifier]={x:t.clientX,y:t.clientY,alive:true,name:'P'+(Object.keys(touches2).length+1)};
+    btns[t.identifier]=makeBtnEl(t.identifier,t.clientX,t.clientY);
+    pressBtnEl(btns[t.identifier],true);
+   }
+  }
+  if(phase==='countdown'){resetCd();phase='waiting';}
+  updateMsg();
  }
- if(phase==='countdown'){resetCd();updateMsg();}
- else updateMsg();
- }
+
  function onTouchMove(ev){
- ev.preventDefault();
- for(var i=0;i<ev.changedTouches.length;i++){
- var t=ev.changedTouches[i];
- if(touches2[t.identifier]){touches2[t.identifier].x=t.clientX;touches2[t.identifier].y=t.clientY;}
+  ev.preventDefault();
+  for(var i=0;i<ev.changedTouches.length;i++){
+   var t=ev.changedTouches[i];
+   if(touches2[t.identifier]){
+    touches2[t.identifier].x=t.clientX;
+    touches2[t.identifier].y=t.clientY;
+    if(btns[t.identifier]){
+     var R=56;
+     btns[t.identifier].style.left=(t.clientX-R)+'px';
+     btns[t.identifier].style.top=(t.clientY-R)+'px';
+    }
+   }
+  }
  }
- }
+
  function onTouchEnd(ev){
- ev.preventDefault();
- if(phase==='result')return;
- for(var i=0;i<ev.changedTouches.length;i++){
- delete touches2[ev.changedTouches[i].identifier];
- colorIdx2=Math.max(0,colorIdx2-1);
- }
- if(phase==='countdown'){resetCd();phase='waiting';}
- updateMsg();
+  ev.preventDefault();
+  if(phase==='result')return;
+  for(var i=0;i<ev.changedTouches.length;i++){
+   var id=ev.changedTouches[i].identifier;
+   removeBtnEl(id);
+   delete touches2[id];
+  }
+  if(phase==='countdown'){resetCd();phase='waiting';}
+  updateMsg();
  }
 
  wrap.addEventListener('touchstart',onTouchStart,{passive:false});
@@ -4796,76 +4788,129 @@ function renderChiPaga(){
  wrap.addEventListener('touchcancel',onTouchEnd,{passive:false});
 
  function updateMsg(){
- var n=Object.keys(touches2).length;
- if(n===0){msgEl.textContent=T('chiPagaInstr');msgEl.style.color='#555';cdEl.style.opacity='0';}
- else if(n===1){msgEl.textContent=T('chiPagaWait');msgEl.style.color='#555';}
- else{msgEl.textContent='';startCd();}
+  var n=Object.keys(touches2).length;
+  if(n===0){msgEl.textContent=T('chiPagaInstr');msgEl.style.opacity='1';cdEl.style.opacity='0';}
+  else if(n===1){msgEl.textContent=T('chiPagaWait');msgEl.style.opacity='1';}
+  else{msgEl.style.opacity='0';startCd();}
  }
 
  function startCd(){
- if(phase==='countdown')return;
- phase='countdown';cdVal=4;cdEl.style.opacity='1';cdEl.textContent=cdVal;tickCd();
+  if(phase==='countdown')return;
+  phase='countdown';cdVal=4;cdEl.style.opacity='1';cdEl.textContent=cdVal;tickCd();
  }
  function tickCd(){
- cdTimer=setTimeout(function(){
- cdVal--;
- if(cdVal>0){cdEl.textContent=cdVal;tickCd();}
- else{cdEl.style.opacity='0';cdEl.textContent='';pickLoser();}
- },1000);
+  cdTimer=setTimeout(function(){
+   cdVal--;
+   if(cdVal>0){cdEl.textContent=cdVal;tickCd();}
+   else{cdEl.style.opacity='0';pickLoser();}
+  },1000);
  }
  function resetCd(){clearTimeout(cdTimer);cdEl.style.opacity='0';cdEl.textContent='';cdVal=4;}
 
  function pickLoser(){
- phase='result';
- var ids=Object.keys(touches2);
- if(!ids.length){resetGame();return;}
- var loserId=ids[Math.floor(Math.random()*ids.length)];
- loserTouchId=loserId;
- var idx2=1;
- for(var id in touches2){touches2[id].name='P'+idx2;idx2++;}
- for(var id in touches2){if(id!==loserId)touches2[id].alive=false;}
- setTimeout(function(){
- if(touches2[loserId]){
- banner.style.opacity='1';banner.style.pointerEvents='auto';
- bName.textContent=touches2[loserId].name;
- }
- },900);
+  phase='result';
+  var ids=Object.keys(touches2);
+  if(!ids.length){resetGame();return;}
+  var loserId=ids[Math.floor(Math.random()*ids.length)];
+  loserTouchId=loserId;
+  // Rimuovi tutti tranne il perdente
+  for(var id in btns){
+   if(id!=loserId){removeBtnEl(id);}
+   else{
+    // Il perdente: animazione shake + rimane su
+    pressBtnEl(btns[id],false);
+   }
+  }
+  // Scatta esplosione dopo 0.6s
+  setTimeout(function(){
+   var lt=touches2[loserId];
+   if(lt){spawnExplosion(lt.x,lt.y);}
+   shakeT=1;
+   setTimeout(function(){
+    removeBtnEl(loserId);
+    banner.style.opacity='1';banner.style.pointerEvents='auto';
+    var idx2=1;for(var id in touches2){touches2[id].name='P'+idx2;idx2++;}
+    if(touches2[loserId]) bName.textContent=touches2[loserId].name;
+   },600);
+  },600);
  }
 
- function resetGame(){
- banner.style.opacity='0';banner.style.pointerEvents='none';
- touches2={};colorIdx2=0;loserTouchId=null;phase='waiting';resetCd();
- msgEl.textContent=T('chiPagaInstr');msgEl.style.color='#555';msgEl.style.opacity='1';
+ function spawnExplosion(cx,cy){
+  for(var i=0;i<120;i++){
+   var angle=Math.random()*Math.PI*2;
+   var speed=60+Math.random()*260;
+   var size=3+Math.random()*10;
+   var hue=Math.random()<0.7?(Math.random()*30):(180+Math.random()*60);
+   particles.push({
+    x:cx,y:cy,
+    vx:Math.cos(angle)*speed,
+    vy:Math.sin(angle)*speed,
+    size:size,life:1,
+    decay:0.012+Math.random()*0.018,
+    color:'hsl('+hue+',90%,'+(45+Math.random()*25)+'%)',
+    gravity:120+Math.random()*80
+   });
+  }
  }
-
- function hexA(hex,a){var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return 'rgba('+r+','+g+','+b+','+a+')';}
 
  function animate(ts){
- var dt=Math.min((ts-lastTs)/1000,0.05);lastTs=ts;
- ctx.clearRect(0,0,canvas.width,canvas.height);
- for(var id in touches2){
- var t=touches2[id];
- var tgt=t.alive?70:0;
- t.r+=(tgt-t.r)*(t.alive?0.18:0.28);
- t.pulse=(t.pulse||0)+dt*2.5;
- var pm=t.alive?(phase==='countdown'?12:6):0;
- var pr=t.r+Math.sin(t.pulse)*pm;
- if(pr<1)continue;
- var isLoser=(phase==='result'&&id==loserTouchId);
- var g2=ctx.createRadialGradient(t.x,t.y,pr*0.3,t.x,t.y,pr*1.8);
- g2.addColorStop(0,hexA(t.color,isLoser?0.35:0.18));
- g2.addColorStop(1,hexA(t.color,0));
- ctx.beginPath();ctx.arc(t.x,t.y,pr*1.8,0,Math.PI*2);ctx.fillStyle=g2;ctx.fill();
- ctx.beginPath();ctx.arc(t.x,t.y,pr,0,Math.PI*2);ctx.fillStyle=hexA(t.color,isLoser?0.9:0.75);ctx.fill();
- ctx.beginPath();ctx.arc(t.x,t.y,pr,0,Math.PI*2);ctx.strokeStyle=t.color;ctx.lineWidth=isLoser?4:2.5;ctx.stroke();
- ctx.beginPath();ctx.arc(t.x,t.y,6,0,Math.PI*2);ctx.fillStyle='#fff';ctx.globalAlpha=isLoser?1:0.6;ctx.fill();ctx.globalAlpha=1;
- }
- if(phase==='countdown'&&cdVal<=3){var fl=(Math.sin(Date.now()/120)+1)/2;ctx.globalAlpha=fl*0.06;ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.globalAlpha=1;}
- animId=requestAnimationFrame(animate);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  var dt=0.016;
+
+  // Sfondo che pulsa rosso durante il countdown
+  if(phase==='countdown'){
+   var fl=(Math.sin(Date.now()/140)+1)/2;
+   ctx.fillStyle='rgba(180,0,0,'+(fl*0.12)+')';
+   ctx.fillRect(0,0,canvas.width,canvas.height);
+  }
+
+  // Particles esplosione
+  for(var i=particles.length-1;i>=0;i--){
+   var p=particles[i];
+   p.x+=p.vx*dt;p.y+=p.vy*dt;
+   p.vy+=p.gravity*dt;
+   p.vx*=0.97;p.vy*=0.97;
+   p.life-=p.decay;
+   if(p.life<=0){particles.splice(i,1);continue;}
+   ctx.globalAlpha=Math.max(0,p.life);
+   ctx.fillStyle=p.color;
+   ctx.beginPath();
+   ctx.arc(p.x,p.y,p.size*p.life,0,Math.PI*2);
+   ctx.fill();
+  }
+  ctx.globalAlpha=1;
+
+  // Shake del wrap durante esplosione
+  if(shakeT>0){
+   shakeT-=0.04;
+   var sx=(Math.random()-0.5)*shakeT*14;
+   var sy=(Math.random()-0.5)*shakeT*14;
+   canvas.style.transform='translate('+sx+'px,'+sy+'px)';
+  } else {
+   canvas.style.transform='';
+   shakeT=0;
+  }
+
+  animId=requestAnimationFrame(animate);
  }
  animId=requestAnimationFrame(animate);
 
- function cleanup(){cancelAnimationFrame(animId);wrap.removeEventListener('touchstart',onTouchStart);wrap.removeEventListener('touchmove',onTouchMove);wrap.removeEventListener('touchend',onTouchEnd);wrap.removeEventListener('touchcancel',onTouchEnd);}
+ function resetGame(){
+  banner.style.opacity='0';banner.style.pointerEvents='none';
+  for(var id in btns){removeBtnEl(id);}
+  touches2={};loserTouchId=null;phase='waiting';
+  particles=[];shakeT=0;canvas.style.transform='';
+  resetCd();
+  msgEl.textContent=T('chiPagaInstr');msgEl.style.opacity='1';
+ }
+
+ function cleanup(){
+  cancelAnimationFrame(animId);
+  wrap.removeEventListener('touchstart',onTouchStart);
+  wrap.removeEventListener('touchmove',onTouchMove);
+  wrap.removeEventListener('touchend',onTouchEnd);
+  wrap.removeEventListener('touchcancel',onTouchEnd);
+ }
 }
 
 function renderQuantoVale(){
@@ -5440,80 +5485,196 @@ function renderAnalytics(){
  clr();
  addBackArrow(goHome);
  if(!S.pinOK){
- var panel=div("panel");document.getElementById("root").appendChild(panel);
- var ps=div("pin-screen");panel.appendChild(ps);
- ps.appendChild(div("pin-title","AREA RISERVATA"));
- ps.appendChild(div("",T("pinAccess")));
- var dots=div("");dots.style.cssText="font-size:32px;color:"+(S.pinErr?"#E8571A":"#E9B949")+";margin:10px 0;font-weight:700;font-family:'Space Grotesk',sans-serif;letter-spacing:8px;";
- var dotStr="";for(var i=0;i<4;i++)dotStr+=(i<S.pinInput.length?"\u25cf":"\u25cb")+" ";dots.textContent=dotStr;ps.appendChild(dots);
- if(S.pinErr){var err=div("");err.style.cssText="color:#E8571A;font-size:14px;font-family:'Space Grotesk',sans-serif;letter-spacing:2px;";err.textContent="PIN ERRATO, RIPROVA";ps.appendChild(err);}
- var pad=div("pin-pad");ps.appendChild(pad);
- for(var k=1;k<=9;k++){(function(n){pad.appendChild(btn("pin-btn",String(n),function(){pinPress(n);}));})(k);}
- pad.appendChild(div(""));
- pad.appendChild(btn("pin-btn","0",function(){pinPress(0);}));
- pad.appendChild(btn("pin-btn","\u232b",function(){S.pinInput=S.pinInput.slice(0,-1);renderAnalytics();}));
- return;
+  var panel=div("panel");document.getElementById("root").appendChild(panel);
+  var ps=div("pin-screen");panel.appendChild(ps);
+  ps.appendChild(div("pin-title","AREA RISERVATA"));
+  ps.appendChild(div("","Inserisci il PIN per accedere."));
+  var dots=div("");dots.style.cssText="font-size:32px;color:"+(S.pinErr?"#E8571A":"#E9B949")+";margin:10px 0;font-weight:700;font-family:'Space Grotesk',sans-serif;letter-spacing:8px;";
+  var dotStr="";for(var i=0;i<4;i++)dotStr+=(i<S.pinInput.length?"●":"○")+" ";dots.textContent=dotStr;ps.appendChild(dots);
+  if(S.pinErr){var err=div("");err.style.cssText="color:#E8571A;font-size:14px;font-family:'Space Grotesk',sans-serif;letter-spacing:2px;";err.textContent="PIN ERRATO, RIPROVA";ps.appendChild(err);}
+  var pad=div("pin-pad");ps.appendChild(pad);
+  for(var k=1;k<=9;k++){(function(n){pad.appendChild(btn("pin-btn",String(n),function(){pinPress(n);}));})(k);}
+  pad.appendChild(div(""));
+  pad.appendChild(btn("pin-btn","0",function(){pinPress(0);}));
+  pad.appendChild(btn("pin-btn","⌫",function(){S.pinInput=S.pinInput.slice(0,-1);renderAnalytics();}));
+  return;
  }
- var total=ANALYTICS.plays.length;
- var today=0;var todayStr=new Date().toDateString();
- for(var i=0;i<ANALYTICS.plays.length;i++){if(new Date(ANALYTICS.plays[i].ts).toDateString()===todayStr)today++;}
- var gc={};for(var i=0;i<ANALYTICS.plays.length;i++){var p=ANALYTICS.plays[i];gc[p.game]=(gc[p.game]||0)+1;}
- var top=[];for(var k in gc)top.push([k,gc[k]]);top.sort(function(a,b){return b[1]-a[1];});top=top.slice(0,10);
- var maxP=top.length?top[0][1]:1;
- var rVals=[];for(var k in ANALYTICS.ratings)rVals.push(ANALYTICS.ratings[k]);
- var avgR=rVals.length?(rVals.reduce(function(s,r){return s+r.t/r.c;},0)/rVals.length).toFixed(1):"--";
- var catMap={};for(var i=0;i<ANALYTICS.plays.length;i++){var p=ANALYTICS.plays[i];catMap[p.cat]=(catMap[p.cat]||0)+1;}
- var catArr=[];for(var k in catMap)catArr.push([k,catMap[k]]);catArr.sort(function(a,b){return b[1]-a[1];});
- var topCat=catArr.length?catArr[0][0]:"--";
- var panel=div("panel");document.getElementById("root").appendChild(panel);
- var topBar=div("");topBar.style.cssText="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;";panel.appendChild(topBar);
- var atitle=div("");atitle.style.cssText="font-family:'Space Grotesk',sans-serif;font-size:28px;letter-spacing:2px;";atitle.textContent="ANALYTICS";topBar.appendChild(atitle);
- var bw=div("");bw.style.cssText="display:flex;gap:10px;";topBar.appendChild(bw);
- bw.appendChild(btn("ebtn out",T("analyticsReset"),function(){if(confirm(T("analyticsSure"))){ANALYTICS={plays:[],ratings:{}};saveA();renderAnalytics();}}));
- bw.appendChild(btn("ebtn out",T("analyticsClose"),function(){S.screen="home";S.pinOK=false;render();}));
- var hint=div("");hint.style.cssText="font-size:13px;color:var(--muted);margin-bottom:20px;font-style:italic;";hint.textContent="PIN: "+PIN+" — "+T("analyticsPinHint");panel.appendChild(hint);
- var grid=div("agrid");panel.appendChild(grid);
- function acard(n,l){var c=div("acard");c.appendChild(div("anum",String(n)));c.appendChild(div("alabel",l));return c;}
- grid.appendChild(acard(total,T("analyticsTotalGames")));grid.appendChild(acard(today,T("analyticsToday")));grid.appendChild(acard(avgR,T("analyticsAvgRating")));grid.appendChild(acard(topCat,T("topCategory")));
- panel.appendChild(div("sec-label",T("mostPlayed")));
- if(top.length===0){panel.appendChild(div("",T("analyticsEmpty")));}
- else{for(var i=0;i<top.length;i++){var name=top[i][0],count=top[i][1];var r2=ANALYTICS.ratings[name];var avg2=r2?(r2.t/r2.c).toFixed(1):"--";var row=div("arow");row.appendChild(div("ar-rank",String(i+1)));row.appendChild(div("ar-name",name));var bw2=div("ar-bar-wrap");var bb=div("ar-bar");bb.style.width=Math.round(count/maxP*100)+"%";bw2.appendChild(bb);row.appendChild(bw2);row.appendChild(div("ar-count",count+" "+T("analyticsGames")));row.appendChild(div("ar-stars","\u2605 "+avg2));panel.appendChild(row);}}
- var sl2=div("sec-label",T("analyticsRecent"));sl2.style.marginTop="22px";panel.appendChild(sl2);
- var recent=ANALYTICS.plays.slice().reverse().slice(0,15);
- for(var i=0;i<recent.length;i++){var p=recent[i];var d=new Date(p.ts);var hm=d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0");var row=div("arow");row.appendChild(div("ar-name",p.game));var ci=div("");ci.style.cssText="font-size:12px;color:var(--muted);font-style:italic;flex:1;";ci.textContent=p.cat;row.appendChild(ci);row.appendChild(div("ar-count",d.toLocaleDateString("it-IT",{day:"2-digit",month:"short"})+" "+hm));panel.appendChild(row);}
 
- // ── SEZIONE TEMPO GIOCATO ──
- var tlabel=div("sec-label","⏱ TEMPO GIOCATO");tlabel.style.marginTop="22px";panel.appendChild(tlabel);
- var timeMap={};
- var totalSec=0;
- for(var i=0;i<ANALYTICS.plays.length;i++){
- var pp=ANALYTICS.plays[i];
- var d2=pp.dur||0;
- timeMap[pp.game]=(timeMap[pp.game]||0)+d2;
- totalSec+=d2;
+ // ── PANNELLO IMPOSTAZIONI ──
+ if(!S.settingsTab) S.settingsTab = "analytics";
+
+ var panel=div("panel");document.getElementById("root").appendChild(panel);
+
+ // Titolo
+ var topBar=div("");topBar.style.cssText="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px;";panel.appendChild(topBar);
+ var atitle=div("");atitle.style.cssText="font-family:'Space Grotesk',sans-serif;font-size:26px;letter-spacing:2px;font-weight:900;";atitle.textContent="IMPOSTAZIONI";topBar.appendChild(atitle);
+ var closeBtn=btn("ebtn out","Esci",function(){S.screen="home";S.pinOK=false;render();});topBar.appendChild(closeBtn);
+
+ // Tab bar
+ var tabs=div("");tabs.style.cssText="display:flex;gap:0;border-bottom:2px solid #eee;margin-bottom:24px;overflow-x:auto;";
+ function makeTab(label,id){
+  var t=document.createElement("button");
+  t.style.cssText="padding:10px 18px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-bottom:"+(S.settingsTab===id?"2px solid var(--dark)":"2px solid transparent")+";color:"+(S.settingsTab===id?"var(--dark)":"#aaa")+";margin-bottom:-2px;white-space:nowrap;";
+  t.textContent=label;
+  t.onclick=function(){S.settingsTab=id;renderAnalytics();};
+  tabs.appendChild(t);
  }
- function fmtTime(s){if(s<60)return s+"s";if(s<3600)return Math.floor(s/60)+"m "+(s%60)+"s";return Math.floor(s/3600)+"h "+Math.floor((s%3600)/60)+"m";}
- var timeArr=[];for(var k in timeMap)timeArr.push([k,timeMap[k]]);timeArr.sort(function(a,b){return b[1]-a[1];});timeArr=timeArr.slice(0,10);
- var maxT=timeArr.length?timeArr[0][1]:1;
- var totDiv=div("acard");totDiv.style.cssText="background:var(--panel-bg,#f8f6f1);border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;";
- var totLabel=div("alabel","Tempo totale");totLabel.style.flex="1";
- var totVal=div("anum",fmtTime(totalSec));
- totDiv.appendChild(totVal);totDiv.appendChild(totLabel);
- panel.appendChild(totDiv);
- if(timeArr.length===0){panel.appendChild(div("",T("analyticsEmpty")));}
- else{
- for(var i=0;i<timeArr.length;i++){
- var tname=timeArr[i][0],tsec=timeArr[i][1];
- if(tsec===0)continue;
- var row=div("arow");
- row.appendChild(div("ar-rank",String(i+1)));
- row.appendChild(div("ar-name",tname));
- var bw3=div("ar-bar-wrap");var bb3=div("ar-bar");bb3.style.width=Math.round(tsec/maxT*100)+"%";bw3.appendChild(bb3);row.appendChild(bw3);
- row.appendChild(div("ar-count",fmtTime(tsec)));
- panel.appendChild(row);
+ makeTab("Analytics","analytics");
+ makeTab("Locale","locale");
+ makeTab("Menu","menu");
+ makeTab("Admin","admin");
+ panel.appendChild(tabs);
+
+ var content=div("");panel.appendChild(content);
+
+ // ── TAB ANALYTICS ──
+ if(S.settingsTab==="analytics"){
+  var total=ANALYTICS.plays.length;
+  var today=0;var todayStr=new Date().toDateString();
+  for(var i=0;i<ANALYTICS.plays.length;i++){if(new Date(ANALYTICS.plays[i].ts).toDateString()===todayStr)today++;}
+  var gc={};for(var i=0;i<ANALYTICS.plays.length;i++){var p=ANALYTICS.plays[i];gc[p.game]=(gc[p.game]||0)+1;}
+  var top=[];for(var k in gc)top.push([k,gc[k]]);top.sort(function(a,b){return b[1]-a[1];});top=top.slice(0,10);
+  var maxP=top.length?top[0][1]:1;
+  var rVals=[];for(var k in ANALYTICS.ratings)rVals.push(ANALYTICS.ratings[k]);
+  var avgR=rVals.length?(rVals.reduce(function(s,r){return s+r.t/r.c;},0)/rVals.length).toFixed(1):"--";
+  var catMap={};for(var i=0;i<ANALYTICS.plays.length;i++){var p=ANALYTICS.plays[i];catMap[p.cat]=(catMap[p.cat]||0)+1;}
+  var catArr=[];for(var k in catMap)catArr.push([k,catMap[k]]);catArr.sort(function(a,b){return b[1]-a[1];});
+  var topCat=catArr.length?catArr[0][0]:"--";
+  var grid=div("agrid");content.appendChild(grid);
+  function acard(n,l){var c=div("acard");c.appendChild(div("anum",String(n)));c.appendChild(div("alabel",l));return c;}
+  grid.appendChild(acard(total,"Partite totali"));grid.appendChild(acard(today,"Oggi"));grid.appendChild(acard(avgR,"Valutazione media"));grid.appendChild(acard(topCat,"Categoria top"));
+  content.appendChild(div("sec-label","Giochi più giocati"));
+  if(top.length===0){content.appendChild(div("","Nessun dato ancora."));}
+  else{for(var i=0;i<top.length;i++){var name=top[i][0],count=top[i][1];var r2=ANALYTICS.ratings[name];var avg2=r2?(r2.t/r2.c).toFixed(1):"--";var row=div("arow");row.appendChild(div("ar-rank",String(i+1)));row.appendChild(div("ar-name",name));var bw2=div("ar-bar-wrap");var bb=div("ar-bar");bb.style.width=Math.round(count/maxP*100)+"%";bw2.appendChild(bb);row.appendChild(bw2);row.appendChild(div("ar-count",count+" partite"));row.appendChild(div("ar-stars","★ "+avg2));content.appendChild(row);}}
+  var sl2=div("sec-label","Recenti");sl2.style.marginTop="22px";content.appendChild(sl2);
+  var recent=ANALYTICS.plays.slice().reverse().slice(0,15);
+  for(var i=0;i<recent.length;i++){var p=recent[i];var d=new Date(p.ts);var hm=d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0");var row=div("arow");row.appendChild(div("ar-name",p.game));var ci=div("");ci.style.cssText="font-size:12px;color:var(--muted);font-style:italic;flex:1;";ci.textContent=p.cat;row.appendChild(ci);row.appendChild(div("ar-count",d.toLocaleDateString("it-IT",{day:"2-digit",month:"short"})+" "+hm));content.appendChild(row);}
+  // Tempo giocato
+  var tlabel=div("sec-label","⏱ Tempo giocato");tlabel.style.marginTop="22px";content.appendChild(tlabel);
+  var timeMap={};var totalSec=0;
+  for(var i=0;i<ANALYTICS.plays.length;i++){var pp=ANALYTICS.plays[i];var d2=pp.dur||0;timeMap[pp.game]=(timeMap[pp.game]||0)+d2;totalSec+=d2;}
+  function fmtTime(s){if(s<60)return s+"s";if(s<3600)return Math.floor(s/60)+"m "+(s%60)+"s";return Math.floor(s/3600)+"h "+Math.floor((s%3600)/60)+"m";}
+  var timeArr=[];for(var k in timeMap)timeArr.push([k,timeMap[k]]);timeArr.sort(function(a,b){return b[1]-a[1];});timeArr=timeArr.slice(0,10);
+  var maxT=timeArr.length?timeArr[0][1]:1;
+  var totDiv=div("acard");totDiv.style.cssText="background:var(--panel-bg,#f8f6f1);border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;";
+  var totLabel=div("alabel","Tempo totale");totLabel.style.flex="1";var totVal=div("anum",fmtTime(totalSec));
+  totDiv.appendChild(totVal);totDiv.appendChild(totLabel);content.appendChild(totDiv);
+  if(timeArr.length){for(var i=0;i<timeArr.length;i++){var tname=timeArr[i][0],tsec=timeArr[i][1];if(tsec===0)continue;var row=div("arow");row.appendChild(div("ar-rank",String(i+1)));row.appendChild(div("ar-name",tname));var bw3=div("ar-bar-wrap");var bb3=div("ar-bar");bb3.style.width=Math.round(tsec/maxT*100)+"%";bw3.appendChild(bb3);row.appendChild(bw3);row.appendChild(div("ar-count",fmtTime(tsec)));content.appendChild(row);}}
+  var resetRow=div("");resetRow.style.marginTop="20px";
+  resetRow.appendChild(btn("ebtn out","Reset dati",function(){if(confirm("Cancellare tutti i dati analytics?")){ANALYTICS={plays:[],ratings:{}};saveA();renderAnalytics();}}));
+  content.appendChild(resetRow);
+
+ // ── TAB LOCALE ──
+ } else if(S.settingsTab==="locale"){
+  var hint=div("");hint.style.cssText="font-size:13px;color:#999;margin-bottom:20px;line-height:1.5;";
+  hint.textContent="Il codice pub identifica questo locale. I popup di sfida arrivano solo ai dispositivi con lo stesso codice. Scegli un nome breve senza spazi (es. osteria_mario).";
+  content.appendChild(hint);
+
+  var savedPubCode = "";
+  try{ savedPubCode = localStorage.getItem("filos_pub_code") || ""; }catch(e){}
+  var savedPubName = "";
+  try{ savedPubName = localStorage.getItem("filos_pub_name") || ""; }catch(e){}
+
+  function settingRow(labelText, inputEl){
+   var row=div("");row.style.cssText="margin-bottom:20px;";
+   var lbl=div("");lbl.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:8px;";lbl.textContent=labelText;
+   row.appendChild(lbl);row.appendChild(inputEl);return row;
+  }
+
+  var nameInp=document.createElement("input");
+  nameInp.type="text";nameInp.value=savedPubName;nameInp.placeholder="Es. Osteria Mario";nameInp.maxLength=40;
+  nameInp.style.cssText="width:100%;padding:6px 0;font-size:17px;border:none;border-bottom:1.5px solid #e0e0e0;border-radius:0;font-family:inherit;box-sizing:border-box;outline:none;background:transparent;";
+  content.appendChild(settingRow("Nome del locale",nameInp));
+
+  var codeInp=document.createElement("input");
+  codeInp.type="text";codeInp.value=savedPubCode;codeInp.placeholder="Es. osteria_mario";codeInp.maxLength=30;
+  codeInp.style.cssText="width:100%;padding:6px 0;font-size:17px;border:none;border-bottom:1.5px solid #e0e0e0;border-radius:0;font-family:inherit;box-sizing:border-box;outline:none;background:transparent;";
+  codeInp.oninput=function(){this.value=this.value.toLowerCase().replace(/[^a-z0-9_]/g,"");};
+  content.appendChild(settingRow("Codice pub (solo lettere, numeri, _)",codeInp));
+
+  var savedMsg=div("");savedMsg.style.cssText="font-size:13px;color:#2bbfa0;font-weight:700;min-height:20px;margin-bottom:12px;";
+  content.appendChild(savedMsg);
+
+  var saveBtn=document.createElement("button");
+  saveBtn.style.cssText="width:100%;padding:14px;background:var(--dark);color:#fff;border:none;border-radius:12px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;";
+  saveBtn.textContent="Salva";
+  saveBtn.onclick=function(){
+   var name=nameInp.value.trim();
+   var code=codeInp.value.trim();
+   try{localStorage.setItem("filos_pub_name",name);}catch(e){}
+   try{localStorage.setItem("filos_pub_code",code);}catch(e){}
+   savedMsg.textContent="✓ Salvato";
+   setTimeout(function(){savedMsg.textContent="";},2000);
+  };
+  content.appendChild(saveBtn);
+
+  if(savedPubCode){
+   var statusDiv=div("");statusDiv.style.cssText="margin-top:20px;padding:12px 16px;background:#f5f5f5;border-radius:10px;font-size:13px;color:#666;";
+   statusDiv.innerHTML="<strong>"+savedPubName+"</strong> &mdash; <code style='background:#eee;padding:2px 6px;border-radius:4px;'>"+savedPubCode+"</code>";
+   content.appendChild(statusDiv);
+  }
+
+ // ── TAB MENU ──
+ } else if(S.settingsTab==="menu"){
+  renderMenuEditor(content);
+
+ // ── TAB ADMIN ──
+ } else if(S.settingsTab==="admin"){
+  var adminHint=div("");adminHint.style.cssText="font-size:13px;color:#999;margin-bottom:20px;line-height:1.5;";
+  adminHint.textContent="Attiva un evento speciale (es. Quizzone) e seleziona i pub partecipanti. Solo quei pub vedranno il tasto e riceveranno i popup.";
+  content.appendChild(adminHint);
+
+  if(!fbDB){
+   var noFb=div("");noFb.style.cssText="font-size:14px;color:#E8571A;padding:16px;background:#fff5f0;border-radius:10px;";noFb.textContent="Firebase non disponibile. Connessione assente.";
+   content.appendChild(noFb);
+  } else {
+   // Leggi stato evento da Firebase
+   var eventoRef=fbRef(fbDB,"filos_admin/evento");
+   fbGet(eventoRef).then(function(snap){
+    var ev=snap.val()||{attivo:false,nome:"",pubs:[]};
+
+    var evLabel=div("");evLabel.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:8px;";evLabel.textContent="Nome evento";content.appendChild(evLabel);
+    var evNameInp=document.createElement("input");
+    evNameInp.type="text";evNameInp.value=ev.nome||"";evNameInp.placeholder="Es. Quizzone del mercoledì";evNameInp.maxLength=50;
+    evNameInp.style.cssText="width:100%;padding:6px 0;font-size:17px;border:none;border-bottom:1.5px solid #e0e0e0;border-radius:0;font-family:inherit;box-sizing:border-box;outline:none;background:transparent;margin-bottom:20px;";
+    content.appendChild(evNameInp);
+
+    var pubsLabel=div("");pubsLabel.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:8px;";pubsLabel.textContent="Codici pub partecipanti (uno per riga)";content.appendChild(pubsLabel);
+    var pubsInp=document.createElement("textarea");
+    pubsInp.value=(ev.pubs||[]).join("\n");pubsInp.placeholder="osteria_mario\nbar_centrale\npub_verde";pubsInp.rows=5;
+    pubsInp.style.cssText="width:100%;padding:6px 0;font-size:14px;border:none;border-bottom:1.5px solid #e0e0e0;border-radius:0;font-family:'Space Grotesk',monospace;box-sizing:border-box;outline:none;background:transparent;resize:none;margin-bottom:20px;";
+    content.appendChild(pubsInp);
+
+    // Toggle attivo
+    var toggleRow=div("");toggleRow.style.cssText="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:14px 16px;background:#f8f8f8;border-radius:12px;";
+    var toggleLabel=div("");toggleLabel.style.cssText="font-size:15px;font-weight:700;color:var(--dark);";toggleLabel.textContent="Evento attivo";
+    var toggleBtn=document.createElement("button");
+    var isAttivo=ev.attivo||false;
+    toggleBtn.style.cssText="width:52px;height:28px;border-radius:14px;border:none;background:"+(isAttivo?"#2bbfa0":"#ddd")+";cursor:pointer;position:relative;transition:background 0.2s;";
+    toggleBtn.innerHTML='<span style="position:absolute;top:3px;left:'+(isAttivo?"26px":"3px")+';width:22px;height:22px;border-radius:50%;background:#fff;transition:left 0.2s;display:block;"></span>';
+    toggleBtn.onclick=function(){isAttivo=!isAttivo;toggleBtn.style.background=isAttivo?"#2bbfa0":"#ddd";toggleBtn.querySelector("span").style.left=isAttivo?"26px":"3px";};
+    toggleRow.appendChild(toggleLabel);toggleRow.appendChild(toggleBtn);
+    content.appendChild(toggleRow);
+
+    var adminSaved=div("");adminSaved.style.cssText="font-size:13px;color:#2bbfa0;font-weight:700;min-height:20px;margin-bottom:12px;";content.appendChild(adminSaved);
+
+    var saveAdminBtn=document.createElement("button");
+    saveAdminBtn.style.cssText="width:100%;padding:14px;background:var(--dark);color:#fff;border:none;border-radius:12px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;";
+    saveAdminBtn.textContent="Salva evento";
+    saveAdminBtn.onclick=function(){
+     var pubList=pubsInp.value.split("\n").map(function(s){return s.trim().toLowerCase();}).filter(function(s){return s.length>0;});
+     var data={attivo:isAttivo,nome:evNameInp.value.trim(),pubs:pubList,ts:Date.now()};
+     fbSet(eventoRef,data).then(function(){
+      adminSaved.textContent="✓ Evento salvato su Firebase";
+      setTimeout(function(){adminSaved.textContent="";},2500);
+     }).catch(function(){adminSaved.style.color="#E8571A";adminSaved.textContent="❌ Errore nel salvataggio";});
+    };
+    content.appendChild(saveAdminBtn);
+   }).catch(function(){
+    var errDiv=div("");errDiv.style.cssText="font-size:14px;color:#E8571A;";errDiv.textContent="Impossibile leggere Firebase.";content.appendChild(errDiv);
+   });
+  }
  }
- }
- renderMenuEditor(panel);
 }
 
 function pinPress(d){
@@ -6838,6 +6999,8 @@ function startInviteListener(){
    if(!inv || inv.from === FILOS_NAME) continue;
    // Non ancora scaduto (max 30 sec)
    if(Date.now() - inv.ts > 30000) continue;
+   // Filtro codice pub: l'invito deve essere per il nostro pub (o senza filtro)
+   if(inv.pubCode && FILOS_PUB_CODE && inv.pubCode !== FILOS_PUB_CODE) continue;
    // Non già mostrato
    if(window._lastInviteShown === keys[i]) continue;
    window._lastInviteShown = keys[i];
@@ -6956,6 +7119,7 @@ function sendChallenge(gameName, catId){
   from: FILOS_NAME || "Anonimo",
   game: gameName,
   cat: catId || null,
+  pubCode: FILOS_PUB_CODE || null,
   ts: Date.now()
  };
  var key = "inv_" + Date.now();
@@ -6983,6 +7147,7 @@ function sendQvChallenge(onRoomReady){
    game: "Quanto Vale?",
    cat: "quantovale",
    roomCode: code,
+   pubCode: FILOS_PUB_CODE || null,
    ts: Date.now()
   };
   var key = "inv_" + Date.now();
