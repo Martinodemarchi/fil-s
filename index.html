@@ -4615,6 +4615,30 @@ function renderQvSetup(){
  body.appendChild(div("rlabel",T("howMany")));
  body.appendChild(div("rtext",T("qvLocalDesc")));
 
+ // ── PULSANTE COLLEGA (invita a distanza via popup) ──
+ if(fbDB){
+  var collegaWrap=document.createElement("div");
+  collegaWrap.style.cssText="margin-bottom:16px;";
+  var collegaBtn=document.createElement("button");
+  collegaBtn.style.cssText="width:100%;padding:13px;background:#fff;color:var(--teal,#2bbfa0);border:2.5px solid var(--teal,#2bbfa0);border-radius:14px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;";
+  collegaBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 11a4 4 0 0 0 5.66 0l2-2a4 4 0 0 0-5.65-5.66l-1 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M11 7a4 4 0 0 0-5.66 0l-2 2a4 4 0 0 0 5.65 5.66l1-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> COLLEGA dispositivo';
+  var collegaStatus=document.createElement("div");
+  collegaStatus.style.cssText="font-size:12px;color:#aaa;text-align:center;margin-top:6px;min-height:16px;";
+  collegaBtn.onclick=function(){
+   collegaBtn.disabled=true;
+   collegaBtn.style.opacity="0.6";
+   collegaBtn.textContent="⏳ Creazione stanza...";
+   sendQvChallenge(function(code){
+    // Passa automaticamente alla modalità distanza (host)
+    S.qvMode='distanza';
+    renderQvSetup();
+   });
+  };
+  collegaWrap.appendChild(collegaBtn);
+  collegaWrap.appendChild(collegaStatus);
+  body.appendChild(collegaWrap);
+ }
+
  var selectedNum=S.qvNumPlayers||2;
  if(!S.qvNumPlayers)S.qvNumPlayers=2;
  var numWrap=div("filter-row");numWrap.style.justifyContent="center";numWrap.style.marginBottom="20px";
@@ -6869,7 +6893,22 @@ function showInviteBanner(inv, key){
   banner.remove();
   // Rimuovi l'invito da Firebase
   try{fbRemove(fbRef(fbDB,"filos_invites/"+key));}catch(e){}
-  // Apri la lista giochi della categoria sfidante
+
+  // Caso speciale: invito QV con roomCode → join automatico
+  if(inv.roomCode && inv.game === "Quanto Vale?"){
+   var nick = S.qvMyName || FILOS_NAME || "Anonimo";
+   S.qvMyName = nick;
+   fbJoinRoom(inv.roomCode, function(ok, err){
+    if(!ok){ alert("❌ Stanza non trovata o scaduta."); S.screen="home"; render(); return; }
+    try{ fbSet(fbRef(fbDB,'rooms/'+inv.roomCode+'/qv_players/'+nick), {joined:Date.now()}); }catch(e){}
+    S.qvMode = 'distanza';
+    S.screen = 'qv_setup';
+    render();
+   });
+   return;
+  }
+
+  // Caso normale: vai alla lista giochi della categoria
   var catId = inv.cat || null;
   if(catId && typeof GAMES !== "undefined" && GAMES[catId] && GAMES[catId].length > 0){
    S.cat = catId;
@@ -6927,6 +6966,32 @@ function sendChallenge(gameName, catId){
    try{fbRemove(fbRef(fbDB,"filos_invites/"+key));}catch(e){}
   },30000);
  }catch(e){console.warn("Invito non inviato:",e);}
+}
+
+// Manda un invito QV con stanza già creata (codice incluso nell'invite)
+function sendQvChallenge(onRoomReady){
+ if(!fbDB || !fbSet || !fbRef) return;
+ var nick = S.qvMyName || FILOS_NAME || "Anonimo";
+ S.qvMyName = nick;
+ fbCreateRoom(function(code, err){
+  if(err || !code){ console.warn("Errore creazione stanza QV:", err); return; }
+  // Registra host
+  try{ fbSet(fbRef(fbDB,'rooms/'+code+'/qv_players/'+nick), {joined:Date.now(), isHost:true}); }catch(e){}
+  // Manda invite con roomCode
+  var inv = {
+   from: nick,
+   game: "Quanto Vale?",
+   cat: "quantovale",
+   roomCode: code,
+   ts: Date.now()
+  };
+  var key = "inv_" + Date.now();
+  try{
+   fbSet(fbRef(fbDB,"filos_invites/"+key), inv);
+   setTimeout(function(){ try{fbRemove(fbRef(fbDB,"filos_invites/"+key));}catch(e){} }, 30000);
+  }catch(e){ console.warn("Invito QV non inviato:", e); }
+  if(typeof onRoomReady === "function") onRoomReady(code);
+ });
 }
 
 // Pulsante "Sfida un tavolo" nella home
