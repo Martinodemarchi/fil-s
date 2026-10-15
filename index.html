@@ -5286,10 +5286,25 @@ function renderEnd(){
  var fe=["\uD83C\uDF55","\uD83E\uDDC0","\uD83E\uDED2","\uD83E\uDD68","\uD83C\uDF2E","\uD83C\uDF6B"];
  for(var i=0;i<items.length;i++){(function(item,idx){
  var card=div("menu-card");
- card.appendChild(el("span","mc-emoji",(tab==="drink"?de:fe)[idx%6]));
- card.appendChild(el("span","mc-name",item.name));
- card.appendChild(el("span","mc-desc",item.desc));
- card.appendChild(el("span","mc-price","\u20ac "+item.price));
+ card.style.padding="0";card.style.overflow="hidden";card.style.textAlign="center";
+ if(item.photo){
+  var img=document.createElement("img");
+  img.src=item.photo;
+  img.style.cssText="width:100%;height:110px;object-fit:cover;display:block;border-radius:14px 14px 0 0;";
+  card.appendChild(img);
+  var inner=document.createElement("div");inner.style.cssText="padding:10px 8px 14px;";
+  inner.appendChild(el("span","mc-name",item.name));
+  inner.appendChild(el("span","mc-desc",item.desc));
+  inner.appendChild(el("span","mc-price","\u20ac "+item.price));
+  card.appendChild(inner);
+ } else {
+  var inner2=document.createElement("div");inner2.style.cssText="padding:18px 12px;";
+  inner2.appendChild(el("span","mc-emoji",(tab==="drink"?de:fe)[idx%6]));
+  inner2.appendChild(el("span","mc-name",item.name));
+  inner2.appendChild(el("span","mc-desc",item.desc));
+  inner2.appendChild(el("span","mc-price","\u20ac "+item.price));
+  card.appendChild(inner2);
+ }
  card.onclick=function(){toast.textContent=item.name+" (\u20ac "+item.price+") \u2014 "+T("menuCallWaiter");toast.style.display="block";setTimeout(function(){toast.style.display="none";},4000);};
  mgrid.appendChild(card);
  })(items[i],i);}
@@ -5452,30 +5467,135 @@ function renderMenuEditor(panel){
  var tF=div("me-tab "+(S.menuEdTab==="food"?"on":""));tF.textContent=T("menuFood");
  mtabs.appendChild(tD);mtabs.appendChild(tF);
  var mContent=div("");me.appendChild(mContent);
- function buildEditor(tab){
- mContent.innerHTML="";
- var items=MENU[tab]||[];var list=div("me-list");mContent.appendChild(list);
- for(var i=0;i<items.length;i++){(function(item,idx){
- var row=div("me-row");
- var inName=el("input","me-inp-name");inName.type="text";inName.value=item.name;inName.placeholder=T("productName");
- var inDesc=el("input","me-inp-desc");inDesc.type="text";inDesc.value=item.desc;inDesc.placeholder="Descrizione breve";
- var inPrice=el("input","me-inp-price");inPrice.type="text";inPrice.value=item.price;inPrice.placeholder="0.00";
- var savedLabel=div("me-saved","SALVATO");
- function saveRow(){MENU[tab][idx].name=inName.value.toUpperCase();MENU[tab][idx].desc=inDesc.value;MENU[tab][idx].price=inPrice.value;saveMenu();savedLabel.className="me-saved show";setTimeout(function(){savedLabel.className="me-saved";},1500);}
- inName.onblur=saveRow;inDesc.onblur=saveRow;inPrice.onblur=saveRow;
- inName.onkeydown=function(e){if(e.key==="Enter")saveRow();};
- inDesc.onkeydown=function(e){if(e.key==="Enter")saveRow();};
- inPrice.onkeydown=function(e){if(e.key==="Enter")saveRow();};
- var delBtn=btn("me-del","\u2715 RIMUOVI",function(){MENU[tab].splice(idx,1);saveMenu();buildEditor(tab);});
- row.appendChild(inName);row.appendChild(inDesc);row.appendChild(inPrice);row.appendChild(savedLabel);row.appendChild(delBtn);list.appendChild(row);
- })(items[i],i);}
- var addRow=div("");addRow.style.cssText="display:flex;gap:12px;margin-top:4px;";
- addRow.appendChild(btn("me-add","+ AGGIUNGI",function(){MENU[tab].push({name:"NUOVO PRODOTTO",desc:"Descrizione",price:"0.00"});saveMenu();buildEditor(tab);}));
- mContent.appendChild(addRow);
- var resetRow=div("");resetRow.style.marginTop="12px";
- resetRow.appendChild(btn("ebtn out","RIPRISTINA DEFAULT",function(){if(confirm("Ripristinare il menu "+tab+" predefinito?")){MENU[tab]=MENU_DEFAULT[tab].slice();saveMenu();buildEditor(tab);}}));
- mContent.appendChild(resetRow);
+
+ var ALLERGENI=["Glutine","Latte","Uova","Arachidi","Frutta a guscio","Soia","Pesce","Molluschi","Sedano","Senape","Sesamo","Lupini","Anidride solforosa"];
+
+ function makeProductCard(tab,idx){
+  var it=MENU[tab][idx];
+  var card=document.createElement("div");
+  card.style.cssText="background:#fff;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07);";
+
+  // FOTO
+  var photoZone=document.createElement("div");
+  photoZone.style.cssText="position:relative;width:100%;background:#f0f0f0;min-height:140px;display:flex;align-items:center;justify-content:center;";
+
+  function refreshPhoto(){
+   photoZone.innerHTML="";
+   var cur=MENU[tab][idx];
+   if(cur&&cur.photo){
+    var imgEl=document.createElement("img");
+    imgEl.src=cur.photo;
+    imgEl.style.cssText="width:100%;height:180px;object-fit:cover;display:block;";
+    photoZone.appendChild(imgEl);
+    var rmBtn=document.createElement("button");
+    rmBtn.innerHTML="✕ Rimuovi foto";
+    rmBtn.style.cssText="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;";
+    rmBtn.onclick=function(){MENU[tab][idx].photo=null;saveMenu();refreshPhoto();};
+    photoZone.appendChild(rmBtn);
+   } else {
+    var addLbl=document.createElement("label");
+    addLbl.style.cssText="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:140px;cursor:pointer;gap:8px;";
+    var ic=document.createElement("div");ic.style.fontSize="36px";ic.textContent="📷";
+    var lt=document.createElement("div");lt.style.cssText="font-size:13px;font-weight:700;letter-spacing:1px;color:#aaa;text-transform:uppercase;";lt.textContent="Tocca per aggiungere foto";
+    var fi=document.createElement("input");fi.type="file";fi.accept="image/*";fi.style.display="none";
+    fi.onchange=function(){
+     var file=this.files[0];if(!file)return;
+     var reader=new FileReader();
+     reader.onload=function(e){
+      var img=new Image();
+      img.onload=function(){
+       var mW=800,mH=600,w=img.width,h=img.height;
+       if(w>mW){h=Math.round(h*mW/w);w=mW;}
+       if(h>mH){w=Math.round(w*mH/h);h=mH;}
+       var c=document.createElement("canvas");c.width=w;c.height=h;
+       c.getContext("2d").drawImage(img,0,0,w,h);
+       MENU[tab][idx].photo=c.toDataURL("image/jpeg",0.75);
+       saveMenu();refreshPhoto();
+      };
+      img.src=e.target.result;
+     };
+     reader.readAsDataURL(file);
+    };
+    addLbl.appendChild(ic);addLbl.appendChild(lt);addLbl.appendChild(fi);
+    photoZone.appendChild(addLbl);
+   }
+  }
+  refreshPhoto();
+  card.appendChild(photoZone);
+
+  // CAMPI
+  var body=document.createElement("div");
+  body.style.cssText="padding:14px 16px;display:flex;flex-direction:column;gap:10px;";
+
+  function mkLabel(t){var l=document.createElement("div");l.style.cssText="font-size:11px;font-weight:700;letter-spacing:1px;color:#aaa;text-transform:uppercase;margin-bottom:2px;";l.textContent=t;return l;}
+  function mkInput(val,ph,w){var i=document.createElement("input");i.type="text";i.value=val||"";i.placeholder=ph;i.style.cssText="width:"+(w||"100%")+";border:none;border-bottom:1.5px solid #e0e0e0;padding:4px 0;font-size:15px;font-family:'DM Sans',sans-serif;background:transparent;outline:none;box-sizing:border-box;";return i;}
+
+  var inName=mkInput(it.name,"Nome prodotto","100%");
+  var inDesc=document.createElement("textarea");inDesc.value=it.desc||"";inDesc.placeholder="Descrizione";inDesc.rows=2;
+  inDesc.style.cssText="width:100%;border:none;border-bottom:1.5px solid #e0e0e0;padding:4px 0;font-size:14px;font-family:'DM Sans',sans-serif;background:transparent;outline:none;resize:none;box-sizing:border-box;";
+  var inPrice=mkInput(it.price,"0.00","100px");
+
+  // Allergeni
+  var algGrid=document.createElement("div");algGrid.style.cssText="display:flex;flex-wrap:wrap;gap:6px;";
+  var itAllergeni=it.allergeni||[];
+  ALLERGENI.forEach(function(a){
+   var chip=document.createElement("div");
+   var on=itAllergeni.indexOf(a)>=0;
+   chip.textContent=a;
+   chip.style.cssText="padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;"+(on?"background:#E8571A;color:#fff;":"background:#f0f0f0;color:#888;");
+   chip.onclick=function(){
+    var cur=MENU[tab][idx].allergeni||[];
+    var pos=cur.indexOf(a);
+    if(pos>=0){cur.splice(pos,1);}else{cur.push(a);}
+    MENU[tab][idx].allergeni=cur;
+    saveMenu();
+    var isOn=cur.indexOf(a)>=0;
+    chip.style.background=isOn?"#E8571A":"#f0f0f0";
+    chip.style.color=isOn?"#fff":"#888";
+   };
+   algGrid.appendChild(chip);
+  });
+
+  function saveFields(){
+   MENU[tab][idx].name=inName.value.toUpperCase();
+   MENU[tab][idx].desc=inDesc.value;
+   MENU[tab][idx].price=inPrice.value;
+   saveMenu();
+  }
+  inName.onblur=saveFields;inDesc.onblur=saveFields;inPrice.onblur=saveFields;
+
+  var delBtn=document.createElement("button");
+  delBtn.textContent="✕ Elimina prodotto";
+  delBtn.style.cssText="margin-top:4px;border:none;background:none;color:#ccc;font-size:12px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;text-align:left;padding:0;";
+  delBtn.onclick=function(){if(confirm("Eliminare questo prodotto?")){MENU[tab].splice(idx,1);saveMenu();buildEditor(tab);}};
+
+  body.appendChild(mkLabel("Titolo"));body.appendChild(inName);
+  body.appendChild(mkLabel("Descrizione"));body.appendChild(inDesc);
+  body.appendChild(mkLabel("Prezzo (€)"));body.appendChild(inPrice);
+  body.appendChild(mkLabel("Allergeni"));body.appendChild(algGrid);
+  body.appendChild(delBtn);
+  card.appendChild(body);
+  return card;
  }
+
+ function buildEditor(tab){
+  mContent.innerHTML="";
+  var items=MENU[tab]||[];
+  var list=document.createElement("div");list.style.marginTop="16px";
+  mContent.appendChild(list);
+  for(var i=0;i<items.length;i++){list.appendChild(makeProductCard(tab,i));}
+  var addBtn=document.createElement("button");
+  addBtn.textContent="+ Aggiungi prodotto";
+  addBtn.style.cssText="width:100%;padding:14px;margin-top:4px;border:2px dashed #ddd;border-radius:14px;background:none;font-size:14px;font-weight:700;letter-spacing:1px;color:#aaa;cursor:pointer;";
+  addBtn.onclick=function(){MENU[tab].push({name:"NUOVO PRODOTTO",desc:"",price:"0.00",photo:null,allergeni:[]});saveMenu();buildEditor(tab);};
+  list.appendChild(addBtn);
+  var resetBtn=document.createElement("button");
+  resetBtn.textContent="Ripristina menu default";
+  resetBtn.style.cssText="margin-top:12px;width:100%;padding:10px;border:1px solid #eee;border-radius:10px;background:none;font-size:12px;color:#bbb;cursor:pointer;";
+  resetBtn.onclick=function(){if(confirm("Ripristinare il menu "+tab+" predefinito?")){MENU[tab]=MENU_DEFAULT[tab].map(function(x){return Object.assign({},x,{photo:null,allergeni:[]});});saveMenu();buildEditor(tab);}};
+  list.appendChild(resetBtn);
+ }
+
  tD.onclick=function(){S.menuEdTab="drink";tD.className="me-tab on";tF.className="me-tab";buildEditor("drink");};
  tF.onclick=function(){S.menuEdTab="food";tF.className="me-tab on";tD.className="me-tab";buildEditor("food");};
  buildEditor(S.menuEdTab);panel.appendChild(me);
