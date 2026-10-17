@@ -5022,7 +5022,7 @@ function renderAnalytics(){
    return wrap;
   }
   var fNome=obField("Nome del locale","Es. Osteria Da Mario","",40);
-  var fCode=obField("Codice pub (senza spazi)","Es. osteria_mario","",30,function(v){return v.toLowerCase().replace(/[^a-z0-9_]/g,"");});
+  var fCode=obField("Codice pub","Es. osteria.mario","",30,function(v){return v.toLowerCase().replace(/[^a-z0-9_.\-]/g,"");});
   // rimuovi bordo ultimo
   fCode.style.borderBottom="none";
   obCard.appendChild(fNome);obCard.appendChild(fCode);
