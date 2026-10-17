@@ -182,9 +182,9 @@ function renderNfcGate(){
  var icon=div("");icon.style.cssText="width:80px;height:80px;border-radius:24px;background:#1c1c1e;display:flex;align-items:center;justify-content:center;margin:0 auto;";
  icon.innerHTML='<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><circle cx="12" cy="12" r="1" fill="#fff" stroke="none"/></svg>';
  wrap.appendChild(icon);
- var title=div("");title.style.cssText="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:800;color:#111;letter-spacing:-0.5px;";title.textContent="Sei al locale?";
+ var title=div("");title.style.cssText="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:800;color:#111;letter-spacing:-0.5px;";title.textContent=T("nfcGateTitle");
  wrap.appendChild(title);
- var sub=div("");sub.style.cssText="font-size:15px;color:#636366;line-height:1.6;max-width:280px;";sub.textContent="Avvicina il telefono al sottobicchiere sul tuo tavolo per accedere a Filòs.";
+ var sub=div("");sub.style.cssText="font-size:15px;color:#636366;line-height:1.6;max-width:280px;";sub.textContent=T("nfcGateSub");
  wrap.appendChild(sub);
  // Animazione onda NFC
  var nfcAnim=div("");nfcAnim.style.cssText="position:relative;width:80px;height:80px;margin:8px auto;";
@@ -5000,8 +5000,8 @@ function renderAnalytics(){
   lockIcon.innerHTML='<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
   ps.appendChild(lockIcon);
 
-  var titleEl=div("");titleEl.style.cssText="font-family:-apple-system,'Helvetica Neue',sans-serif;font-size:22px;font-weight:700;color:var(--dark,#111);letter-spacing:-0.4px;";titleEl.textContent="Area riservata";ps.appendChild(titleEl);
-  var subEl=div("");subEl.style.cssText="font-size:14px;color:#8e8e93;margin-top:-8px;";subEl.textContent="Inserisci il PIN per continuare";ps.appendChild(subEl);
+  var titleEl=div("");titleEl.style.cssText="font-family:-apple-system,'Helvetica Neue',sans-serif;font-size:22px;font-weight:700;color:var(--dark,#111);letter-spacing:-0.4px;";titleEl.textContent=T("pinTitle");ps.appendChild(titleEl);
+  var subEl=div("");subEl.style.cssText="font-size:14px;color:#8e8e93;margin-top:-8px;";subEl.textContent=T("pinSub");ps.appendChild(subEl);
 
   var pinInp=document.createElement("input");
   pinInp.type="password";pinInp.inputMode="numeric";pinInp.pattern="[0-9]*";
@@ -5017,7 +5017,7 @@ function renderAnalytics(){
   ps.appendChild(pinInp);
 
   if(S.pinErr){
-   var errEl=div("");errEl.style.cssText="font-size:13px;color:#ff3b30;font-weight:600;margin-top:-8px;";errEl.textContent="PIN errato, riprova";ps.appendChild(errEl);
+   var errEl=div("");errEl.style.cssText="font-size:13px;color:#ff3b30;font-weight:600;margin-top:-8px;";errEl.textContent=T("pinError");ps.appendChild(errEl);
   }
 
   // Auto-submit quando si raggiungono 4 cifre
@@ -5045,8 +5045,8 @@ function renderAnalytics(){
   var obIcon=div("");obIcon.style.cssText="width:72px;height:72px;border-radius:20px;background:#1c1c1e;display:flex;align-items:center;justify-content:center;";
   obIcon.innerHTML='<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
   obHdr.appendChild(obIcon);
-  var obTitle=div("");obTitle.style.cssText="font-size:24px;font-weight:800;color:var(--dark,#111);letter-spacing:-0.5px;text-align:center;";obTitle.textContent="Benvenuto in Filòs";obHdr.appendChild(obTitle);
-  var obSub=div("");obSub.style.cssText="font-size:15px;color:#636366;text-align:center;line-height:1.5;max-width:300px;";obSub.textContent="Configura il tuo locale in pochi passi per attivare le analytics e le funzioni gestore.";obHdr.appendChild(obSub);
+  var obTitle=div("");obTitle.style.cssText="font-size:24px;font-weight:800;color:var(--dark,#111);letter-spacing:-0.5px;text-align:center;";obTitle.textContent=T("obTitle");obHdr.appendChild(obTitle);
+  var obSub=div("");obSub.style.cssText="font-size:15px;color:#636366;text-align:center;line-height:1.5;max-width:300px;";obSub.textContent=T("obSub");obHdr.appendChild(obSub);
   ob.appendChild(obHdr);
   // Form card
   var obCard=div("");obCard.style.cssText="background:var(--surface,#fff);border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);";
@@ -5059,8 +5059,8 @@ function renderAnalytics(){
    wrap.appendChild(lbl);wrap.appendChild(inp);inp._isField=true;
    return wrap;
   }
-  var fNome=obField("Nome del locale","Es. Osteria Da Mario","",40);
-  var fCode=obField("Codice pub","Es. osteria.mario","",30,function(v){return v.toLowerCase().replace(/[^a-z0-9_.\-]/g,"");});
+  var fNome=obField(T("obFieldName"),T("obFieldNamePH"),"",40);
+  var fCode=obField(T("obFieldCode"),T("obFieldCodePH"),"",30,function(v){return v.toLowerCase().replace(/[^a-z0-9_.\-]/g,"");});
   // rimuovi bordo ultimo
   fCode.style.borderBottom="none";
   obCard.appendChild(fNome);obCard.appendChild(fCode);
@@ -5070,18 +5070,18 @@ function renderAnalytics(){
   var obErr=div("");obErr.style.cssText="font-size:13px;color:#ff3b30;font-weight:600;text-align:center;min-height:18px;";ob.appendChild(obErr);
   var obBtn=document.createElement("button");
   obBtn.style.cssText="width:100%;padding:16px;border-radius:14px;border:none;background:#1c1c1e;color:#fff;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:-0.2px;";
-  obBtn.textContent="Attiva il mio locale";
+  obBtn.textContent=T("obBtn");
   obBtn.onclick=function(){
    var nome=fNome.querySelector("input").value.trim();
    var code=fCode.querySelector("input").value.trim();
-   if(!nome){obErr.textContent="Inserisci il nome del locale";return;}
-   if(!code||code.length<3){obErr.textContent="Il codice deve avere almeno 3 caratteri";return;}
+   if(!nome){obErr.textContent=T("obErrName");return;}
+   if(!code||code.length<3){obErr.textContent=T("obErrCode");return;}
    try{localStorage.setItem("filos_pub_name",nome);}catch(e){}
    try{localStorage.setItem("filos_pub_code",code);}catch(e){}
    // Azzera analytics alla prima configurazione
    ANALYTICS={plays:[],ratings:{},menuClicks:{}};saveA();
    // Mostra conferma
-   obBtn.textContent="Fatto!";obBtn.style.background="#34c759";
+   obBtn.textContent=T("obBtnDone");obBtn.style.background="#34c759";
    setTimeout(function(){S.settingsTab="profilo";renderAnalytics();},800);
   };
   ob.appendChild(obBtn);
@@ -5147,12 +5147,12 @@ function renderAnalytics(){
  // Tab bar
  var tabsEl=div("as-tabs");page.appendChild(tabsEl);
  var TAB_DEFS=[
-  {id:"profilo",label:" Profilo"},
-  {id:"analytics",label:" Analytics"},
+  {id:"profilo",label:T("tabProfilo")},
+  {id:"analytics",label:T("tabAnalytics")},
   {id:"menu",label:" Menu"},
-  {id:"report",label:" Report"},
-  {id:"speciali",label:" Serate"},
-  {id:"admin",label:" Admin"}
+  {id:"report",label:T("tabReport")},
+  {id:"speciali",label:T("tabSerate")},
+  {id:"admin",label:T("tabAdmin")}
  ];
  TAB_DEFS.forEach(function(td){
   var t=document.createElement("button");t.className="as-tab"+(S.settingsTab===td.id?" on":"");
@@ -5211,30 +5211,30 @@ function renderAnalytics(){
   try{pubName=localStorage.getItem("filos_pub_name")||"";}catch(e){}
   try{pubCode=localStorage.getItem("filos_pub_code")||"";}catch(e){}
 
-  var rName=inputRow("","#ff9f0a","Nome del locale","Es. Osteria Mario",pubName,40);
-  var rCode=inputRow("","#636366","Codice pub","Es. osteria_mario",pubCode,30,function(v){return v.toLowerCase().replace(/[^a-z0-9_]/g,"");});
-  section("Il tuo locale",[rName,rCode]);
+  var rName=inputRow("","#ff9f0a",T("obFieldName"),"Es. Osteria Mario",pubName,40);
+  var rCode=inputRow("","#636366",T("obFieldCode"),"Es. osteria_mario",pubCode,30,function(v){return v.toLowerCase().replace(/[^a-z0-9_]/g,"");});
+  section(T("settingsIlTuoLocale"),[rName,rCode]);
 
   var banner=savedBanner(page);
   var sec2=div("as-section");page.appendChild(sec2);
-  var saveB=document.createElement("button");saveB.className="as-btn as-btn-primary";saveB.textContent="Salva modifiche";
+  var saveB=document.createElement("button");saveB.className="as-btn as-btn-primary";saveB.textContent=T("settingsSave");
   saveB.onclick=function(){
    var name=rName._input.value.trim();var code=rCode._input.value.trim();
    try{localStorage.setItem("filos_pub_name",name);}catch(e){}
    try{localStorage.setItem("filos_pub_code",code);}catch(e){}
-   banner.textContent=" Salvato";setTimeout(function(){banner.textContent="";},2500);
+   banner.textContent=T("settingsSaved");setTimeout(function(){banner.textContent="";},2500);
   };
   sec2.appendChild(saveB);
 
   if(pubCode){
-   section("Stato",[row("","#34c759","Locale configurato",pubCode,"","")]);
+   section(T("settingsStato"),[row("","#34c759",T("settingsLocaleConf"),pubCode,"","")]);
   }
 
   // ── SEZIONE TOKEN NFC ──
   var nfcMaster="";try{nfcMaster=localStorage.getItem("filos_nfc_master_token")||"";}catch(e){}
   var nfcActive=!!nfcMaster;
   var nfcExpiry=getNfcExpiry();
-  var nfcTogRow=toggleRow("","#ff9f0a","Blocco NFC attivo","Solo chi scansiona il tag accede all'app",nfcActive,function(on){
+  var nfcTogRow=toggleRow("","#ff9f0a",T("nfcToggleLabel"),T("nfcToggleSub"),nfcActive,function(on){
    if(on){
     if(!nfcMaster){nfcMaster=Math.random().toString(36).slice(2,10);try{localStorage.setItem("filos_nfc_master_token",nfcMaster);}catch(e){}}
    } else {
@@ -5247,17 +5247,17 @@ function renderAnalytics(){
    var pubCodeForUrl=pubCode||"miopub";
    var nfcUrl=window.location.origin+window.location.pathname+"?t="+nfcMaster;
    var urlRow=div("");urlRow.style.cssText="padding:12px 16px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid rgba(0,0,0,0.07);";
-   var urlLbl=div("");urlLbl.style.cssText="font-size:11px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:0.6px;";urlLbl.textContent="URL per i tag NFC";
+   var urlLbl=div("");urlLbl.style.cssText="font-size:11px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:0.6px;";urlLbl.textContent=T("nfcUrlLabel");
    var urlVal=div("");urlVal.style.cssText="font-size:13px;color:#3478f6;word-break:break-all;font-family:monospace;";urlVal.textContent=nfcUrl;
-   var copyBtn=document.createElement("button");copyBtn.style.cssText="margin-top:4px;padding:8px 14px;border-radius:8px;border:1.5px solid #3478f6;background:transparent;color:#3478f6;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;width:fit-content;";copyBtn.textContent="Copia URL";
-   copyBtn.onclick=function(){try{navigator.clipboard.writeText(nfcUrl);copyBtn.textContent="Copiato!";setTimeout(function(){copyBtn.textContent="Copia URL";},2000);}catch(e){}};
+   var copyBtn=document.createElement("button");copyBtn.style.cssText="margin-top:4px;padding:8px 14px;border-radius:8px;border:1.5px solid #3478f6;background:transparent;color:#3478f6;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;width:fit-content;";copyBtn.textContent=T("nfcCopyBtn");
+   copyBtn.onclick=function(){try{navigator.clipboard.writeText(nfcUrl);copyBtn.textContent=T("nfcCopied");setTimeout(function(){copyBtn.textContent=T("nfcCopyBtn");},2000);}catch(e){}};
    urlRow.appendChild(urlLbl);urlRow.appendChild(urlVal);urlRow.appendChild(copyBtn);
-   var regenBtn=document.createElement("button");regenBtn.style.cssText="margin-top:4px;padding:8px 14px;border-radius:8px;border:1.5px solid #ff3b30;background:transparent;color:#ff3b30;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;width:fit-content;";regenBtn.textContent="Rigenera token (invalida i vecchi tag)";
-   regenBtn.onclick=function(){if(confirm("Rigenerare il token? Tutti i tag NFC esistenti smetteranno di funzionare.")){nfcMaster=Math.random().toString(36).slice(2,10);try{localStorage.setItem("filos_nfc_master_token",nfcMaster);}catch(e){}renderAnalytics();}};
+   var regenBtn=document.createElement("button");regenBtn.style.cssText="margin-top:4px;padding:8px 14px;border-radius:8px;border:1.5px solid #ff3b30;background:transparent;color:#ff3b30;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;width:fit-content;";regenBtn.textContent=T("nfcRegenBtn");
+   regenBtn.onclick=function(){if(confirm(T("nfcRegenConfirm"))){nfcMaster=Math.random().toString(36).slice(2,10);try{localStorage.setItem("filos_nfc_master_token",nfcMaster);}catch(e){}renderAnalytics();}};
    urlRow.appendChild(regenBtn);
-   section("Token NFC",[nfcTogRow,urlRow]);
+   section(T("nfcSection"),[nfcTogRow,urlRow]);
   } else {
-   section("Token NFC",[nfcTogRow]);
+   section(T("nfcSection"),[nfcTogRow]);
   }
 
  // ═══════════════════════════════════════════════
@@ -5418,11 +5418,11 @@ function renderAnalytics(){
 
     var adminBanner=savedBanner(page);
     var adminSec=div("as-section");page.appendChild(adminSec);
-    var saveAdminB=document.createElement("button");saveAdminB.className="as-btn as-btn-primary";saveAdminB.textContent="Salva su Firebase";
+    var saveAdminB=document.createElement("button");saveAdminB.className="as-btn as-btn-primary";saveAdminB.textContent=T("adminSave");
     saveAdminB.onclick=function(){
      var pubList=ta.value.split("\n").map(function(s){return s.trim().toLowerCase();}).filter(Boolean);
      fbSet(eventoRef,{attivo:isAttivo,nome:rEvNome._input.value.trim(),pubs:pubList,ts:Date.now()}).then(function(){
-      adminBanner.textContent=" Salvato su Firebase";setTimeout(function(){adminBanner.textContent="";},2500);
+      adminBanner.textContent=T("adminSaved");setTimeout(function(){adminBanner.textContent="";},2500);
      }).catch(function(){adminBanner.style.color="#ff3b30";adminBanner.textContent=" Errore salvataggio";});
     };
     adminSec.appendChild(saveAdminB);
