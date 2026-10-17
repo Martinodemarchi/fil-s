@@ -5040,9 +5040,11 @@ function renderAnalytics(){
    if(!code||code.length<3){obErr.textContent="Il codice deve avere almeno 3 caratteri";return;}
    try{localStorage.setItem("filos_pub_name",nome);}catch(e){}
    try{localStorage.setItem("filos_pub_code",code);}catch(e){}
+   // Azzera analytics alla prima configurazione
+   ANALYTICS={plays:[],ratings:{},menuClicks:{}};saveA();
    // Mostra conferma
    obBtn.textContent="Fatto!";obBtn.style.background="#34c759";
-   setTimeout(function(){S.settingsTab="analytics";renderAnalytics();},800);
+   setTimeout(function(){S.settingsTab="profilo";renderAnalytics();},800);
   };
   ob.appendChild(obBtn);
   return;
