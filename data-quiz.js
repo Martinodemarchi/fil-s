@@ -1,5 +1,5 @@
-var ANALYTICS={plays:[],ratings:{}};
-try{var _d=localStorage.getItem("filos13");if(_d)ANALYTICS=JSON.parse(_d);}catch(e){}
+var ANALYTICS={plays:[],ratings:{},menuClicks:{}};
+try{var _d=localStorage.getItem("filos13");if(_d){var _p=JSON.parse(_d);ANALYTICS.plays=_p.plays||[];ANALYTICS.ratings=_p.ratings||{};ANALYTICS.menuClicks=_p.menuClicks||{};}}catch(e){}
 function getPubCode(){try{return localStorage.getItem("filos_pub_code")||"";}catch(e){return "";}}
 function fbUniqueKey(){return Date.now()+"_"+Math.random().toString(36).slice(2,7);}
 function fbLogPlay(cat,game){
@@ -24,6 +24,13 @@ function logPlayEnd(){
  saveA();
 }
 function logRating(game,stars){if(!ANALYTICS.ratings[game])ANALYTICS.ratings[game]={t:0,c:0};ANALYTICS.ratings[game].t+=stars;ANALYTICS.ratings[game].c++;saveA();fbLogRating(game,stars);}
+function logMenuClick(tab,itemName){
+ var key=tab+":"+itemName;
+ ANALYTICS.menuClicks[key]=(ANALYTICS.menuClicks[key]||0)+1;
+ saveA();
+ var code=getPubCode();if(!code||!window.fbDB||!window.fbSet||!window.fbRef)return;
+ try{window.fbSet(window.fbRef(window.fbDB,"filos_stats/"+code+"/menu/"+fbUniqueKey()),{tab:tab,item:itemName,ts:Date.now()});}catch(e){}
+}
 
 var PIN="1234";
 var logoTaps=0,logoTimer=null,idleTimer=null,IDLE_MS=5*60*1000;
@@ -4627,7 +4634,7 @@ function renderEnd(){
   inner2.appendChild(el("span","mc-price","\u20ac "+item.price));
   card.appendChild(inner2);
  }
- card.onclick=function(){toast.textContent=item.name+" (\u20ac "+item.price+") \u2014 "+T("menuCallWaiter");toast.style.display="block";setTimeout(function(){toast.style.display="none";},4000);};
+ card.onclick=(function(iname,itab){return function(){toast.textContent=iname+" (\u20ac "+item.price+") \u2014 "+T("menuCallWaiter");toast.style.display="block";setTimeout(function(){toast.style.display="none";},4000);logMenuClick(itab,iname);};})(item.name,tab);
  mgrid.appendChild(card);
  })(items[i],i);}
  }
@@ -4927,8 +4934,11 @@ function renderMenuEditor(panel){
 function renderAnalytics(){
  clr();
  addBackArrow(goHome);
+ var root=document.getElementById("root");
+
+ // ── PIN SCREEN ──
  if(!S.pinOK){
-  var panel=div("panel");document.getElementById("root").appendChild(panel);
+  var panel=div("panel");root.appendChild(panel);
   var ps=div("pin-screen");panel.appendChild(ps);
   ps.appendChild(div("pin-title","AREA RISERVATA"));
   ps.appendChild(div("","Inserisci il PIN per accedere."));
@@ -4943,216 +4953,427 @@ function renderAnalytics(){
   return;
  }
 
- // ── PANNELLO IMPOSTAZIONI ──
- if(!S.settingsTab) S.settingsTab = "analytics";
+ // ── APPLE-STYLE SETTINGS ──
+ if(!S.settingsTab) S.settingsTab="analytics";
 
- var panel=div("panel");document.getElementById("root").appendChild(panel);
+ // Stili globali Apple Settings
+ var style=document.createElement("style");
+ style.textContent=[
+  ".as-page{max-width:640px;margin:0 auto;padding:0 0 40px 0;font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;}",
+  ".as-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 4px;position:sticky;top:0;z-index:10;background:var(--bg,#f2f2f7);}",
+  ".as-title{font-size:28px;font-weight:700;letter-spacing:-0.5px;color:var(--dark,#111);}",
+  ".as-close{background:none;border:none;width:32px;height:32px;border-radius:50%;background:rgba(120,120,128,0.16);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--dark,#111);}",
+  ".as-tabs{display:flex;gap:0;overflow-x:auto;padding:8px 16px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}",
+  ".as-tabs::-webkit-scrollbar{display:none;}",
+  ".as-tab{flex-shrink:0;padding:7px 16px;border-radius:20px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#888;transition:all .18s;}",
+  ".as-tab.on{background:#111;color:#fff;}",
+  ".as-section{margin:20px 16px 0;}",
+  ".as-section-title{font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.5px;padding:0 8px;margin-bottom:6px;}",
+  ".as-group{background:var(--surface,#fff);border-radius:12px;overflow:hidden;}",
+  ".as-row{display:flex;align-items:center;padding:13px 16px;gap:12px;border-bottom:1px solid rgba(0,0,0,.07);cursor:default;}",
+  ".as-row:last-child{border-bottom:none;}",
+  ".as-row-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}",
+  ".as-row-body{flex:1;min-width:0;}",
+  ".as-row-label{font-size:16px;color:var(--dark,#111);font-weight:400;}",
+  ".as-row-sub{font-size:13px;color:#8e8e93;margin-top:2px;}",
+  ".as-row-right{color:#8e8e93;font-size:15px;font-weight:400;flex-shrink:0;}",
+  ".as-row-chevron{color:#c7c7cc;font-size:13px;flex-shrink:0;}",
+  ".as-input{width:100%;background:none;border:none;outline:none;font-family:inherit;font-size:16px;color:var(--dark,#111);padding:0;}",
+  ".as-input::placeholder{color:#c7c7cc;}",
+  ".as-toggle{width:52px;height:32px;border-radius:16px;border:none;cursor:pointer;position:relative;transition:background .22s;flex-shrink:0;}",
+  ".as-toggle-knob{position:absolute;top:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:left .22s;}",
+  ".as-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 16px 0;}",
+  ".as-stat{background:var(--surface,#fff);border-radius:12px;padding:14px 16px;}",
+  ".as-stat-val{font-size:28px;font-weight:700;color:var(--dark,#111);letter-spacing:-1px;line-height:1;}",
+  ".as-stat-label{font-size:12px;color:#8e8e93;margin-top:4px;font-weight:500;}",
+  ".as-bar-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(0,0,0,.05);}",
+  ".as-bar-row:last-child{border-bottom:none;}",
+  ".as-bar-rank{width:18px;font-size:12px;color:#8e8e93;text-align:right;flex-shrink:0;}",
+  ".as-bar-name{font-size:14px;color:var(--dark,#111);min-width:80px;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}",
+  ".as-bar-track{flex:1;height:5px;background:rgba(0,0,0,.07);border-radius:3px;overflow:hidden;}",
+  ".as-bar-fill{height:100%;border-radius:3px;background:#007aff;}",
+  ".as-bar-val{font-size:12px;color:#8e8e93;flex-shrink:0;min-width:40px;text-align:right;}",
+  ".as-btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;text-align:center;margin-top:10px;}",
+  ".as-btn-primary{background:#007aff;color:#fff;}",
+  ".as-btn-destructive{background:none;border:1.5px solid #ff3b30;color:#ff3b30;}",
+  ".as-btn-pdf{background:#34c759;color:#fff;}",
+  "@media(prefers-color-scheme:dark){.as-page .as-group{background:#1c1c1e;}.as-page .as-row{border-color:rgba(255,255,255,.07);}.as-page .as-stat{background:#1c1c1e;}.as-page .as-bar-track{background:rgba(255,255,255,.1);}}"
+ ].join("");
+ root.appendChild(style);
 
- // Titolo
- var topBar=div("");topBar.style.cssText="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px;";panel.appendChild(topBar);
- var atitle=div("");atitle.style.cssText="font-family:'Space Grotesk',sans-serif;font-size:26px;letter-spacing:2px;font-weight:900;";atitle.textContent="IMPOSTAZIONI";topBar.appendChild(atitle);
- var closeBtn=btn("ebtn out","Esci",function(){S.screen="home";S.pinOK=false;render();});topBar.appendChild(closeBtn);
+ var page=div("as-page");root.appendChild(page);
+
+ // Header
+ var hdr=div("as-header");page.appendChild(hdr);
+ hdr.appendChild(div("as-title","Impostazioni"));
+ var closeX=document.createElement("button");closeX.className="as-close";closeX.innerHTML="&#10005;";
+ closeX.onclick=function(){S.screen="home";S.pinOK=false;render();};hdr.appendChild(closeX);
 
  // Tab bar
- var tabs=div("");tabs.style.cssText="display:flex;gap:0;border-bottom:2px solid #eee;margin-bottom:24px;overflow-x:auto;";
- function makeTab(label,id){
-  var t=document.createElement("button");
-  t.style.cssText="padding:10px 18px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-bottom:"+(S.settingsTab===id?"2px solid var(--dark)":"2px solid transparent")+";color:"+(S.settingsTab===id?"var(--dark)":"#aaa")+";margin-bottom:-2px;white-space:nowrap;";
-  t.textContent=label;
-  t.onclick=function(){S.settingsTab=id;renderAnalytics();};
-  tabs.appendChild(t);
+ var tabsEl=div("as-tabs");page.appendChild(tabsEl);
+ var TAB_DEFS=[
+  {id:"profilo",label:"👤 Profilo"},
+  {id:"analytics",label:"📊 Analytics"},
+  {id:"menu",label:"🍺 Menu"},
+  {id:"report",label:"📄 Report"},
+  {id:"speciali",label:"🎮 Serate"},
+  {id:"admin",label:"⚙️ Admin"}
+ ];
+ TAB_DEFS.forEach(function(td){
+  var t=document.createElement("button");t.className="as-tab"+(S.settingsTab===td.id?" on":"");
+  t.textContent=td.label;t.onclick=function(){S.settingsTab=td.id;renderAnalytics();};tabsEl.appendChild(t);
+ });
+
+ // ─────────────────────────────────────────────
+ // Helper: crea un gruppo di righe
+ function section(title,rows){
+  var sec=div("as-section");page.appendChild(sec);
+  if(title){var tl=div("as-section-title");tl.textContent=title;sec.appendChild(tl);}
+  var grp=div("as-group");sec.appendChild(grp);
+  rows.forEach(function(r){grp.appendChild(r);});
+  return grp;
  }
- makeTab("Analytics","analytics");
- makeTab("Locale","locale");
- makeTab("Menu","menu");
- makeTab("Admin","admin");
- makeTab("Serate","speciali");
- panel.appendChild(tabs);
+ function row(icon,iconBg,label,sub,right,chevron){
+  var r=div("as-row");
+  if(icon){var ic=div("as-row-icon");ic.style.background=iconBg||"#e5e5ea";ic.textContent=icon;r.appendChild(ic);}
+  var body=div("as-row-body");body.appendChild(Object.assign(div("as-row-label"),{textContent:label}));
+  if(sub){body.appendChild(Object.assign(div("as-row-sub"),{textContent:sub}));}
+  r.appendChild(body);
+  if(right!=null){var rv=div("as-row-right");rv.textContent=right;r.appendChild(rv);}
+  if(chevron){var ch=div("as-row-chevron");ch.innerHTML="&#8250;";r.appendChild(ch);}
+  return r;
+ }
+ function inputRow(icon,iconBg,label,placeholder,value,maxlen,filter){
+  var r=div("as-row");
+  if(icon){var ic=div("as-row-icon");ic.style.background=iconBg||"#e5e5ea";ic.textContent=icon;r.appendChild(ic);}
+  var body=div("as-row-body");body.appendChild(Object.assign(div("as-row-label"),{textContent:label}));
+  var inp=document.createElement("input");inp.className="as-input";inp.placeholder=placeholder;inp.value=value||"";inp.maxLength=maxlen||50;
+  if(filter)inp.oninput=function(){this.value=filter(this.value);};
+  body.appendChild(inp);r.appendChild(body);
+  r._input=inp;return r;
+ }
+ function toggleRow(icon,iconBg,label,sub,isOn,onChange){
+  var r=div("as-row");
+  if(icon){var ic=div("as-row-icon");ic.style.background=iconBg||"#e5e5ea";ic.textContent=icon;r.appendChild(ic);}
+  var body=div("as-row-body");body.appendChild(Object.assign(div("as-row-label"),{textContent:label}));
+  if(sub){body.appendChild(Object.assign(div("as-row-sub"),{textContent:sub}));}
+  r.appendChild(body);
+  var tog=document.createElement("button");tog.className="as-toggle";
+  tog.style.background=isOn?"#34c759":"#e5e5ea";
+  var knob=div("as-toggle-knob");knob.style.left=isOn?"23px":"3px";tog.appendChild(knob);
+  tog.onclick=function(){isOn=!isOn;tog.style.background=isOn?"#34c759":"#e5e5ea";knob.style.left=isOn?"23px":"3px";if(onChange)onChange(isOn);};
+  r.appendChild(tog);return r;
+ }
+ function savedBanner(parent){
+  var b=div("");b.style.cssText="font-size:13px;color:#34c759;font-weight:600;padding:0 16px 4px;min-height:20px;";parent.appendChild(b);return b;
+ }
 
- var content=div("");panel.appendChild(content);
+ // ═══════════════════════════════════════════════
+ // TAB PROFILO
+ // ═══════════════════════════════════════════════
+ if(S.settingsTab==="profilo"){
+  var pubName="";var pubCode="";
+  try{pubName=localStorage.getItem("filos_pub_name")||"";}catch(e){}
+  try{pubCode=localStorage.getItem("filos_pub_code")||"";}catch(e){}
 
- // ── TAB ANALYTICS ──
- if(S.settingsTab==="analytics"){
-  var total=ANALYTICS.plays.length;
-  var today=0;var todayStr=new Date().toDateString();
-  for(var i=0;i<ANALYTICS.plays.length;i++){if(new Date(ANALYTICS.plays[i].ts).toDateString()===todayStr)today++;}
-  var gc={};for(var i=0;i<ANALYTICS.plays.length;i++){var p=ANALYTICS.plays[i];gc[p.game]=(gc[p.game]||0)+1;}
-  var top=[];for(var k in gc)top.push([k,gc[k]]);top.sort(function(a,b){return b[1]-a[1];});top=top.slice(0,10);
-  var maxP=top.length?top[0][1]:1;
-  var rVals=[];for(var k in ANALYTICS.ratings)rVals.push(ANALYTICS.ratings[k]);
-  var avgR=rVals.length?(rVals.reduce(function(s,r){return s+r.t/r.c;},0)/rVals.length).toFixed(1):"--";
-  var catMap={};for(var i=0;i<ANALYTICS.plays.length;i++){var p=ANALYTICS.plays[i];catMap[p.cat]=(catMap[p.cat]||0)+1;}
-  var catArr=[];for(var k in catMap)catArr.push([k,catMap[k]]);catArr.sort(function(a,b){return b[1]-a[1];});
-  var topCat=catArr.length?catArr[0][0]:"--";
-  var grid=div("agrid");content.appendChild(grid);
-  function acard(n,l){var c=div("acard");c.appendChild(div("anum",String(n)));c.appendChild(div("alabel",l));return c;}
-  grid.appendChild(acard(total,"Partite totali"));grid.appendChild(acard(today,"Oggi"));grid.appendChild(acard(avgR,"Valutazione media"));grid.appendChild(acard(topCat,"Categoria top"));
-  content.appendChild(div("sec-label","Giochi più giocati"));
-  if(top.length===0){content.appendChild(div("","Nessun dato ancora."));}
-  else{for(var i=0;i<top.length;i++){var name=top[i][0],count=top[i][1];var r2=ANALYTICS.ratings[name];var avg2=r2?(r2.t/r2.c).toFixed(1):"--";var row=div("arow");row.appendChild(div("ar-rank",String(i+1)));row.appendChild(div("ar-name",name));var bw2=div("ar-bar-wrap");var bb=div("ar-bar");bb.style.width=Math.round(count/maxP*100)+"%";bw2.appendChild(bb);row.appendChild(bw2);row.appendChild(div("ar-count",count+" partite"));row.appendChild(div("ar-stars","★ "+avg2));content.appendChild(row);}}
-  var sl2=div("sec-label","Recenti");sl2.style.marginTop="22px";content.appendChild(sl2);
-  var recent=ANALYTICS.plays.slice().reverse().slice(0,15);
-  for(var i=0;i<recent.length;i++){var p=recent[i];var d=new Date(p.ts);var hm=d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0");var row=div("arow");row.appendChild(div("ar-name",p.game));var ci=div("");ci.style.cssText="font-size:12px;color:var(--muted);font-style:italic;flex:1;";ci.textContent=p.cat;row.appendChild(ci);row.appendChild(div("ar-count",d.toLocaleDateString("it-IT",{day:"2-digit",month:"short"})+" "+hm));content.appendChild(row);}
-  // Tempo giocato
-  var tlabel=div("sec-label","⏱ Tempo giocato");tlabel.style.marginTop="22px";content.appendChild(tlabel);
-  var timeMap={};var totalSec=0;
-  for(var i=0;i<ANALYTICS.plays.length;i++){var pp=ANALYTICS.plays[i];var d2=pp.dur||0;timeMap[pp.game]=(timeMap[pp.game]||0)+d2;totalSec+=d2;}
-  function fmtTime(s){if(s<60)return s+"s";if(s<3600)return Math.floor(s/60)+"m "+(s%60)+"s";return Math.floor(s/3600)+"h "+Math.floor((s%3600)/60)+"m";}
-  var timeArr=[];for(var k in timeMap)timeArr.push([k,timeMap[k]]);timeArr.sort(function(a,b){return b[1]-a[1];});timeArr=timeArr.slice(0,10);
-  var maxT=timeArr.length?timeArr[0][1]:1;
-  var totDiv=div("acard");totDiv.style.cssText="background:var(--panel-bg,#f8f6f1);border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;";
-  var totLabel=div("alabel","Tempo totale");totLabel.style.flex="1";var totVal=div("anum",fmtTime(totalSec));
-  totDiv.appendChild(totVal);totDiv.appendChild(totLabel);content.appendChild(totDiv);
-  if(timeArr.length){for(var i=0;i<timeArr.length;i++){var tname=timeArr[i][0],tsec=timeArr[i][1];if(tsec===0)continue;var row=div("arow");row.appendChild(div("ar-rank",String(i+1)));row.appendChild(div("ar-name",tname));var bw3=div("ar-bar-wrap");var bb3=div("ar-bar");bb3.style.width=Math.round(tsec/maxT*100)+"%";bw3.appendChild(bb3);row.appendChild(bw3);row.appendChild(div("ar-count",fmtTime(tsec)));content.appendChild(row);}}
-  var resetRow=div("");resetRow.style.marginTop="20px";
-  resetRow.appendChild(btn("ebtn out","Reset dati",function(){if(confirm("Cancellare tutti i dati analytics?")){ANALYTICS={plays:[],ratings:{}};saveA();renderAnalytics();}}));
-  content.appendChild(resetRow);
+  var rName=inputRow("🏠","#ff9f0a","Nome del locale","Es. Osteria Mario",pubName,40);
+  var rCode=inputRow("🔑","#636366","Codice pub","Es. osteria_mario",pubCode,30,function(v){return v.toLowerCase().replace(/[^a-z0-9_]/g,"");});
+  section("Il tuo locale",[rName,rCode]);
 
- // ── TAB LOCALE ──
- } else if(S.settingsTab==="locale"){
-  var hint=div("");hint.style.cssText="font-size:13px;color:#999;margin-bottom:20px;line-height:1.5;";
-  hint.textContent="Il codice pub identifica questo locale. I popup di sfida arrivano solo ai dispositivi con lo stesso codice. Scegli un nome breve senza spazi (es. osteria_mario).";
-  content.appendChild(hint);
-
-  var savedPubCode = "";
-  try{ savedPubCode = localStorage.getItem("filos_pub_code") || ""; }catch(e){}
-  var savedPubName = "";
-  try{ savedPubName = localStorage.getItem("filos_pub_name") || ""; }catch(e){}
-
-  function settingRow(labelText, inputEl){
-   var row=div("");row.style.cssText="margin-bottom:20px;";
-   var lbl=div("");lbl.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:8px;";lbl.textContent=labelText;
-   row.appendChild(lbl);row.appendChild(inputEl);return row;
-  }
-
-  var nameInp=document.createElement("input");
-  nameInp.type="text";nameInp.value=savedPubName;nameInp.placeholder="Es. Osteria Mario";nameInp.maxLength=40;
-  nameInp.style.cssText="width:100%;padding:6px 0;font-size:17px;border:none;border-bottom:1.5px solid #e0e0e0;border-radius:0;font-family:inherit;box-sizing:border-box;outline:none;background:transparent;";
-  content.appendChild(settingRow("Nome del locale",nameInp));
-
-  var codeInp=document.createElement("input");
-  codeInp.type="text";codeInp.value=savedPubCode;codeInp.placeholder="Es. osteria_mario";codeInp.maxLength=30;
-  codeInp.style.cssText="width:100%;padding:6px 0;font-size:17px;border:none;border-bottom:1.5px solid #e0e0e0;border-radius:0;font-family:inherit;box-sizing:border-box;outline:none;background:transparent;";
-  codeInp.oninput=function(){this.value=this.value.toLowerCase().replace(/[^a-z0-9_]/g,"");};
-  content.appendChild(settingRow("Codice pub (solo lettere, numeri, _)",codeInp));
-
-  var savedMsg=div("");savedMsg.style.cssText="font-size:13px;color:#2bbfa0;font-weight:700;min-height:20px;margin-bottom:12px;";
-  content.appendChild(savedMsg);
-
-  var saveBtn=document.createElement("button");
-  saveBtn.style.cssText="width:100%;padding:14px;background:var(--dark);color:#fff;border:none;border-radius:12px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;";
-  saveBtn.textContent="Salva";
-  saveBtn.onclick=function(){
-   var name=nameInp.value.trim();
-   var code=codeInp.value.trim();
+  var banner=savedBanner(page);
+  var sec2=div("as-section");page.appendChild(sec2);
+  var saveB=document.createElement("button");saveB.className="as-btn as-btn-primary";saveB.textContent="Salva modifiche";
+  saveB.onclick=function(){
+   var name=rName._input.value.trim();var code=rCode._input.value.trim();
    try{localStorage.setItem("filos_pub_name",name);}catch(e){}
    try{localStorage.setItem("filos_pub_code",code);}catch(e){}
-   savedMsg.textContent="✓ Salvato";
-   setTimeout(function(){savedMsg.textContent="";},2000);
+   banner.textContent="✓ Salvato";setTimeout(function(){banner.textContent="";},2500);
   };
-  content.appendChild(saveBtn);
+  sec2.appendChild(saveB);
 
-  if(savedPubCode){
-   var statusDiv=div("");statusDiv.style.cssText="margin-top:20px;padding:12px 16px;background:#f5f5f5;border-radius:10px;font-size:13px;color:#666;";
-   statusDiv.innerHTML="<strong>"+savedPubName+"</strong> &mdash; <code style='background:#eee;padding:2px 6px;border-radius:4px;'>"+savedPubCode+"</code>";
-   content.appendChild(statusDiv);
+  if(pubCode){
+   section("Stato",[row("✓","#34c759","Locale configurato",pubCode,"","")]);
   }
 
- // ── TAB MENU ──
- } else if(S.settingsTab==="menu"){
-  renderMenuEditor(content);
+ // ═══════════════════════════════════════════════
+ // TAB ANALYTICS
+ // ═══════════════════════════════════════════════
+ } else if(S.settingsTab==="analytics"){
+  var total=ANALYTICS.plays.length;
+  var todayStr=new Date().toDateString();
+  var today=0;for(var i=0;i<ANALYTICS.plays.length;i++){if(new Date(ANALYTICS.plays[i].ts).toDateString()===todayStr)today++;}
+  
+  // Sessioni uniche (per giorno diverso)
+  var days={};for(var i=0;i<ANALYTICS.plays.length;i++){days[new Date(ANALYTICS.plays[i].ts).toDateString()]=1;}
+  var dayCount=Object.keys(days).length;
 
- // ── TAB ADMIN ──
- } else if(S.settingsTab==="admin"){
-  var adminHint=div("");adminHint.style.cssText="font-size:13px;color:#999;margin-bottom:20px;line-height:1.5;";
-  adminHint.textContent="Attiva un evento speciale (es. Quizzone) e seleziona i pub partecipanti. Solo quei pub vedranno il tasto e riceveranno i popup.";
-  content.appendChild(adminHint);
+  // Tempo totale
+  var totalSec=0;for(var i=0;i<ANALYTICS.plays.length;i++){totalSec+=(ANALYTICS.plays[i].dur||0);}
+  function fmtTime(s){if(!s||s===0)return"0s";if(s<60)return s+"s";if(s<3600)return Math.floor(s/60)+"m";return Math.floor(s/3600)+"h "+Math.floor((s%3600)/60)+"m";}
+  
+  // Valutazione media
+  var rVals=[];for(var k in ANALYTICS.ratings)rVals.push(ANALYTICS.ratings[k]);
+  var avgR=rVals.length?(rVals.reduce(function(s,r){return s+r.t/r.c;},0)/rVals.length).toFixed(1):"—";
+  
+  // Menu clicks totali
+  var totalMenuClicks=0;for(var k in ANALYTICS.menuClicks)totalMenuClicks+=ANALYTICS.menuClicks[k];
 
-  if(!fbDB){
-   var noFb=div("");noFb.style.cssText="font-size:14px;color:#E8571A;padding:16px;background:#fff5f0;border-radius:10px;";noFb.textContent="Firebase non disponibile. Connessione assente.";
-   content.appendChild(noFb);
+  // Stat grid
+  var grid=div("as-stat-grid");page.appendChild(grid);
+  function stat(val,label){var c=div("as-stat");c.appendChild(Object.assign(div("as-stat-val"),{textContent:String(val)}));c.appendChild(Object.assign(div("as-stat-label"),{textContent:label}));return c;}
+  grid.appendChild(stat(total,"Partite totali"));
+  grid.appendChild(stat(today,"Oggi"));
+  grid.appendChild(stat(fmtTime(totalSec),"Tempo totale"));
+  grid.appendChild(stat(avgR,"Valutazione ★"));
+
+  // Giochi top
+  var gc={};for(var i=0;i<ANALYTICS.plays.length;i++){var p=ANALYTICS.plays[i];gc[p.game]=(gc[p.game]||0)+1;}
+  var topGames=[];for(var k in gc)topGames.push([k,gc[k]]);topGames.sort(function(a,b){return b[1]-a[1];});topGames=topGames.slice(0,8);
+  var maxG=topGames.length?topGames[0][1]:1;
+
+  if(topGames.length){
+   var gSec=div("as-section");page.appendChild(gSec);
+   gSec.appendChild(Object.assign(div("as-section-title"),{textContent:"Giochi più giocati"}));
+   var gGrp=div("as-group");gGrp.style.padding="10px 16px";gSec.appendChild(gGrp);
+   topGames.forEach(function(g,idx){
+    var br=div("as-bar-row");
+    br.appendChild(Object.assign(div("as-bar-rank"),{textContent:String(idx+1)}));
+    br.appendChild(Object.assign(div("as-bar-name"),{textContent:g[0]}));
+    var track=div("as-bar-track");var fill=div("as-bar-fill");fill.style.width=Math.round(g[1]/maxG*100)+"%";track.appendChild(fill);br.appendChild(track);
+    br.appendChild(Object.assign(div("as-bar-val"),{textContent:g[1]+" pt"}));
+    gGrp.appendChild(br);
+   });
+  }
+
+  // Menu click
+  if(totalMenuClicks>0){
+   var menuArr=[];for(var k in ANALYTICS.menuClicks){var parts=k.split(":");menuArr.push({tab:parts[0],name:parts[1]||k,count:ANALYTICS.menuClicks[k]});}
+   menuArr.sort(function(a,b){return b.count-a.count;});menuArr=menuArr.slice(0,8);
+   var maxM=menuArr[0].count;
+   var mSec=div("as-section");page.appendChild(mSec);
+   mSec.appendChild(Object.assign(div("as-section-title"),{textContent:"🍺 Menu più richiesti ("+totalMenuClicks+" click totali)"}));
+   var mGrp=div("as-group");mGrp.style.padding="10px 16px";mSec.appendChild(mGrp);
+   menuArr.forEach(function(m,idx){
+    var br=div("as-bar-row");
+    br.appendChild(Object.assign(div("as-bar-rank"),{textContent:String(idx+1)}));
+    var nm=div("as-bar-name");nm.textContent=(m.tab==="drink"?"🍹":"🍔")+" "+m.name;nm.style.maxWidth="160px";br.appendChild(nm);
+    var track=div("as-bar-track");var fill=div("as-bar-fill");fill.style.background="#ff9f0a";fill.style.width=Math.round(m.count/maxM*100)+"%";track.appendChild(fill);br.appendChild(track);
+    br.appendChild(Object.assign(div("as-bar-val"),{textContent:m.count+"x"}));
+    mGrp.appendChild(br);
+   });
   } else {
-   // Leggi stato evento da Firebase
+   section("🍺 Menu",[row("ℹ️","#e5e5ea","Nessun click menu ancora","I click verranno tracciati quando i clienti sfogliano il menu","","")]);
+  }
+
+  // Ultimi 10
+  var recent=ANALYTICS.plays.slice().reverse().slice(0,10);
+  if(recent.length){
+   var rSec=div("as-section");page.appendChild(rSec);
+   rSec.appendChild(Object.assign(div("as-section-title"),{textContent:"Recenti"}));
+   var rGrp=div("as-group");rSec.appendChild(rGrp);
+   recent.forEach(function(p){
+    var d=new Date(p.ts);var hm=d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0");
+    var dateStr=d.toLocaleDateString("it-IT",{day:"2-digit",month:"short"});
+    rGrp.appendChild(row("🎮","#5856d6",p.game,p.cat,dateStr+" "+hm,""));
+   });
+  }
+
+  // Reset
+  var resetSec=div("as-section");page.appendChild(resetSec);
+  var resetB=document.createElement("button");resetB.className="as-btn as-btn-destructive";resetB.textContent="Reset tutti i dati";
+  resetB.onclick=function(){if(confirm("Cancellare tutti i dati analytics locali?\nI dati su Firebase non vengono eliminati.")){ANALYTICS={plays:[],ratings:{},menuClicks:{}};saveA();renderAnalytics();}};
+  resetSec.appendChild(resetB);
+
+ // ═══════════════════════════════════════════════
+ // TAB MENU
+ // ═══════════════════════════════════════════════
+ } else if(S.settingsTab==="menu"){
+  var mWrap=div("as-section");page.appendChild(mWrap);
+  renderMenuEditor(mWrap);
+
+ // ═══════════════════════════════════════════════
+ // TAB REPORT PDF
+ // ═══════════════════════════════════════════════
+ } else if(S.settingsTab==="report"){
+  var pubName2="";try{pubName2=localStorage.getItem("filos_pub_name")||"Il tuo locale";}catch(e){}
+
+  section("Periodo",[ 
+   (function(){var r=div("as-row");var body=div("as-row-body");body.appendChild(Object.assign(div("as-row-label"),{textContent:"Seleziona periodo"}));
+   var sel=document.createElement("select");sel.className="as-input";sel.style.cssText="font-size:15px;background:transparent;color:var(--dark,#111);border:none;outline:none;width:100%;";
+   [["oggi","Oggi"],["settimana","Questa settimana"],["mese","Questo mese"],["trimestre","Ultimo trimestre"],["tutto","Tutto"]].forEach(function(o){var op=document.createElement("option");op.value=o[0];op.textContent=o[1];sel.appendChild(op);});
+   body.appendChild(sel);r.appendChild(body);r._sel=sel;return r;})()
+  ]);
+
+  var periodRow=page.querySelector(".as-group .as-row");
+
+  var repSec=div("as-section");page.appendChild(repSec);
+  var genBtn=document.createElement("button");genBtn.className="as-btn as-btn-pdf";genBtn.textContent="📄 Genera e scarica PDF";
+  genBtn.onclick=function(){
+   var period=periodRow&&periodRow._sel?periodRow._sel.value:"tutto";
+   generatePDFReport(pubName2,period);
+  };
+  repSec.appendChild(genBtn);
+
+  section("Cosa include il report",[
+   row("📊","#5856d6","Partite totali e giornaliere","Conteggio per periodo","",""),
+   row("🎮","#ff9f0a","Giochi più popolari","Top 10 con barra di utilizzo","",""),
+   row("🍺","#34c759","Menu più richiesti","Click su drink e food","",""),
+   row("⭐","#ff9f0a","Valutazioni medie","Per gioco","",""),
+   row("⏱","#636366","Tempo di gioco","Totale e per gioco","","")
+  ]);
+
+ // ═══════════════════════════════════════════════
+ // TAB SERATE SPECIALI
+ // ═══════════════════════════════════════════════
+ } else if(S.settingsTab==="speciali"){
+  var qzEnabled=false;try{qzEnabled=localStorage.getItem("filos_quizzone")==="1";}catch(e){}
+  section("Giochi speciali",[
+   toggleRow("🎯","#ff3b30","Quizzone","Quiz multiplayer per la serata",qzEnabled,function(on){try{localStorage.setItem("filos_quizzone",on?"1":"0");}catch(e){}})
+  ]);
+
+ // ═══════════════════════════════════════════════
+ // TAB ADMIN
+ // ═══════════════════════════════════════════════
+ } else if(S.settingsTab==="admin"){
+  if(!fbDB){
+   section("Stato",[row("⚠️","#ff3b30","Firebase non disponibile","Controlla la connessione","","")]);
+  } else {
    var eventoRef=fbRef(fbDB,"filos_admin/evento");
    fbGet(eventoRef).then(function(snap){
     var ev=snap.val()||{attivo:false,nome:"",pubs:[]};
+    var rEvNome=inputRow("📌","#ff9f0a","Nome evento","Es. Quizzone del mercoledì",ev.nome||"",50);
+    var pubsRow=div("as-row");var pubBody=div("as-row-body");pubBody.appendChild(Object.assign(div("as-row-label"),{textContent:"Codici pub partecipanti"}));
+    var ta=document.createElement("textarea");ta.style.cssText="width:100%;background:none;border:none;outline:none;font-family:'SF Mono',monospace;font-size:13px;color:var(--dark,#111);resize:none;padding:6px 0;";ta.rows=4;ta.value=(ev.pubs||[]).join("\n");ta.placeholder="osteria_mario\nbar_centrale";
+    pubBody.appendChild(ta);pubsRow.appendChild(pubBody);
 
-    var evLabel=div("");evLabel.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:8px;";evLabel.textContent="Nome evento";content.appendChild(evLabel);
-    var evNameInp=document.createElement("input");
-    evNameInp.type="text";evNameInp.value=ev.nome||"";evNameInp.placeholder="Es. Quizzone del mercoledì";evNameInp.maxLength=50;
-    evNameInp.style.cssText="width:100%;padding:6px 0;font-size:17px;border:none;border-bottom:1.5px solid #e0e0e0;border-radius:0;font-family:inherit;box-sizing:border-box;outline:none;background:transparent;margin-bottom:20px;";
-    content.appendChild(evNameInp);
-
-    var pubsLabel=div("");pubsLabel.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:8px;";pubsLabel.textContent="Codici pub partecipanti (uno per riga)";content.appendChild(pubsLabel);
-    var pubsInp=document.createElement("textarea");
-    pubsInp.value=(ev.pubs||[]).join("\n");pubsInp.placeholder="osteria_mario\nbar_centrale\npub_verde";pubsInp.rows=5;
-    pubsInp.style.cssText="width:100%;padding:6px 0;font-size:14px;border:none;border-bottom:1.5px solid #e0e0e0;border-radius:0;font-family:'Space Grotesk',monospace;box-sizing:border-box;outline:none;background:transparent;resize:none;margin-bottom:20px;";
-    content.appendChild(pubsInp);
-
-    // Toggle attivo
-    var toggleRow=div("");toggleRow.style.cssText="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:14px 16px;background:#f8f8f8;border-radius:12px;";
-    var toggleLabel=div("");toggleLabel.style.cssText="font-size:15px;font-weight:700;color:var(--dark);";toggleLabel.textContent="Evento attivo";
-    var toggleBtn=document.createElement("button");
     var isAttivo=ev.attivo||false;
-    toggleBtn.style.cssText="width:52px;height:28px;border-radius:14px;border:none;background:"+(isAttivo?"#2bbfa0":"#ddd")+";cursor:pointer;position:relative;transition:background 0.2s;";
-    toggleBtn.innerHTML='<span style="position:absolute;top:3px;left:'+(isAttivo?"26px":"3px")+';width:22px;height:22px;border-radius:50%;background:#fff;transition:left 0.2s;display:block;"></span>';
-    toggleBtn.onclick=function(){isAttivo=!isAttivo;toggleBtn.style.background=isAttivo?"#2bbfa0":"#ddd";toggleBtn.querySelector("span").style.left=isAttivo?"26px":"3px";};
-    toggleRow.appendChild(toggleLabel);toggleRow.appendChild(toggleBtn);
-    content.appendChild(toggleRow);
+    var togEv=toggleRow("🟢","#34c759","Evento attivo","Visibile a tutti i pub partecipanti",isAttivo,function(on){isAttivo=on;});
 
-    var adminSaved=div("");adminSaved.style.cssText="font-size:13px;color:#2bbfa0;font-weight:700;min-height:20px;margin-bottom:12px;";content.appendChild(adminSaved);
+    section("Evento in corso",[rEvNome,pubsRow,togEv]);
 
-    var saveAdminBtn=document.createElement("button");
-    saveAdminBtn.style.cssText="width:100%;padding:14px;background:var(--dark);color:#fff;border:none;border-radius:12px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;";
-    saveAdminBtn.textContent="Salva evento";
-    saveAdminBtn.onclick=function(){
-     var pubList=pubsInp.value.split("\n").map(function(s){return s.trim().toLowerCase();}).filter(function(s){return s.length>0;});
-     var data={attivo:isAttivo,nome:evNameInp.value.trim(),pubs:pubList,ts:Date.now()};
-     fbSet(eventoRef,data).then(function(){
-      adminSaved.textContent="✓ Evento salvato su Firebase";
-      setTimeout(function(){adminSaved.textContent="";},2500);
-     }).catch(function(){adminSaved.style.color="#E8571A";adminSaved.textContent="❌ Errore nel salvataggio";});
+    var adminBanner=savedBanner(page);
+    var adminSec=div("as-section");page.appendChild(adminSec);
+    var saveAdminB=document.createElement("button");saveAdminB.className="as-btn as-btn-primary";saveAdminB.textContent="Salva su Firebase";
+    saveAdminB.onclick=function(){
+     var pubList=ta.value.split("\n").map(function(s){return s.trim().toLowerCase();}).filter(Boolean);
+     fbSet(eventoRef,{attivo:isAttivo,nome:rEvNome._input.value.trim(),pubs:pubList,ts:Date.now()}).then(function(){
+      adminBanner.textContent="✓ Salvato su Firebase";setTimeout(function(){adminBanner.textContent="";},2500);
+     }).catch(function(){adminBanner.style.color="#ff3b30";adminBanner.textContent="❌ Errore salvataggio";});
     };
-    content.appendChild(saveAdminBtn);
-   }).catch(function(){
-    var errDiv=div("");errDiv.style.cssText="font-size:14px;color:#E8571A;";errDiv.textContent="Impossibile leggere Firebase.";content.appendChild(errDiv);
-   });
+    adminSec.appendChild(saveAdminB);
+   }).catch(function(){section("Errore",[row("⚠️","#ff3b30","Impossibile leggere Firebase","","","")]);});
   }
  }
 }
- // ── TAB SERATE SPECIALI ──
- if(S.settingsTab==="speciali"){
-  var sp=div("");sp.style.cssText="display:flex;flex-direction:column;gap:18px;";
-  
-  // Titolo sezione
-  var spTitle=div("");spTitle.style.cssText="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;";spTitle.textContent="Attiva giochi speciali visibili ai clienti";sp.appendChild(spTitle);
-  
-  // Toggle Quizzone
-  var qzRow=div("");qzRow.style.cssText="background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;";
-  var qzInfo=div("");
-  var qzName=div("");qzName.style.cssText="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:var(--dark);margin-bottom:4px;";qzName.textContent="QUIZZONE";
-  var qzDesc=div("");qzDesc.style.cssText="font-size:13px;color:var(--muted);";qzDesc.textContent="Quiz multiplayer — visibile nella lista giochi";
-  qzInfo.appendChild(qzName);qzInfo.appendChild(qzDesc);qzRow.appendChild(qzInfo);
-  
-  // Toggle switch
-  var qzEnabled=false;try{qzEnabled=localStorage.getItem("filos_quizzone")==="1";}catch(e){}
-  var toggleWrap=div("");toggleWrap.style.cssText="flex-shrink:0;";
-  var toggle=document.createElement("button");
-  toggle.style.cssText="width:52px;height:28px;border-radius:999px;border:none;cursor:pointer;position:relative;transition:background 0.2s;background:"+(qzEnabled?"#FF7A45":"#ddd")+";";
-  var knob=div("");knob.style.cssText="position:absolute;top:3px;left:"+(qzEnabled?"25px":"3px")+";width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.2);transition:left 0.2s;";
-  toggle.appendChild(knob);
-  toggle.onclick=function(){
-   qzEnabled=!qzEnabled;
-   try{localStorage.setItem("filos_quizzone",qzEnabled?"1":"0");}catch(e){}
-   toggle.style.background=qzEnabled?"#FF7A45":"#ddd";
-   knob.style.left=qzEnabled?"25px":"3px";
-   qzDesc.textContent=qzEnabled?"Quiz multiplayer — ATTIVO ✓":"Quiz multiplayer — visibile nella lista giochi";
-  };
-  toggleWrap.appendChild(toggle);qzRow.appendChild(toggleWrap);
-  sp.appendChild(qzRow);
-  
-  content.appendChild(sp);
+
+function generatePDFReport(pubName, period){
+ // Calcola range temporale
+ var now=Date.now();var fromTs=0;
+ var periodLabel="Tutto il periodo";
+ if(period==="oggi"){fromTs=new Date().setHours(0,0,0,0);periodLabel="Oggi, "+new Date().toLocaleDateString("it-IT",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});}
+ else if(period==="settimana"){var d=new Date();d.setDate(d.getDate()-d.getDay()+1);d.setHours(0,0,0,0);fromTs=d.getTime();periodLabel="Settimana corrente";}
+ else if(period==="mese"){var d=new Date();d.setDate(1);d.setHours(0,0,0,0);fromTs=d.getTime();periodLabel="Mese: "+new Date().toLocaleDateString("it-IT",{month:"long",year:"numeric"});}
+ else if(period==="trimestre"){var d=new Date();d.setMonth(d.getMonth()-2);d.setDate(1);d.setHours(0,0,0,0);fromTs=d.getTime();periodLabel="Ultimo trimestre";}
+
+ // Filtra dati
+ var plays=ANALYTICS.plays.filter(function(p){return p.ts>=fromTs;});
+ var total=plays.length;
+ var days={};plays.forEach(function(p){days[new Date(p.ts).toDateString()]=1;});
+ var dayCount=Object.keys(days).length;
+
+ // Tempo totale
+ var totalSec=0;plays.forEach(function(p){totalSec+=(p.dur||0);});
+ function fmtT(s){if(!s||s===0)return"0 min";if(s<60)return s+"s";if(s<3600)return Math.floor(s/60)+"m "+Math.floor(s%60)+"s";return Math.floor(s/3600)+"h "+Math.floor((s%3600)/60)+"m";}
+
+ // Giochi top
+ var gc={};plays.forEach(function(p){gc[p.game]=(gc[p.game]||0)+1;});
+ var topGames=[];for(var k in gc)topGames.push([k,gc[k]]);topGames.sort(function(a,b){return b[1]-a[1];});
+ var maxG=topGames.length?topGames[0][1]:1;
+
+ // Valutazioni
+ var allRatings={};for(var k in ANALYTICS.ratings){if(ANALYTICS.ratings[k].c>0)allRatings[k]=ANALYTICS.ratings[k];}
+ var rVals=Object.values(allRatings);
+ var avgR=rVals.length?(rVals.reduce(function(s,r){return s+r.t/r.c;},0)/rVals.length).toFixed(1):"—";
+
+ // Menu clicks
+ var menuArr=[];for(var k in ANALYTICS.menuClicks){var parts=k.split(":");menuArr.push({tab:parts[0],name:parts[1]||k,count:ANALYTICS.menuClicks[k]});}
+ menuArr.sort(function(a,b){return b.count-a.count;});
+ var totalClicks=menuArr.reduce(function(s,m){return s+m.count;},0);
+
+ // Orari di punta
+ var hourMap={};plays.forEach(function(p){var h=new Date(p.ts).getHours();hourMap[h]=(hourMap[h]||0)+1;});
+ var peakHour="—";var peakCount=0;for(var h in hourMap){if(hourMap[h]>peakCount){peakCount=hourMap[h];peakHour=h+":00–"+(parseInt(h)+1)+":00";}}
+
+ // Ora report
+ var reportDate=new Date().toLocaleDateString("it-IT",{weekday:"long",day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
+
+ // Bar SVG
+ function bar(pct,color){return '<div style="height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;flex:1;"><div style="width:'+Math.round(pct)+'%;height:100%;background:'+(color||"#007aff")+';border-radius:4px;"></div></div>';}
+
+ // HTML del report
+ var html='<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Report '+pubName+'</title><style>';
+ html+='*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,"Helvetica Neue",sans-serif;color:#111;background:#fff;padding:32px;max-width:800px;margin:0 auto;}';
+ html+='h1{font-size:28px;font-weight:700;margin-bottom:4px;}h2{font-size:16px;font-weight:600;color:#333;margin:28px 0 10px;border-bottom:1.5px solid #e0e0e0;padding-bottom:6px;}';
+ html+='.sub{font-size:14px;color:#666;margin-bottom:20px;}.header-meta{font-size:12px;color:#999;margin-top:4px;}';
+ html+='.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px;}';
+ html+='.stat-box{background:#f7f7f7;border-radius:10px;padding:14px 16px;}.stat-val{font-size:26px;font-weight:700;line-height:1;}.stat-label{font-size:11px;color:#888;margin-top:4px;text-transform:uppercase;letter-spacing:.5px;}';
+ html+='.bar-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f0f0f0;font-size:13px;}';
+ html+='.bar-row:last-child{border-bottom:none;}.bar-rank{width:18px;color:#aaa;text-align:right;flex-shrink:0;}.bar-name{min-width:120px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}';
+ html+='.bar-val{min-width:48px;text-align:right;color:#666;flex-shrink:0;}';
+ html+='.footer{margin-top:36px;padding-top:16px;border-top:1px solid #e0e0e0;font-size:11px;color:#aaa;text-align:center;}';
+ html+='@media print{body{padding:16px;}button{display:none!important;}}';
+ html+='</style></head><body>';
+
+ html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;">';
+ html+='<div><h1>'+pubName+'</h1><div class="sub">'+periodLabel+'</div></div>';
+ html+='<div class="header-meta">Generato il '+reportDate+'</div></div>';
+
+ html+='<div class="stat-grid">';
+ html+='<div class="stat-box"><div class="stat-val">'+total+'</div><div class="stat-label">Partite</div></div>';
+ html+='<div class="stat-box"><div class="stat-val">'+dayCount+'</div><div class="stat-label">Giorni attivi</div></div>';
+ html+='<div class="stat-box"><div class="stat-val">'+fmtT(totalSec)+'</div><div class="stat-label">Tempo totale</div></div>';
+ html+='<div class="stat-box"><div class="stat-val">'+avgR+'</div><div class="stat-label">Valutazione ★</div></div>';
+ html+='</div>';
+
+ html+='<div class="stat-grid" style="grid-template-columns:1fr 1fr;margin-top:12px;">';
+ html+='<div class="stat-box"><div class="stat-val">'+totalClicks+'</div><div class="stat-label">Click menu</div></div>';
+ html+='<div class="stat-box"><div class="stat-val">'+peakHour+'</div><div class="stat-label">Ora di punta</div></div>';
+ html+='</div>';
+
+ if(topGames.length){
+  html+='<h2>🎮 Giochi più giocati</h2>';
+  topGames.slice(0,10).forEach(function(g,i){
+   html+='<div class="bar-row"><span class="bar-rank">'+(i+1)+'</span><span class="bar-name">'+g[0]+'</span>'+bar(g[1]/maxG*100,"#007aff")+'<span class="bar-val">'+g[1]+'&nbsp;pt</span></div>';
+  });
  }
+
+ if(menuArr.length){
+  var maxM=menuArr[0].count;
+  html+='<h2>🍺 Menu più richiesti</h2>';
+  menuArr.slice(0,10).forEach(function(m,i){
+   var icon=m.tab==="drink"?"🍹":"🍔";
+   html+='<div class="bar-row"><span class="bar-rank">'+(i+1)+'</span><span class="bar-name">'+icon+' '+m.name+'</span>'+bar(m.count/maxM*100,"#ff9f0a")+'<span class="bar-val">'+m.count+'x</span></div>';
+  });
+ }
+
+ if(Object.keys(allRatings).length){
+  var ratArr=[];for(var k in allRatings)ratArr.push([k,allRatings[k]]);
+  ratArr.sort(function(a,b){return (b[1].t/b[1].c)-(a[1].t/a[1].c);});var maxRat=5;
+  html+='<h2>⭐ Valutazioni per gioco</h2>';
+  ratArr.slice(0,10).forEach(function(r,i){
+   var avg=(r[1].t/r[1].c).toFixed(1);
+   html+='<div class="bar-row"><span class="bar-rank">'+(i+1)+'</span><span class="bar-name">'+r[0]+'</span>'+bar(r[1].t/r[1].c/5*100,"#ff9f0a")+'<span class="bar-val">★&nbsp;'+avg+'</span></div>';
+  });
+ }
+
+ html+='<div class="footer">Fil&apos;s — Report analitico • I dati non contengono informazioni personali identificabili</div>';
+ html+='<br><button onclick="window.print()" style="display:block;margin:0 auto;padding:12px 32px;background:#007aff;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;">Stampa / Salva PDF</button>';
+ html+='</body></html>';
+
+ var win=window.open("","_blank","width=860,height=700");
+ if(win){win.document.write(html);win.document.close();}
+ else{alert("Il popup è stato bloccato. Abilita i popup per questo sito per scaricare il PDF.");}
+}
 
 
 function pinPress(d){
