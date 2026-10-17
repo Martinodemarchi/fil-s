@@ -60,7 +60,7 @@ var FILOS_PUB_NAME = "";
 try { FILOS_PUB_NAME = localStorage.getItem("filos_pub_name") || ""; } catch(e){}
 
 // ── TOKEN NFC ────────────────────────────────────
-var NFC_TOKEN_DURATION = 4 * 60 * 60 * 1000; // 4 ore in ms
+var NFC_TOKEN_DURATION = 2 * 60 * 60 * 1000; // 2 ore in ms
 function getNfcToken(){try{return localStorage.getItem("filos_nfc_token")||"";}catch(e){return "";}}
 function getNfcExpiry(){try{return parseInt(localStorage.getItem("filos_nfc_expiry")||"0",10);}catch(e){return 0;}}
 function isNfcValid(){var t=getNfcToken();if(!t)return false;return Date.now()<getNfcExpiry();}
