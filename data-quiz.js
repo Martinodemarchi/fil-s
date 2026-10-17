@@ -5007,7 +5007,7 @@ function renderAnalytics(){
   var obIcon=div("");obIcon.style.cssText="width:72px;height:72px;border-radius:20px;background:#1c1c1e;display:flex;align-items:center;justify-content:center;";
   obIcon.innerHTML='<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
   obHdr.appendChild(obIcon);
-  var obTitle=div("");obTitle.style.cssText="font-size:24px;font-weight:800;color:var(--dark,#111);letter-spacing:-0.5px;text-align:center;";obTitle.textContent="Benvenuto in Fil-s";obHdr.appendChild(obTitle);
+  var obTitle=div("");obTitle.style.cssText="font-size:24px;font-weight:800;color:var(--dark,#111);letter-spacing:-0.5px;text-align:center;";obTitle.textContent="Benvenuto in Filòs";obHdr.appendChild(obTitle);
   var obSub=div("");obSub.style.cssText="font-size:15px;color:#636366;text-align:center;line-height:1.5;max-width:300px;";obSub.textContent="Configura il tuo locale in pochi passi per attivare le analytics e le funzioni gestore.";obHdr.appendChild(obSub);
   ob.appendChild(obHdr);
   // Form card
