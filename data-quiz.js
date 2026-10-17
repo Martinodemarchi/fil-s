@@ -582,12 +582,26 @@ function startMrWhite(numPlayers){
 
 function renderMrWhiteSetup(){
  clr();
+ if(!S.mwNumPlayers||S.mwNumPlayers<3)S.mwNumPlayers=4;
  var wrap=div("mw-wrap");
  wrap.appendChild(div("mw-title","MR. WHITE"));
  wrap.appendChild(div("mw-sub",T("mrWhiteHowMany")));
- wrap.appendChild(makeNumPadWidget(S.mwNumPlayers||4, 4, 0, function(n){
- S.mwNumPlayers=n; S.screen="mrwhite"; startMrWhite(n);
- }));
+
+ // Stepper stile altri giochi
+ var stepper=div("");stepper.style.cssText="display:flex;align-items:center;justify-content:center;gap:24px;margin:24px 0;";
+ var numDisp=div("");numDisp.style.cssText="font-size:52px;font-weight:800;min-width:64px;text-align:center;font-family:'Space Grotesk',sans-serif;color:var(--dark);";numDisp.textContent=String(S.mwNumPlayers);
+ var minusBtn=document.createElement("button");
+ minusBtn.style.cssText="width:48px;height:48px;border-radius:50%;border:2px solid #e0e0e0;background:#fff;font-size:24px;font-weight:300;cursor:pointer;color:#555;display:flex;align-items:center;justify-content:center;font-family:inherit;";
+ minusBtn.textContent="−";
+ minusBtn.onclick=function(){if(S.mwNumPlayers>3){S.mwNumPlayers--;numDisp.textContent=String(S.mwNumPlayers);}};
+ var plusBtn=document.createElement("button");
+ plusBtn.style.cssText="width:48px;height:48px;border-radius:50%;border:2px solid #e0e0e0;background:#fff;font-size:24px;font-weight:300;cursor:pointer;color:#555;display:flex;align-items:center;justify-content:center;font-family:inherit;";
+ plusBtn.textContent="+";
+ plusBtn.onclick=function(){if(S.mwNumPlayers<12){S.mwNumPlayers++;numDisp.textContent=String(S.mwNumPlayers);}};
+ stepper.appendChild(minusBtn);stepper.appendChild(numDisp);stepper.appendChild(plusBtn);
+ wrap.appendChild(stepper);
+
+ wrap.appendChild(btn("ebtn","INIZIA",function(){S.screen="mrwhite";startMrWhite(S.mwNumPlayers);}));
  wrap.appendChild(btn("ebtn out",T("backToGames"),goBackToGames));
  document.getElementById("root").appendChild(wrap);
 }
