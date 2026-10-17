@@ -603,7 +603,7 @@ function renderMrWhite(){
  var overlay=div("mw-reveal-screen");
  var isWhite=(S.mwRevealing===S.mwWhiteIdx);
  if(isWhite){
- overlay.appendChild(div("mw-reveal-msg","Sei MR. WHITE ️"));
+ overlay.appendChild(div("mw-reveal-msg","Sei MR. WHITE "));
  overlay.appendChild(div("mw-reveal-word",S.mwSimilar));
  overlay.appendChild(div("mw-reveal-sub",T("mrWhiteBluff")));
  } else {
@@ -1000,7 +1000,7 @@ function renderAlfabeto(){
  // Buttons
  var btns=div("endbtns");
  if(!S.alfaRunning){
- btns.appendChild(btn("ebtn","▶ VIA!",function(){startAlfaTimer();}));
+ btns.appendChild(btn("ebtn"," VIA!",function(){startAlfaTimer();}));
  } else {
  // Point buttons for each player
  players.forEach(function(p){
@@ -1014,7 +1014,7 @@ function renderAlfabeto(){
  btns.appendChild(pb);
  })(p);
  });
- btns.appendChild(btn("ebtn out","⏭ "+T("ncNobody"),function(){
+ btns.appendChild(btn("ebtn out"," "+T("ncNobody"),function(){
  if(alfaInterval){clearInterval(alfaInterval);}
  S.alfaRunning=false;
  newAlfaRound();
@@ -1164,7 +1164,7 @@ function renderNomeCognome(){
  btns.appendChild(pb);
  })(p);
  });
- btns.appendChild(btn("ebtn out","⏭ "+T("ncNobody"),function(){newNcRound();}));
+ btns.appendChild(btn("ebtn out"," "+T("ncNobody"),function(){newNcRound();}));
  wrap.appendChild(btns);
 
  document.getElementById("root").appendChild(wrap);
@@ -1282,7 +1282,7 @@ function renderDado(){
  // Dice
  var dadoBox=div("dado-box"+(S.dadoRolled?" rolled":""));
  var face=div("dado-face");
- face.textContent=S.dadoValue>0?DADO_FACES[S.dadoValue]:"🎲";
+ face.textContent=S.dadoValue>0?DADO_FACES[S.dadoValue]:"";
  dadoBox.appendChild(face);
  if(!S.dadoRolled){
  dadoBox.onclick=function(){
@@ -1681,7 +1681,7 @@ function renderPub(){
   goHome();
  }));
  hdr.appendChild(div("intesa-title",gameName));
- hdr.appendChild(div("intesa-desc","2 minuti per convincere tutti 📺"));
+ hdr.appendChild(div("intesa-desc","2 minuti per convincere tutti "));
 
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px 16px;";
@@ -1703,7 +1703,7 @@ function renderPub(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:22px;font-weight:700;color:#388E3C;text-align:center;";
-  scaduto.textContent="📺 Votate lo spot migliore!";
+  scaduto.textContent=" Votate lo spot migliore!";
   body.appendChild(scaduto);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
    if(_pubTimer){clearInterval(_pubTimer);_pubTimer=null;}
@@ -1713,7 +1713,7 @@ function renderPub(){
    S.pubTime=120;S.pubRunning=false;renderPub();
   });riBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(riBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===120?"📺 INIZIA LO SPOT":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===120?" INIZIA LO SPOT":" RIPRENDI",function(){
    S.pubRunning=true;
    _pubTimer=setInterval(function(){
     S.pubTime=(S.pubTime||1)-1;
@@ -1730,7 +1730,7 @@ function renderPub(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.pubRunning=false;
    if(_pubTimer){clearInterval(_pubTimer);_pubTimer=null;}
    renderPub();
@@ -1761,7 +1761,7 @@ function renderRobot(){
   goHome();
  }));
  hdr.appendChild(div("intesa-title",gameName));
- hdr.appendChild(div("intesa-desc","2 minuti per completare la missione 🤖"));
+ hdr.appendChild(div("intesa-desc","2 minuti per completare la missione "));
 
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px 16px;";
@@ -1783,7 +1783,7 @@ function renderRobot(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:22px;font-weight:700;color:#388E3C;text-align:center;";
-  scaduto.textContent="🤖 Cambiate ruolo!";
+  scaduto.textContent=" Cambiate ruolo!";
   body.appendChild(scaduto);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
    if(_robotTimer){clearInterval(_robotTimer);_robotTimer=null;}
@@ -1793,7 +1793,7 @@ function renderRobot(){
    S.robotTime=120;S.robotRunning=false;renderRobot();
   });riBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(riBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===120?"🤖 INIZIA IL TURNO":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===120?" INIZIA IL TURNO":" RIPRENDI",function(){
    S.robotRunning=true;
    _robotTimer=setInterval(function(){
     S.robotTime=(S.robotTime||1)-1;
@@ -1810,7 +1810,7 @@ function renderRobot(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.robotRunning=false;
    if(_robotTimer){clearInterval(_robotTimer);_robotTimer=null;}
    renderRobot();
@@ -1842,7 +1842,7 @@ function renderSpecchio(){
   goHome();
  }));
  hdr.appendChild(div("intesa-title",gameName));
- hdr.appendChild(div("intesa-desc","2 minuti come riflesso, poi si scambiano 🪞"));
+ hdr.appendChild(div("intesa-desc","2 minuti come riflesso, poi si scambiano "));
 
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px 16px;";
@@ -1864,7 +1864,7 @@ function renderSpecchio(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:22px;font-weight:700;color:#00838F;text-align:center;";
-  scaduto.textContent="🪞 Scambiate i ruoli!";
+  scaduto.textContent=" Scambiate i ruoli!";
   body.appendChild(scaduto);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
    if(_specTimer){clearInterval(_specTimer);_specTimer=null;}
@@ -1874,7 +1874,7 @@ function renderSpecchio(){
    S.specTime=120;S.specRunning=false;renderSpecchio();
   });riBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(riBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===120?"🪞 INIZIA IL TURNO":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===120?" INIZIA IL TURNO":" RIPRENDI",function(){
    S.specRunning=true;
    _specTimer=setInterval(function(){
     S.specTime=(S.specTime||1)-1;
@@ -1891,7 +1891,7 @@ function renderSpecchio(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.specRunning=false;
    if(_specTimer){clearInterval(_specTimer);_specTimer=null;}
    renderSpecchio();
@@ -1924,7 +1924,7 @@ function renderScultura(){
   goHome();
  }));
  hdr.appendChild(div("intesa-title",gameName));
- hdr.appendChild(div("intesa-desc","1 minuto per indovinare la scena 🗿"));
+ hdr.appendChild(div("intesa-desc","1 minuto per indovinare la scena "));
 
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px 16px;";
@@ -1944,17 +1944,17 @@ function renderScultura(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:22px;font-weight:700;color:#5E35B1;text-align:center;";
-  scaduto.textContent="⏱️ Tempo! Rivelate la scena!";
+  scaduto.textContent=" Tempo! Rivelate la scena!";
   body.appendChild(scaduto);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
    if(_sculTimer){clearInterval(_sculTimer);_sculTimer=null;}
    endGame(gameName);
   });fineBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(fineBtn);
-  var riBtn=btn("ebtn","🗿 PROSSIMO SCULTORE",function(){
+  var riBtn=btn("ebtn"," PROSSIMO SCULTORE",function(){
    S.sculTime=60;S.sculRunning=false;renderScultura();
   });riBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(riBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===60?"🗿 INIZIA IL TIMER":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===60?" INIZIA IL TIMER":" RIPRENDI",function(){
    S.sculRunning=true;
    _sculTimer=setInterval(function(){
     S.sculTime=(S.sculTime||1)-1;
@@ -1971,7 +1971,7 @@ function renderScultura(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.sculRunning=false;
    if(_sculTimer){clearInterval(_sculTimer);_sculTimer=null;}
    renderScultura();
@@ -2004,7 +2004,7 @@ function renderMimo(){
   goHome();
  }));
  hdr.appendChild(div("intesa-title",gameName));
- hdr.appendChild(div("intesa-desc","3 minuti per far indovinare la squadra 🎭"));
+ hdr.appendChild(div("intesa-desc","3 minuti per far indovinare la squadra "));
 
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px 16px;";
@@ -2026,17 +2026,17 @@ function renderMimo(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:22px;font-weight:700;color:#1565C0;text-align:center;";
-  scaduto.textContent="⏱️ Tempo! Prossimo giocatore!";
+  scaduto.textContent=" Tempo! Prossimo giocatore!";
   body.appendChild(scaduto);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
    if(_mimoTimer){clearInterval(_mimoTimer);_mimoTimer=null;}
    endGame(gameName);
   });fineBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(fineBtn);
-  var riBtn=btn("ebtn","🎭 PROSSIMO MIMO",function(){
+  var riBtn=btn("ebtn"," PROSSIMO MIMO",function(){
    S.mimoTime=180;S.mimoRunning=false;renderMimo();
   });riBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(riBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===180?"🎭 INIZIA IL MIMO":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===180?" INIZIA IL MIMO":" RIPRENDI",function(){
    S.mimoRunning=true;
    _mimoTimer=setInterval(function(){
     S.mimoTime=(S.mimoTime||1)-1;
@@ -2053,7 +2053,7 @@ function renderMimo(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.mimoRunning=false;
    if(_mimoTimer){clearInterval(_mimoTimer);_mimoTimer=null;}
    renderMimo();
@@ -2086,7 +2086,7 @@ function renderSoprannome(){
   goHome();
  }));
  hdr.appendChild(div("intesa-title",gameName));
- hdr.appendChild(div("intesa-desc","5 minuti di conversazione libera 💬"));
+ hdr.appendChild(div("intesa-desc","5 minuti di conversazione libera "));
 
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px 16px;";
@@ -2108,7 +2108,7 @@ function renderSoprannome(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:22px;font-weight:700;color:#6a1b9a;text-align:center;";
-  scaduto.textContent="⏱️ Tempo! Rivelate i soprannomi!";
+  scaduto.textContent=" Tempo! Rivelate i soprannomi!";
   body.appendChild(scaduto);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
    if(_sopTimer){clearInterval(_sopTimer);_sopTimer=null;}
@@ -2118,7 +2118,7 @@ function renderSoprannome(){
    S.sopTime=300;S.sopRunning=false;renderSoprannome();
   });riBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(riBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===300?"💬 INIZIA LA CONVERSAZIONE":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===300?" INIZIA LA CONVERSAZIONE":" RIPRENDI",function(){
    S.sopRunning=true;
    _sopTimer=setInterval(function(){
     S.sopTime=(S.sopTime||1)-1;
@@ -2135,7 +2135,7 @@ function renderSoprannome(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.sopRunning=false;
    if(_sopTimer){clearInterval(_sopTimer);_sopTimer=null;}
    renderSoprannome();
@@ -2172,7 +2172,7 @@ function renderCosaInComune(){
   goHome();
  }));
  hdr.appendChild(div("intesa-title",gameName));
- hdr.appendChild(div("intesa-desc","4 minuti per scoprirlo! 🔍"));
+ hdr.appendChild(div("intesa-desc","4 minuti per scoprirlo! "));
 
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px 16px;";
@@ -2196,9 +2196,9 @@ function renderCosaInComune(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:22px;font-weight:700;color:#2e7d32;text-align:center;";
-  scaduto.textContent="⏱️ Tempo! Presentatevi al gruppo!";
+  scaduto.textContent=" Tempo! Presentatevi al gruppo!";
   body.appendChild(scaduto);
-  var nextBtn=btn("ebtn","▶ NUOVA COPPIA",function(){
+  var nextBtn=btn("ebtn"," NUOVA COPPIA",function(){
    S.cicTime=240;S.cicRunning=false;renderCosaInComune();
   });nextBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(nextBtn);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
@@ -2206,7 +2206,7 @@ function renderCosaInComune(){
    endGame(gameName);
   });fineBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(fineBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===240?"🔍 INIZIA":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===240?" INIZIA":" RIPRENDI",function(){
    S.cicRunning=true;
    _cicTimer=setInterval(function(){
     S.cicTime=(S.cicTime||1)-1;
@@ -2223,7 +2223,7 @@ function renderCosaInComune(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.cicRunning=false;
    if(_cicTimer){clearInterval(_cicTimer);_cicTimer=null;}
    renderCosaInComune();
@@ -2260,7 +2260,7 @@ function renderChiSeiDavvero(){
   goHome();
  }));
  hdr.appendChild(div("intesa-title",gameName));
- hdr.appendChild(div("intesa-desc","20 secondi per rispondere! 🎯"));
+ hdr.appendChild(div("intesa-desc","20 secondi per rispondere! "));
 
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px 16px;";
@@ -2282,9 +2282,9 @@ function renderChiSeiDavvero(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:22px;font-weight:700;color:#1565c0;text-align:center;";
-  scaduto.textContent="⏱️ Tempo! Prossima domanda!";
+  scaduto.textContent=" Tempo! Prossima domanda!";
   body.appendChild(scaduto);
-  var nextBtn=btn("ebtn","▶ NUOVA DOMANDA",function(){
+  var nextBtn=btn("ebtn"," NUOVA DOMANDA",function(){
    S.csdTime=20;S.csdRunning=false;renderChiSeiDavvero();
   });nextBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(nextBtn);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
@@ -2292,7 +2292,7 @@ function renderChiSeiDavvero(){
    endGame(gameName);
   });fineBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(fineBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===20?"🎯 INIZIA IL ROUND":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===20?" INIZIA IL ROUND":" RIPRENDI",function(){
    S.csdRunning=true;
    _csdTimer=setInterval(function(){
     S.csdTime=(S.csdTime||1)-1;
@@ -2309,7 +2309,7 @@ function renderChiSeiDavvero(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.csdRunning=false;
    if(_csdTimer){clearInterval(_csdTimer);_csdTimer=null;}
    renderChiSeiDavvero();
@@ -2346,7 +2346,7 @@ function renderSuperpotere(){
   goHome();
  }));
  hdr.appendChild(div("intesa-title",gameName));
- hdr.appendChild(div("intesa-desc","30 secondi per convincerli tutti! ⚡"));
+ hdr.appendChild(div("intesa-desc","30 secondi per convincerli tutti! "));
 
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px 16px;";
@@ -2368,9 +2368,9 @@ function renderSuperpotere(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:22px;font-weight:700;color:#7b1fa2;text-align:center;";
-  scaduto.textContent="⚡ Tempo scaduto!";
+  scaduto.textContent=" Tempo scaduto!";
   body.appendChild(scaduto);
-  var nextBtn=btn("ebtn","▶ PROSSIMO GIOCATORE",function(){
+  var nextBtn=btn("ebtn"," PROSSIMO GIOCATORE",function(){
    S.superTime=30;S.superRunning=false;renderSuperpotere();
   });nextBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(nextBtn);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
@@ -2378,7 +2378,7 @@ function renderSuperpotere(){
    endGame(gameName);
   });fineBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(fineBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===30?"⚡ INIZIA IL TURNO":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===30?" INIZIA IL TURNO":" RIPRENDI",function(){
    S.superRunning=true;
    _superTimer=setInterval(function(){
     S.superTime=(S.superTime||1)-1;
@@ -2395,7 +2395,7 @@ function renderSuperpotere(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.superRunning=false;
    if(_superTimer){clearInterval(_superTimer);_superTimer=null;}
    renderSuperpotere();
@@ -2455,9 +2455,9 @@ function renderAppello(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:20px;font-weight:700;color:#2E7D32;text-align:center;";
-  scaduto.textContent="⏱️ Via! Iniziate a giocare!";
+  scaduto.textContent=" Via! Iniziate a giocare!";
   body.appendChild(scaduto);
-  var riBtn=btn("ebtn","▶ NUOVO GIRO",function(){
+  var riBtn=btn("ebtn"," NUOVO GIRO",function(){
    S.appelloTime=60;S.appelloRunning=false;renderAppello();
   });riBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(riBtn);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
@@ -2465,7 +2465,7 @@ function renderAppello(){
    endGame(gameName);
   });fineBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(fineBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===60?"▶ INIZIA MEMORIZZAZIONE":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===60?" INIZIA MEMORIZZAZIONE":" RIPRENDI",function(){
    S.appelloRunning=true;
    _appelloTimer=setInterval(function(){
     S.appelloTime=(S.appelloTime||1)-1;
@@ -2482,7 +2482,7 @@ function renderAppello(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.appelloRunning=false;
    if(_appelloTimer){clearInterval(_appelloTimer);_appelloTimer=null;}
    renderAppello();
@@ -2545,9 +2545,9 @@ function renderSiNon(){
  if(timeLeft<=0){
   // Tempo scaduto
   var scaduto=div("");scaduto.style.cssText="font-size:18px;font-weight:700;color:#2E7D32;text-align:center;";
-  scaduto.textContent="⏱️ Tempo scaduto! Hai resistito!";
+  scaduto.textContent=" Tempo scaduto! Hai resistito!";
   body.appendChild(scaduto);
-  var riBtn=btn("ebtn","▶ PROSSIMO GIOCATORE",function(){
+  var riBtn=btn("ebtn"," PROSSIMO GIOCATORE",function(){
    S.sinonTime=180;S.sinonRunning=false;renderSiNon();
   });riBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(riBtn);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
@@ -2555,7 +2555,7 @@ function renderSiNon(){
    endGame("SÌ, NO, NON");
   });fineBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(fineBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===180?"▶ INIZIA":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===180?" INIZIA":" RIPRENDI",function(){
    S.sinonRunning=true;
    _sinonTimer=setInterval(function(){
     S.sinonTime=(S.sinonTime||1)-1;
@@ -2572,18 +2572,18 @@ function renderSiNon(){
   }
   // Bottone "ha sbagliato" per azzerare
   if(timeLeft<180){
-   var errBtn=btn("ebtn out","❌ HA DETTO SÌ/NO/NON — turno successivo",function(){
+   var errBtn=btn("ebtn out"," HA DETTO SÌ/NO/NON — turno successivo",function(){
     S.sinonTime=180;S.sinonRunning=false;renderSiNon();
    });errBtn.style.cssText="width:100%;max-width:280px;font-size:13px;";body.appendChild(errBtn);
   }
  } else {
   // In esecuzione — mostra pausa e pulsante "ha sbagliato"
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.sinonRunning=false;
    if(_sinonTimer){clearInterval(_sinonTimer);_sinonTimer=null;}
    renderSiNon();
   });pauseBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(pauseBtn);
-  var errBtn2=btn("ebtn","❌ HA DETTO SÌ/NO/NON",function(){
+  var errBtn2=btn("ebtn"," HA DETTO SÌ/NO/NON",function(){
    S.sinonRunning=false;
    if(_sinonTimer){clearInterval(_sinonTimer);_sinonTimer=null;}
    S.sinonTime=180;renderSiNon();
@@ -2598,31 +2598,31 @@ function renderSiNon(){
 // ══════════════════════════════════════════
 
 var TRAD_ROLES = [
- {id:"lupo", name:"🐺 LUPO", plural:"Lupi", color:"#8B0000",
+ {id:"lupo", name:" LUPO", plural:"Lupi", color:"#8B0000",
   power:"Ogni notte, insieme agli altri lupi (senza parlare), indicate chi eliminare.",
   win:"Vincete quando i lupi sono in parità numerica con i villici."},
- {id:"veggente", name:"🔮 VEGGENTE", plural:"Veggente", color:"#4B0082",
+ {id:"veggente", name:" VEGGENTE", plural:"Veggente", color:"#4B0082",
   power:"Ogni notte puoi indicare un giocatore: il narratore ti rivelerà in silenzio se è un lupo o un villico.",
   win:"Vinci con i villici se vengono eliminati tutti i lupi."},
- {id:"medico", name:"💉 MEDICO", plural:"Medico", color:"#006400",
+ {id:"medico", name:" MEDICO", plural:"Medico", color:"#006400",
   power:"Ogni notte puoi salvare una persona dall'eliminazione (anche te stesso, ma non la stessa persona due notti di fila).",
   win:"Vinci con i villici se vengono eliminati tutti i lupi."},
- {id:"strega", name:"🧪 STREGA", plural:"Strega", color:"#556B2F",
+ {id:"strega", name:" STREGA", plural:"Strega", color:"#556B2F",
   power:"Hai due pozioni: una per salvare la vittima della notte, una per uccidere un giocatore. Puoi usarne una per notte, ciascuna una sola volta in tutta la partita.",
   win:"Vinci con i villici se vengono eliminati tutti i lupi."},
- {id:"cacciatore", name:"🏹 CACCIATORE", plural:"Cacciatore", color:"#8B4513",
+ {id:"cacciatore", name:" CACCIATORE", plural:"Cacciatore", color:"#8B4513",
   power:"Se vieni eliminato (di notte o di giorno), puoi subito indicare un giocatore da eliminare insieme a te.",
   win:"Vinci con i villici se vengono eliminati tutti i lupi."},
- {id:"cupido", name:"💘 CUPIDO", plural:"Cupido", color:"#C71585",
+ {id:"cupido", name:" CUPIDO", plural:"Cupido", color:"#C71585",
   power:"La prima notte, indica due giocatori: diventano gli innamorati. Gli innamorati vincono insieme (e muoiono insieme: se uno muore, l'altro muore di crepacuore).",
   win:"Vinci con i villici, salvo che tu sia un innamorato: in quel caso vinci solo se entrambi gli innamorati sopravvivono."},
- {id:"serpe", name:"🐍 SERPE", plural:"Serpe", color:"#8B0000",
+ {id:"serpe", name:" SERPE", plural:"Serpe", color:"#8B0000",
   power:"Sei un lupo travestito. Il veggente ti vede come villico. Agisci di notte con gli altri lupi.",
   win:"Vinci con i lupi."},
- {id:"guardiaboschi", name:"🛡️ GUARDIA DEL BOSCO", plural:"Guardia del Bosco", color:"#2E8B57",
+ {id:"guardiaboschi", name:" GUARDIA DEL BOSCO", plural:"Guardia del Bosco", color:"#2E8B57",
   power:"Ogni notte puoi proteggere un giocatore: se i lupi lo attaccano, non viene eliminato. Non puoi proteggere la stessa persona due notti consecutive.",
   win:"Vinci con i villici se vengono eliminati tutti i lupi."},
- {id:"villico", name:"🏡 VILLICO", plural:"Villici", color:"#4A4A4A",
+ {id:"villico", name:" VILLICO", plural:"Villici", color:"#4A4A4A",
   power:"Non hai poteri speciali. Di giorno discuti, ragiona e vota con gli altri per eliminare i sospettati.",
   win:"Vinci se vengono eliminati tutti i lupi."}
 ];
@@ -2730,7 +2730,7 @@ function renderTradRole(){
   // Filastrocca
   var filWrap=div("");filWrap.style.cssText="background:rgba(0,0,0,.06);border-radius:14px;padding:20px 18px;width:100%;max-width:400px;";
   var filTitle=div("");filTitle.style.cssText="font-size:11px;font-weight:800;letter-spacing:.1em;opacity:.5;margin-bottom:12px;text-transform:uppercase;";
-  filTitle.textContent="📜 FILASTROCCA DEL NARRATORE";
+  filTitle.textContent=" FILASTROCCA DEL NARRATORE";
   filWrap.appendChild(filTitle);
   var filText=div("");filText.style.cssText="font-size:15px;line-height:1.8;font-style:italic;white-space:pre-line;";
   filText.textContent="Cala la notte sul villaggio...\nOgni abitante chiude gli occhi\ne il silenzio avvolge ogni cosa.\n\nMa nell'oscurità si muovono i lupi.\nChi sopravviverà all'alba?";
@@ -2740,7 +2740,7 @@ function renderTradRole(){
   // Ordine turni di notte
   var ordWrap=div("");ordWrap.style.cssText="width:100%;max-width:400px;";
   var ordTitle=div("");ordTitle.style.cssText="font-size:11px;font-weight:800;letter-spacing:.1em;opacity:.5;margin-bottom:10px;text-transform:uppercase;";
-  ordTitle.textContent="🌙 ORDINE DEI TURNI DI NOTTE";
+  ordTitle.textContent=" ORDINE DEI TURNI DI NOTTE";
   ordWrap.appendChild(ordTitle);
   // Solo i ruoli presenti in questa partita
   var dist=tradGetDistribution(total);
@@ -2760,7 +2760,7 @@ function renderTradRole(){
   });
   body2.appendChild(ordWrap);
 
-  var nightBtn=btn("ebtn","🌙 INIZIA LA PRIMA NOTTE",function(){S.screen="traditore_night";render();});
+  var nightBtn=btn("ebtn"," INIZIA LA PRIMA NOTTE",function(){S.screen="traditore_night";render();});
   nightBtn.style.cssText="margin-top:8px;width:100%;max-width:300px;";
   body2.appendChild(nightBtn);
   document.getElementById("root").appendChild(wrap);
@@ -2779,7 +2779,7 @@ function renderTradRole(){
 
  if(!S.tradRevealed){
   // Bottone per rivelare il ruolo
-  var revBtn=btn("ebtn","👁️ GUARDA IL TUO RUOLO",function(){S.tradRevealed=true;renderTradRole();});
+  var revBtn=btn("ebtn"," GUARDA IL TUO RUOLO",function(){S.tradRevealed=true;renderTradRole();});
   revBtn.style.cssText="width:100%;max-width:280px;font-size:16px;padding:18px;";
   body.appendChild(revBtn);
  } else {
@@ -2790,10 +2790,10 @@ function renderTradRole(){
   roleName.textContent=role.name;
   roleCard.appendChild(roleName);
   var rolePow=div("");rolePow.style.cssText="font-size:14px;line-height:1.6;margin-bottom:14px;opacity:.95;";
-  rolePow.textContent="⚡ "+role.power;
+  rolePow.textContent=" "+role.power;
   roleCard.appendChild(rolePow);
   var roleWin=div("");roleWin.style.cssText="font-size:13px;line-height:1.5;padding-top:12px;border-top:1px solid rgba(255,255,255,.3);opacity:.85;";
-  roleWin.textContent="🏆 "+role.win;
+  roleWin.textContent=" "+role.win;
   roleCard.appendChild(roleWin);
   body.appendChild(roleCard);
 
@@ -2802,7 +2802,7 @@ function renderTradRole(){
    var lupiInDeck=deck.filter(function(r){return r.id==="lupo"||r.id==="serpe";});
    if(lupiInDeck.length>1){
     var lupoNote=div("");lupoNote.style.cssText="font-size:13px;background:rgba(139,0,0,.12);border-radius:10px;padding:10px 14px;max-width:360px;text-align:center;color:var(--fg);";
-    lupoNote.textContent="🐺 Ricordati: questa notte, quando il narratore chiama i lupi, apri gli occhi e guarda in silenzio chi sono i tuoi compagni.";
+    lupoNote.textContent=" Ricordati: questa notte, quando il narratore chiama i lupi, apri gli occhi e guarda in silenzio chi sono i tuoi compagni.";
     body.appendChild(lupoNote);
    }
   }
@@ -2851,15 +2851,15 @@ function renderTradNight(){
  var isFirst=round===1;
  // Costruisci nightSteps dai ruoli vivi in questa partita
  var NIGHT_SCRIPTS={
-  cupido:function(){return "💘 Cupido, apri gli occhi. Indica due giocatori: diventeranno gli innamorati — vinceranno e moriranno insieme. Cupido, chiudi gli occhi.";},
+  cupido:function(){return " Cupido, apri gli occhi. Indica due giocatori: diventeranno gli innamorati — vinceranno e moriranno insieme. Cupido, chiudi gli occhi.";},
   lupo:function(){
    var lupiVivi=players.filter(function(p){return p.alive&&(p.role.id==="lupo"||p.role.id==="serpe");});
-   return "🐺 Lupi, aprite gli occhi."+(lupiVivi.length>1?" Guardatevi in silenzio.":"")+" Indicate chi volete eliminare stanotte. Lupi, chiudete gli occhi.";
+   return " Lupi, aprite gli occhi."+(lupiVivi.length>1?" Guardatevi in silenzio.":"")+" Indicate chi volete eliminare stanotte. Lupi, chiudete gli occhi.";
   },
-  veggente:function(){return "🔮 Veggente, apri gli occhi. Indica un giocatore: annuirò se è un lupo 🐺, scuoterò la testa se è innocente. Veggente, chiudi gli occhi.";},
-  medico:function(){return "💉 Medico, apri gli occhi. Indica chi vuoi salvare stanotte (anche te stesso, ma non la stessa persona due notti di fila). Medico, chiudi gli occhi.";},
-  strega:function(){return "🧪 Strega, apri gli occhi. [Mostrali chi è stato attaccato.] Vuoi usare la pozione salvavita? Vuoi usare la pozione della morte su qualcun altro? Strega, chiudi gli occhi.";},
-  guardiaboschi:function(){return "🛡️ Guardia del Bosco, apri gli occhi. Indica chi vuoi proteggere stanotte (non la stessa persona due notti di fila). Guardia del Bosco, chiudi gli occhi.";}
+  veggente:function(){return " Veggente, apri gli occhi. Indica un giocatore: annuirò se è un lupo , scuoterò la testa se è innocente. Veggente, chiudi gli occhi.";},
+  medico:function(){return " Medico, apri gli occhi. Indica chi vuoi salvare stanotte (anche te stesso, ma non la stessa persona due notti di fila). Medico, chiudi gli occhi.";},
+  strega:function(){return " Strega, apri gli occhi. [Mostrali chi è stato attaccato.] Vuoi usare la pozione salvavita? Vuoi usare la pozione della morte su qualcun altro? Strega, chiudi gli occhi.";},
+  guardiaboschi:function(){return " Guardia del Bosco, apri gli occhi. Indica chi vuoi proteggere stanotte (non la stessa persona due notti di fila). Guardia del Bosco, chiudi gli occhi.";}
  };
  var nightOrder=isFirst?["cupido","lupo","veggente","medico","strega","guardiaboschi"]:["lupo","veggente","medico","strega","guardiaboschi"];
  var steps=[];
@@ -2879,7 +2879,7 @@ function renderTradNight(){
  var hdr=div("dhdr");hdr.style.background="#1a1a2e";card.appendChild(hdr);
  var top=div("dhdr-top");hdr.appendChild(top);
  top.appendChild(btn("card-nav-btn","Esci",goHome));
- hdr.appendChild(div("intesa-title","🌙 NOTTE "+(round)));
+ hdr.appendChild(div("intesa-title"," NOTTE "+(round)));
  hdr.appendChild(div("intesa-desc","Tutti chiudono gli occhi.\nLeggi ad alta voce ogni passo."));
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;gap:10px;padding:20px 16px;";
@@ -2907,7 +2907,7 @@ function renderTradNight(){
  });
 
  var hasCupido=players.some(function(p){return p.alive&&p.role.id==="cupido";});
- var albaLabel=(round===1&&hasCupido&&!S.tradInnamoratiSet)?"💘 CUPIDO HA SCELTO — SEGNA GLI INNAMORATI":"☀️ ALBA — CHI È STATO ELIMINATO?";
+ var albaLabel=(round===1&&hasCupido&&!S.tradInnamoratiSet)?" CUPIDO HA SCELTO — SEGNA GLI INNAMORATI":" ALBA — CHI È STATO ELIMINATO?";
  var albaBtn=btn("ebtn",albaLabel,function(){
   if(round===1&&hasCupido&&!S.tradInnamoratiSet){S.screen="traditore_cupido";render();}
   else{S.screen="traditore_dawn";render();}
@@ -2927,14 +2927,14 @@ function renderTradCupido(){
  var hdr=div("dhdr");hdr.style.background="#C71585";card.appendChild(hdr);
  var top=div("dhdr-top");hdr.appendChild(top);
  top.appendChild(btn("card-nav-btn","Esci",goHome));
- hdr.appendChild(div("intesa-title","💘 CUPIDO"));
+ hdr.appendChild(div("intesa-title"," CUPIDO"));
  hdr.appendChild(div("intesa-desc","Seleziona i due giocatori che Cupido ha indicato come innamorati."));
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;gap:8px;padding:20px 16px;";
  players.forEach(function(p,i){
   if(!p.alive) return;
   var sel=S.tradCupidoSel.indexOf(i)>=0;
-  var b=btn("ebtn"+(sel?" ":" out"),tradPlayerName(i)+(sel?" ❤️":""),function(idx){return function(){
+  var b=btn("ebtn"+(sel?" ":" out"),tradPlayerName(i)+(sel?" ":""),function(idx){return function(){
    var s=S.tradCupidoSel;
    var pos=s.indexOf(idx);
    if(pos>=0){s.splice(pos,1);}
@@ -2969,7 +2969,7 @@ function renderTradDawn(){
  var hdr=div("dhdr");hdr.style.background="#b5400a";card.appendChild(hdr);
  var top=div("dhdr-top");hdr.appendChild(top);
  top.appendChild(btn("card-nav-btn","Esci",goHome));
- hdr.appendChild(div("intesa-title","☀️ ALBA — Notte "+round));
+ hdr.appendChild(div("intesa-title"," ALBA — Notte "+round));
  hdr.appendChild(div("intesa-desc","Chi è stato eliminato stanotte?\n(nessuno se il medico ha salvato)"));
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;gap:8px;padding:20px 16px;";
@@ -3021,7 +3021,7 @@ function renderTradDay(){
  var hdr=div("dhdr");hdr.style.background="#c8a84b";card.appendChild(hdr);
  var top=div("dhdr-top");hdr.appendChild(top);
  top.appendChild(btn("card-nav-btn","Esci",goHome));
- hdr.appendChild(div("intesa-title","☀️ GIORNO "+(round)));
+ hdr.appendChild(div("intesa-title"," GIORNO "+(round)));
 
  // Annuncio eliminati
  var msg="";
@@ -3048,7 +3048,7 @@ function renderTradDay(){
  body.appendChild(viviWrap);
 
  var dibTitle=div("");dibTitle.style.cssText="font-size:14px;line-height:1.6;padding:12px 16px;background:rgba(200,168,75,.12);border-radius:10px;border-left:4px solid #c8a84b;";
- dibTitle.textContent="💬 Apri il dibattito: ognuno ha la parola per accusare, difendersi e convincere. Quando siete pronti, votate a maggioranza chi eliminare.";
+ dibTitle.textContent=" Apri il dibattito: ognuno ha la parola per accusare, difendersi e convincere. Quando siete pronti, votate a maggioranza chi eliminare.";
  body.appendChild(dibTitle);
 
  var votoTitle=div("");votoTitle.style.cssText="font-size:11px;font-weight:800;letter-spacing:.08em;opacity:.5;margin-top:8px;";votoTitle.textContent="VOTO — CHI VIENE ELIMINATO DAL VILLAGGIO?";
@@ -3101,7 +3101,7 @@ function renderTradCacciatore(){
  var hdr=div("dhdr");hdr.style.background="#8B4513";card.appendChild(hdr);
  var top=div("dhdr-top");hdr.appendChild(top);
  top.appendChild(btn("card-nav-btn","Esci",goHome));
- hdr.appendChild(div("intesa-title","🏹 CACCIATORE"));
+ hdr.appendChild(div("intesa-title"," CACCIATORE"));
  hdr.appendChild(div("intesa-desc","Il Cacciatore è stato eliminato!\nPuò portare con sé un altro giocatore."));
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;gap:8px;padding:20px 16px;";
@@ -3138,7 +3138,7 @@ function renderTradWin(){
  var win=S.tradWin;
  var players=S.tradPlayers;
  var bgMap={villici:"#2E7D32",lupi:"#8B0000",innamorati:"#C71585"};
- var titleMap={villici:"🏡 VINCONO I VILLICI!",lupi:"🐺 VINCONO I LUPI!",innamorati:"💘 VINCONO GLI INNAMORATI!"};
+ var titleMap={villici:" VINCONO I VILLICI!",lupi:" VINCONO I LUPI!",innamorati:" VINCONO GLI INNAMORATI!"};
  var msgMap={
   villici:"I lupi sono stati smascherati. Il villaggio è salvo!",
   lupi:"I lupi hanno conquistato il villaggio. Il traditore ha vinto!",
@@ -3159,8 +3159,8 @@ function renderTradWin(){
  body.appendChild(revTitle);
  players.forEach(function(p,i){
   var row=div("");row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:10px;margin-bottom:4px;background:var(--bg2,rgba(128,128,128,.08));opacity:"+(p.alive?"1":".5")+";";
-  var name=div("");name.style.cssText="font-size:14px;font-weight:600;";name.textContent=tradPlayerName(i)+(p.alive?"":" 💀");
-  var roleLabel=div("");roleLabel.style.cssText="font-size:13px;font-weight:700;color:"+p.role.color+";";roleLabel.textContent=p.role.name+(p.innamorato!==undefined?" 💘":"");
+  var name=div("");name.style.cssText="font-size:14px;font-weight:600;";name.textContent=tradPlayerName(i)+(p.alive?"":" ");
+  var roleLabel=div("");roleLabel.style.cssText="font-size:13px;font-weight:700;color:"+p.role.color+";";roleLabel.textContent=p.role.name+(p.innamorato!==undefined?" ":"");
   row.appendChild(name);row.appendChild(roleLabel);
   body.appendChild(row);
  });
@@ -3247,7 +3247,7 @@ function renderQvSetup(){
 
   var waitMsg=document.createElement("div");
   waitMsg.style.cssText="text-align:center;font-size:16px;color:#666;margin-bottom:24px;";
-  waitMsg.textContent="⏳ Aspetta che l'altro giocatore avvii la partita…";
+  waitMsg.textContent=" Aspetta che l'altro giocatore avvii la partita…";
   body.appendChild(waitMsg);
 
   var discBtn=document.createElement("button");
@@ -4087,7 +4087,7 @@ function renderAgSetup(){
  }
  body.appendChild(namesGrid);
  var startWrap=div("");startWrap.style.cssText="text-align:center;margin-top:20px;";
- startWrap.appendChild(btn("ebtn","📅 INIZIA",function(){
+ startWrap.appendChild(btn("ebtn"," INIZIA",function(){
   var names=inputs.map(function(inp,i){return inp.value.trim()||"Giocatore "+(i+1);});
   S.agPlayerNames=names;
   S.agNumPlayers=selectedNum;
@@ -4168,7 +4168,7 @@ function renderAnnoGiusto(){
   rangeRow.appendChild(el("span","","2025"));
   sliderWrap.appendChild(rangeRow);
   body.appendChild(sliderWrap);
-  var confirmBtn=btn("ebtn","✓ CONFERMA RISPOSTA",function(){
+  var confirmBtn=btn("ebtn"," CONFERMA RISPOSTA",function(){
    if(!S.agAnswers)S.agAnswers={};
    var v=S.agCurrentSlider!==undefined?S.agCurrentSlider:1000;
    S.agAnswers[curPlayer]=v;
@@ -4213,7 +4213,7 @@ function renderAnnoGiusto(){
   var rankDiv=div("");rankDiv.style.cssText="width:100%;max-width:340px;display:flex;flex-direction:column;gap:8px;";
   ranked.forEach(function(r,i){
    var row=div("qv-player-answer"+(i===0?" winner":""));
-   var pname=el("span","qv-answer-name",(i===0?"🏆 ":i===1?"🥈 ":i===2?"🥉 ":"")+r.p);
+   var pname=el("span","qv-answer-name",(i===0?" ":i===1?" ":i===2?" ":"")+r.p);
    var pval=el("span","qv-answer-val",(r.ans<0?Math.abs(r.ans)+" a.C.":r.ans+" d.C.")+" (±"+r.diff+")");
    row.appendChild(pname);row.appendChild(pval);
    rankDiv.appendChild(row);
@@ -4232,11 +4232,11 @@ function renderAnnoGiusto(){
   body.appendChild(scoreDiv);
   var nextBtn;
   if(S.agRound+1>=S.agTotalRounds){
-   nextBtn=btn("ebtn","🏆 RISULTATI FINALI",function(){
+   nextBtn=btn("ebtn"," RISULTATI FINALI",function(){
     S.screen="ag_end";render();
    });
   } else {
-   nextBtn=btn("ebtn","▶ PROSSIMA DOMANDA",function(){
+   nextBtn=btn("ebtn"," PROSSIMA DOMANDA",function(){
     S.agRound++;
     S.agAnswers={};
     S.agCurrentPlayerIdx=0;
@@ -4257,12 +4257,12 @@ function renderAgEnd(){
  var wrap=div("qv-wrap");
  var maxScore=Math.max.apply(null,S.agPlayers.map(function(p){return S.agScores[p];}));
  var winner=S.agPlayers.filter(function(p){return S.agScores[p]===maxScore;})[0];
- var wt=div("end-title");wt.textContent=winner+" ha vinto! 📅";wrap.appendChild(wt);
+ var wt=div("end-title");wt.textContent=winner+" ha vinto! ";wrap.appendChild(wt);
  wrap.appendChild(div("end-sub","Con "+maxScore+" punti su "+S.agTotalRounds+" round"));
  var pd=div("qv-players-answers");
  S.agPlayers.slice().sort(function(a,b){return S.agScores[b]-S.agScores[a];}).forEach(function(p,i){
   var row=div("qv-player-answer"+(i===0?" winner":""));
-  row.appendChild(el("span","qv-answer-name",(i===0?"🏆 ":i===1?"🥈 ":i===2?"🥉 ":"")+p));
+  row.appendChild(el("span","qv-answer-name",(i===0?" ":i===1?" ":i===2?" ":"")+p));
   row.appendChild(el("span","qv-answer-val",S.agScores[p]+" pt"));
   pd.appendChild(row);
  });
@@ -4299,7 +4299,7 @@ function renderLex(){
   goHome();
  }));
  hdr.appendChild(div("intesa-title",gameName));
- hdr.appendChild(div("intesa-desc","2 minuti per raccontare la storia 💔"));
+ hdr.appendChild(div("intesa-desc","2 minuti per raccontare la storia "));
 
  var body=div("dbody");card.appendChild(body);
  body.style.cssText="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px 16px;";
@@ -4321,7 +4321,7 @@ function renderLex(){
 
  if(timeLeft<=0){
   var scaduto=div("");scaduto.style.cssText="font-size:22px;font-weight:700;color:#c2185b;text-align:center;";
-  scaduto.textContent="💔 Votate la storia migliore!";
+  scaduto.textContent=" Votate la storia migliore!";
   body.appendChild(scaduto);
   var fineBtn=btn("ebtn out",T("endGame"),function(){
    if(_lexTimer){clearInterval(_lexTimer);_lexTimer=null;}
@@ -4331,7 +4331,7 @@ function renderLex(){
    S.lexTime=120;S.lexRunning=false;renderLex();
   });riBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(riBtn);
  } else if(!running){
-  var startBtn=btn("ebtn",timeLeft===120?"💔 INIZIA":"▶ RIPRENDI",function(){
+  var startBtn=btn("ebtn",timeLeft===120?" INIZIA":" RIPRENDI",function(){
    S.lexRunning=true;
    _lexTimer=setInterval(function(){
     S.lexTime=(S.lexTime||1)-1;
@@ -4348,7 +4348,7 @@ function renderLex(){
    });resetBtn.style.cssText="width:100%;max-width:280px;";body.appendChild(resetBtn);
   }
  } else {
-  var pauseBtn=btn("ebtn out","⏸ PAUSA",function(){
+  var pauseBtn=btn("ebtn out"," PAUSA",function(){
    S.lexRunning=false;
    if(_lexTimer){clearInterval(_lexTimer);_lexTimer=null;}
    renderLex();
@@ -4410,7 +4410,7 @@ function renderCaSetup(){
  }
  body.appendChild(namesGrid);
  var startWrap=div("");startWrap.style.cssText="text-align:center;margin-top:20px;";
- startWrap.appendChild(btn("ebtn","🤫 INIZIA",function(){
+ startWrap.appendChild(btn("ebtn"," INIZIA",function(){
   var names=inputs.map(function(inp,i){return inp.value.trim()||"Giocatore "+(i+1);});
   S.caPlayerNames=names;
   S.caNumPlayers=selectedNum;
@@ -4466,9 +4466,9 @@ function renderCaWrite(){
  body.appendChild(ta);
  var hint=document.createElement("div");
  hint.style.cssText="font-size:12px;color:#aaa;text-align:center;margin:8px 0 20px;";
- hint.textContent="Tieni il telefono verso di te mentre scrivi 🙈";
+ hint.textContent="Tieni il telefono verso di te mentre scrivi ";
  body.appendChild(hint);
- var btnLabel=pidx<total-1?"Passa al prossimo →":"Mescola e inizia 🎲";
+ var btnLabel=pidx<total-1?"Passa al prossimo →":"Mescola e inizia ";
  var submitWrap=div("");submitWrap.style.cssText="text-align:center;";
  submitWrap.appendChild(btn("ebtn",btnLabel,function(){
   var txt=ta.value.trim();
@@ -4527,7 +4527,7 @@ function renderCaRead(){
    render();
   }));
  } else {
-  btnsWrap.appendChild(btn("ebtn","Risultati finali 🎉",function(){
+  btnsWrap.appendChild(btn("ebtn","Risultati finali ",function(){
    S.screen="ca_end";render();
   }));
  }
@@ -4540,7 +4540,7 @@ function renderCaEnd(){
  clr();
  addBackArrow(goBackToGames);
  var wrap=div("qv-wrap");
- var wt=div("end-title");wt.textContent="Fine del gioco! 🤫";wrap.appendChild(wt);
+ var wt=div("end-title");wt.textContent="Fine del gioco! ";wrap.appendChild(wt);
  wrap.appendChild(div("end-sub","Tutte le "+S.caOrder.length+" confessioni sono state svelate"));
  var btns=div("endbtns");
  btns.appendChild(btn("ebtn","↺ GIOCA ANCORA",function(){startCa(S.caPlayers);}));
@@ -4818,14 +4818,14 @@ function renderMenuEditor(panel){
     imgEl.style.cssText="width:100%;height:180px;object-fit:cover;display:block;";
     photoZone.appendChild(imgEl);
     var rmBtn=document.createElement("button");
-    rmBtn.innerHTML="✕ Rimuovi foto";
+    rmBtn.innerHTML=" Rimuovi foto";
     rmBtn.style.cssText="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;";
     rmBtn.onclick=function(){MENU[tab][idx].photo=null;saveMenu();refreshPhoto();};
     photoZone.appendChild(rmBtn);
    } else {
     var addLbl=document.createElement("label");
     addLbl.style.cssText="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:140px;cursor:pointer;gap:8px;";
-    var ic=document.createElement("div");ic.style.fontSize="36px";ic.textContent="📷";
+    var ic=document.createElement("div");ic.style.fontSize="36px";ic.textContent="";
     var lt=document.createElement("div");lt.style.cssText="font-size:13px;font-weight:700;letter-spacing:1px;color:#aaa;text-transform:uppercase;";lt.textContent="Tocca per aggiungere foto";
     var fi=document.createElement("input");fi.type="file";fi.accept="image/*";fi.style.display="none";
     fi.onchange=function(){
@@ -4895,7 +4895,7 @@ function renderMenuEditor(panel){
   inName.onblur=saveFields;inDesc.onblur=saveFields;inPrice.onblur=saveFields;
 
   var delBtn=document.createElement("button");
-  delBtn.textContent="✕ Elimina prodotto";
+  delBtn.textContent=" Elimina prodotto";
   delBtn.style.cssText="margin-top:4px;border:none;background:none;color:#ccc;font-size:12px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;text-align:left;padding:0;";
   delBtn.onclick=function(){if(confirm("Eliminare questo prodotto?")){MENU[tab].splice(idx,1);saveMenu();buildEditor(tab);}};
 
@@ -4943,7 +4943,7 @@ function renderAnalytics(){
   ps.appendChild(div("pin-title","AREA RISERVATA"));
   ps.appendChild(div("","Inserisci il PIN per accedere."));
   var dots=div("");dots.style.cssText="font-size:32px;color:"+(S.pinErr?"#E8571A":"#E9B949")+";margin:10px 0;font-weight:700;font-family:'Space Grotesk',sans-serif;letter-spacing:8px;";
-  var dotStr="";for(var i=0;i<4;i++)dotStr+=(i<S.pinInput.length?"●":"○")+" ";dots.textContent=dotStr;ps.appendChild(dots);
+  var dotStr="";for(var i=0;i<4;i++)dotStr+=(i<S.pinInput.length?"":"")+" ";dots.textContent=dotStr;ps.appendChild(dots);
   if(S.pinErr){var err=div("");err.style.cssText="color:#E8571A;font-size:14px;font-family:'Space Grotesk',sans-serif;letter-spacing:2px;";err.textContent="PIN ERRATO, RIPROVA";ps.appendChild(err);}
   var pad=div("pin-pad");ps.appendChild(pad);
   for(var k=1;k<=9;k++){(function(n){pad.appendChild(btn("pin-btn",String(n),function(){pinPress(n);}));})(k);}
@@ -5012,12 +5012,12 @@ function renderAnalytics(){
  // Tab bar
  var tabsEl=div("as-tabs");page.appendChild(tabsEl);
  var TAB_DEFS=[
-  {id:"profilo",label:"👤 Profilo"},
-  {id:"analytics",label:"📊 Analytics"},
-  {id:"menu",label:"🍺 Menu"},
-  {id:"report",label:"📄 Report"},
-  {id:"speciali",label:"🎮 Serate"},
-  {id:"admin",label:"⚙️ Admin"}
+  {id:"profilo",label:" Profilo"},
+  {id:"analytics",label:" Analytics"},
+  {id:"menu",label:" Menu"},
+  {id:"report",label:" Report"},
+  {id:"speciali",label:" Serate"},
+  {id:"admin",label:" Admin"}
  ];
  TAB_DEFS.forEach(function(td){
   var t=document.createElement("button");t.className="as-tab"+(S.settingsTab===td.id?" on":"");
@@ -5076,8 +5076,8 @@ function renderAnalytics(){
   try{pubName=localStorage.getItem("filos_pub_name")||"";}catch(e){}
   try{pubCode=localStorage.getItem("filos_pub_code")||"";}catch(e){}
 
-  var rName=inputRow("🏠","#ff9f0a","Nome del locale","Es. Osteria Mario",pubName,40);
-  var rCode=inputRow("🔑","#636366","Codice pub","Es. osteria_mario",pubCode,30,function(v){return v.toLowerCase().replace(/[^a-z0-9_]/g,"");});
+  var rName=inputRow("","#ff9f0a","Nome del locale","Es. Osteria Mario",pubName,40);
+  var rCode=inputRow("","#636366","Codice pub","Es. osteria_mario",pubCode,30,function(v){return v.toLowerCase().replace(/[^a-z0-9_]/g,"");});
   section("Il tuo locale",[rName,rCode]);
 
   var banner=savedBanner(page);
@@ -5087,12 +5087,12 @@ function renderAnalytics(){
    var name=rName._input.value.trim();var code=rCode._input.value.trim();
    try{localStorage.setItem("filos_pub_name",name);}catch(e){}
    try{localStorage.setItem("filos_pub_code",code);}catch(e){}
-   banner.textContent="✓ Salvato";setTimeout(function(){banner.textContent="";},2500);
+   banner.textContent=" Salvato";setTimeout(function(){banner.textContent="";},2500);
   };
   sec2.appendChild(saveB);
 
   if(pubCode){
-   section("Stato",[row("✓","#34c759","Locale configurato",pubCode,"","")]);
+   section("Stato",[row("","#34c759","Locale configurato",pubCode,"","")]);
   }
 
  // ═══════════════════════════════════════════════
@@ -5124,7 +5124,7 @@ function renderAnalytics(){
   grid.appendChild(stat(total,"Partite totali"));
   grid.appendChild(stat(today,"Oggi"));
   grid.appendChild(stat(fmtTime(totalSec),"Tempo totale"));
-  grid.appendChild(stat(avgR,"Valutazione ★"));
+  grid.appendChild(stat(avgR,"Valutazione "));
 
   // Giochi top
   var gc={};for(var i=0;i<ANALYTICS.plays.length;i++){var p=ANALYTICS.plays[i];gc[p.game]=(gc[p.game]||0)+1;}
@@ -5151,18 +5151,18 @@ function renderAnalytics(){
    menuArr.sort(function(a,b){return b.count-a.count;});menuArr=menuArr.slice(0,8);
    var maxM=menuArr[0].count;
    var mSec=div("as-section");page.appendChild(mSec);
-   mSec.appendChild(Object.assign(div("as-section-title"),{textContent:"🍺 Menu più richiesti ("+totalMenuClicks+" click totali)"}));
+   mSec.appendChild(Object.assign(div("as-section-title"),{textContent:" Menu più richiesti ("+totalMenuClicks+" click totali)"}));
    var mGrp=div("as-group");mGrp.style.padding="10px 16px";mSec.appendChild(mGrp);
    menuArr.forEach(function(m,idx){
     var br=div("as-bar-row");
     br.appendChild(Object.assign(div("as-bar-rank"),{textContent:String(idx+1)}));
-    var nm=div("as-bar-name");nm.textContent=(m.tab==="drink"?"🍹":"🍔")+" "+m.name;nm.style.maxWidth="160px";br.appendChild(nm);
+    var nm=div("as-bar-name");nm.textContent=(m.tab==="drink"?"":"")+" "+m.name;nm.style.maxWidth="160px";br.appendChild(nm);
     var track=div("as-bar-track");var fill=div("as-bar-fill");fill.style.background="#ff9f0a";fill.style.width=Math.round(m.count/maxM*100)+"%";track.appendChild(fill);br.appendChild(track);
     br.appendChild(Object.assign(div("as-bar-val"),{textContent:m.count+"x"}));
     mGrp.appendChild(br);
    });
   } else {
-   section("🍺 Menu",[row("ℹ️","#e5e5ea","Nessun click menu ancora","I click verranno tracciati quando i clienti sfogliano il menu","","")]);
+   section(" Menu",[row("ℹ","#e5e5ea","Nessun click menu ancora","I click verranno tracciati quando i clienti sfogliano il menu","","")]);
   }
 
   // Ultimi 10
@@ -5174,7 +5174,7 @@ function renderAnalytics(){
    recent.forEach(function(p){
     var d=new Date(p.ts);var hm=d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0");
     var dateStr=d.toLocaleDateString("it-IT",{day:"2-digit",month:"short"});
-    rGrp.appendChild(row("🎮","#5856d6",p.game,p.cat,dateStr+" "+hm,""));
+    rGrp.appendChild(row("","#5856d6",p.game,p.cat,dateStr+" "+hm,""));
    });
   }
 
@@ -5207,7 +5207,7 @@ function renderAnalytics(){
   var periodRow=page.querySelector(".as-group .as-row");
 
   var repSec=div("as-section");page.appendChild(repSec);
-  var genBtn=document.createElement("button");genBtn.className="as-btn as-btn-pdf";genBtn.textContent="📄 Genera e scarica PDF";
+  var genBtn=document.createElement("button");genBtn.className="as-btn as-btn-pdf";genBtn.textContent=" Genera e scarica PDF";
   genBtn.onclick=function(){
    var period=periodRow&&periodRow._sel?periodRow._sel.value:"tutto";
    generatePDFReport(pubName2,period);
@@ -5215,11 +5215,11 @@ function renderAnalytics(){
   repSec.appendChild(genBtn);
 
   section("Cosa include il report",[
-   row("📊","#5856d6","Partite totali e giornaliere","Conteggio per periodo","",""),
-   row("🎮","#ff9f0a","Giochi più popolari","Top 10 con barra di utilizzo","",""),
-   row("🍺","#34c759","Menu più richiesti","Click su drink e food","",""),
+   row("","#5856d6","Partite totali e giornaliere","Conteggio per periodo","",""),
+   row("","#ff9f0a","Giochi più popolari","Top 10 con barra di utilizzo","",""),
+   row("","#34c759","Menu più richiesti","Click su drink e food","",""),
    row("⭐","#ff9f0a","Valutazioni medie","Per gioco","",""),
-   row("⏱","#636366","Tempo di gioco","Totale e per gioco","","")
+   row("","#636366","Tempo di gioco","Totale e per gioco","","")
   ]);
 
  // ═══════════════════════════════════════════════
@@ -5228,7 +5228,7 @@ function renderAnalytics(){
  } else if(S.settingsTab==="speciali"){
   var qzEnabled=false;try{qzEnabled=localStorage.getItem("filos_quizzone")==="1";}catch(e){}
   section("Giochi speciali",[
-   toggleRow("🎯","#ff3b30","Quizzone","Quiz multiplayer per la serata",qzEnabled,function(on){try{localStorage.setItem("filos_quizzone",on?"1":"0");}catch(e){}})
+   toggleRow("","#ff3b30","Quizzone","Quiz multiplayer per la serata",qzEnabled,function(on){try{localStorage.setItem("filos_quizzone",on?"1":"0");}catch(e){}})
   ]);
 
  // ═══════════════════════════════════════════════
@@ -5236,18 +5236,18 @@ function renderAnalytics(){
  // ═══════════════════════════════════════════════
  } else if(S.settingsTab==="admin"){
   if(!fbDB){
-   section("Stato",[row("⚠️","#ff3b30","Firebase non disponibile","Controlla la connessione","","")]);
+   section("Stato",[row("","#ff3b30","Firebase non disponibile","Controlla la connessione","","")]);
   } else {
    var eventoRef=fbRef(fbDB,"filos_admin/evento");
    fbGet(eventoRef).then(function(snap){
     var ev=snap.val()||{attivo:false,nome:"",pubs:[]};
-    var rEvNome=inputRow("📌","#ff9f0a","Nome evento","Es. Quizzone del mercoledì",ev.nome||"",50);
+    var rEvNome=inputRow("","#ff9f0a","Nome evento","Es. Quizzone del mercoledì",ev.nome||"",50);
     var pubsRow=div("as-row");var pubBody=div("as-row-body");pubBody.appendChild(Object.assign(div("as-row-label"),{textContent:"Codici pub partecipanti"}));
     var ta=document.createElement("textarea");ta.style.cssText="width:100%;background:none;border:none;outline:none;font-family:'SF Mono',monospace;font-size:13px;color:var(--dark,#111);resize:none;padding:6px 0;";ta.rows=4;ta.value=(ev.pubs||[]).join("\n");ta.placeholder="osteria_mario\nbar_centrale";
     pubBody.appendChild(ta);pubsRow.appendChild(pubBody);
 
     var isAttivo=ev.attivo||false;
-    var togEv=toggleRow("🟢","#34c759","Evento attivo","Visibile a tutti i pub partecipanti",isAttivo,function(on){isAttivo=on;});
+    var togEv=toggleRow("","#34c759","Evento attivo","Visibile a tutti i pub partecipanti",isAttivo,function(on){isAttivo=on;});
 
     section("Evento in corso",[rEvNome,pubsRow,togEv]);
 
@@ -5257,11 +5257,11 @@ function renderAnalytics(){
     saveAdminB.onclick=function(){
      var pubList=ta.value.split("\n").map(function(s){return s.trim().toLowerCase();}).filter(Boolean);
      fbSet(eventoRef,{attivo:isAttivo,nome:rEvNome._input.value.trim(),pubs:pubList,ts:Date.now()}).then(function(){
-      adminBanner.textContent="✓ Salvato su Firebase";setTimeout(function(){adminBanner.textContent="";},2500);
-     }).catch(function(){adminBanner.style.color="#ff3b30";adminBanner.textContent="❌ Errore salvataggio";});
+      adminBanner.textContent=" Salvato su Firebase";setTimeout(function(){adminBanner.textContent="";},2500);
+     }).catch(function(){adminBanner.style.color="#ff3b30";adminBanner.textContent=" Errore salvataggio";});
     };
     adminSec.appendChild(saveAdminB);
-   }).catch(function(){section("Errore",[row("⚠️","#ff3b30","Impossibile leggere Firebase","","","")]);});
+   }).catch(function(){section("Errore",[row("","#ff3b30","Impossibile leggere Firebase","","","")]);});
   }
  }
 }
@@ -5332,7 +5332,7 @@ function generatePDFReport(pubName, period){
  html+='<div class="stat-box"><div class="stat-val">'+total+'</div><div class="stat-label">Partite</div></div>';
  html+='<div class="stat-box"><div class="stat-val">'+dayCount+'</div><div class="stat-label">Giorni attivi</div></div>';
  html+='<div class="stat-box"><div class="stat-val">'+fmtT(totalSec)+'</div><div class="stat-label">Tempo totale</div></div>';
- html+='<div class="stat-box"><div class="stat-val">'+avgR+'</div><div class="stat-label">Valutazione ★</div></div>';
+ html+='<div class="stat-box"><div class="stat-val">'+avgR+'</div><div class="stat-label">Valutazione </div></div>';
  html+='</div>';
 
  html+='<div class="stat-grid" style="grid-template-columns:1fr 1fr;margin-top:12px;">';
@@ -5341,7 +5341,7 @@ function generatePDFReport(pubName, period){
  html+='</div>';
 
  if(topGames.length){
-  html+='<h2>🎮 Giochi più giocati</h2>';
+  html+='<h2> Giochi più giocati</h2>';
   topGames.slice(0,10).forEach(function(g,i){
    html+='<div class="bar-row"><span class="bar-rank">'+(i+1)+'</span><span class="bar-name">'+g[0]+'</span>'+bar(g[1]/maxG*100,"#007aff")+'<span class="bar-val">'+g[1]+'&nbsp;pt</span></div>';
   });
@@ -5349,9 +5349,9 @@ function generatePDFReport(pubName, period){
 
  if(menuArr.length){
   var maxM=menuArr[0].count;
-  html+='<h2>🍺 Menu più richiesti</h2>';
+  html+='<h2> Menu più richiesti</h2>';
   menuArr.slice(0,10).forEach(function(m,i){
-   var icon=m.tab==="drink"?"🍹":"🍔";
+   var icon=m.tab==="drink"?"":"";
    html+='<div class="bar-row"><span class="bar-rank">'+(i+1)+'</span><span class="bar-name">'+icon+' '+m.name+'</span>'+bar(m.count/maxM*100,"#ff9f0a")+'<span class="bar-val">'+m.count+'x</span></div>';
   });
  }
@@ -5362,7 +5362,7 @@ function generatePDFReport(pubName, period){
   html+='<h2>⭐ Valutazioni per gioco</h2>';
   ratArr.slice(0,10).forEach(function(r,i){
    var avg=(r[1].t/r[1].c).toFixed(1);
-   html+='<div class="bar-row"><span class="bar-rank">'+(i+1)+'</span><span class="bar-name">'+r[0]+'</span>'+bar(r[1].t/r[1].c/5*100,"#ff9f0a")+'<span class="bar-val">★&nbsp;'+avg+'</span></div>';
+   html+='<div class="bar-row"><span class="bar-rank">'+(i+1)+'</span><span class="bar-name">'+r[0]+'</span>'+bar(r[1].t/r[1].c/5*100,"#ff9f0a")+'<span class="bar-val">&nbsp;'+avg+'</span></div>';
   });
  }
 
@@ -5506,7 +5506,7 @@ function renderConnect(){
  createBtn.style.cssText="padding:18px 42px;background:var(--dark);color:#fff;border:none;border-radius:50px;font-family:inherit;font-weight:800;font-size:17px;letter-spacing:1px;cursor:pointer;white-space:nowrap;";
  createBtn.textContent=T("createRoom");
  createBtn.onclick=function(){
- createBtn.textContent="⏳";
+ createBtn.textContent="";
  createBtn.disabled=true;
  fbCreateRoom(function(code,err){
  if(err){ createBtn.textContent=T("createRoom"); createBtn.disabled=false; return; }
@@ -5550,7 +5550,7 @@ function renderConnect(){
  // Aggiorno createBtn per mostrare anche chiudi
  var _origClick=createBtn.onclick;
  createBtn.onclick=function(){
- createBtn.textContent="⏳"; createBtn.disabled=true;
+ createBtn.textContent=""; createBtn.disabled=true;
  fbCreateRoom(function(code,err){
  if(err){ createBtn.textContent=T("createRoom"); createBtn.disabled=false; return; }
  codeZone.innerHTML="";
@@ -5575,7 +5575,7 @@ function renderConnect(){
  joinBtn.onclick=function(){
  var code=codeInput.value.trim();
  if(code.length<4){ codeInput.focus(); return; }
- joinBtn.textContent="⏳"; joinBtn.disabled=true; codeInput.disabled=true;
+ joinBtn.textContent=""; joinBtn.disabled=true; codeInput.disabled=true;
  fbJoinRoom(code,function(ok,err){
  if(ok){ setTimeout(function(){render();},600); }
  else {
@@ -5726,9 +5726,9 @@ var QZ_QUESTIONS = [
 
 // Colori e forme Kahoot-style
 var QZ_COLORS = [
- {bg:"#E21B3C",icon:"▲"}, // rosso triangolo
- {bg:"#1368CE",icon:"◆"}, // blu rombo
- {bg:"#FFA602",icon:"●"}, // giallo cerchio
+ {bg:"#E21B3C",icon:""}, // rosso triangolo
+ {bg:"#1368CE",icon:""}, // blu rombo
+ {bg:"#FFA602",icon:""}, // giallo cerchio
  {bg:"#26890C",icon:"■"}, // verde quadrato
 ];
 
@@ -5997,7 +5997,7 @@ function renderQuizzoneLobby(){
  // Avatar animato "in attesa"
  var dots=document.createElement('div');
  dots.style.cssText='font-size:32px;animation:qz-pulse 1.4s infinite;';
- dots.textContent='⏳';
+ dots.textContent='';
  wrap.appendChild(dots);
 
  // Ascolta cambio fase
@@ -6192,7 +6192,7 @@ function renderQuizzoneGame(){
  } else {
  // Timer fermo
  var numEl=document.getElementById('qz-timer-num');
- if(numEl) numEl.textContent='⏸';
+ if(numEl) numEl.textContent='';
  }
 
  // Giocatori ascoltano cambi di fase
@@ -6385,14 +6385,14 @@ function qzHandleRemote(data){
 
 // ── IL VIAGGIO DEI SOGNI ───────────────────────────────────────────────────
 var VIAGGIO_STEPS=[
- {key:"dest",   label:"🌍 Dove andate?",         ph:"Es. Giappone, Patagonia, Marocco…"},
- {key:"quando", label:"📅 Quando partite?",       ph:"Es. Primavera, Natale, subito…"},
- {key:"durata", label:"⏱ Per quanto tempo?",      ph:"Es. 2 settimane, un mese…"},
- {key:"alloggio",label:"🏡 Dove dormite?",        ph:"Es. Ryokan, tenda, villa con piscina…"},
- {key:"attivita",label:"🎒 Cosa fate ogni giorno?",ph:"Es. Trekking, musei, spiaggia, niente…"},
- {key:"cibo",   label:"🍜 Cosa mangiate?",        ph:"Es. Street food locale, ristoranti stellati…"},
- {key:"momento",label:"✨ Il momento più bello?", ph:"Es. Tramonto sul vulcano, mercato notturno…"},
- {key:"budget", label:"💸 Budget (senza limiti!)",ph:"Es. Illimitato, prima classe ovunque…"}
+ {key:"dest",   label:" Dove andate?",         ph:"Es. Giappone, Patagonia, Marocco…"},
+ {key:"quando", label:" Quando partite?",       ph:"Es. Primavera, Natale, subito…"},
+ {key:"durata", label:" Per quanto tempo?",      ph:"Es. 2 settimane, un mese…"},
+ {key:"alloggio",label:" Dove dormite?",        ph:"Es. Ryokan, tenda, villa con piscina…"},
+ {key:"attivita",label:" Cosa fate ogni giorno?",ph:"Es. Trekking, musei, spiaggia, niente…"},
+ {key:"cibo",   label:" Cosa mangiate?",        ph:"Es. Street food locale, ristoranti stellati…"},
+ {key:"momento",label:" Il momento più bello?", ph:"Es. Tramonto sul vulcano, mercato notturno…"},
+ {key:"budget", label:" Budget (senza limiti!)",ph:"Es. Illimitato, prima classe ovunque…"}
 ];
 
 function renderViaggioPlan(){
@@ -6418,7 +6418,7 @@ function renderViaggioPlan(){
   body.appendChild(inp);
  });
  var startWrap=div("");startWrap.style.cssText="text-align:center;margin-top:28px;";
- startWrap.appendChild(btn("ebtn","VEDI IL VOSTRO VIAGGIO 🗺️",function(){
+ startWrap.appendChild(btn("ebtn","VEDI IL VOSTRO VIAGGIO ",function(){
   // salva tutti i campi
   var inputs=body.querySelectorAll("input");
   VIAGGIO_STEPS.forEach(function(step,i){S.viaggioData[step.key]=inputs[i].value.trim();});
@@ -6438,7 +6438,7 @@ function renderViaggioCard(){
  var dhdrTop=div("dhdr-top");hdr.appendChild(dhdrTop);
  dhdrTop.appendChild(btn("card-nav-btn back","← Modifica",function(){S.screen="viaggio_plan";render();}));
  dhdrTop.appendChild(btn("card-nav-btn",T("exitBtn"),goHome));
- hdr.appendChild(div("dtitle","✈️ "+(d.dest||"IL VOSTRO VIAGGIO")));
+ hdr.appendChild(div("dtitle"," "+(d.dest||"IL VOSTRO VIAGGIO")));
  var card=div("dcard");card.appendChild(hdr);
  var body=div("dbody");card.appendChild(body);
  var lbl=div("rlabel");lbl.style.cssText="margin-bottom:16px;";lbl.textContent="IL VOSTRO VIAGGIO DEI SOGNI";body.appendChild(lbl);
@@ -6453,8 +6453,8 @@ function renderViaggioCard(){
   row.appendChild(right);body.appendChild(row);
  });
  var btns=div("");btns.style.cssText="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;";
- btns.appendChild(btn("ebtn out","✏️ MODIFICA",function(){S.screen="viaggio_plan";render();}));
- btns.appendChild(btn("ebtn","🔄 NUOVO VIAGGIO",function(){
+ btns.appendChild(btn("ebtn out"," MODIFICA",function(){S.screen="viaggio_plan";render();}));
+ btns.appendChild(btn("ebtn"," NUOVO VIAGGIO",function(){
   S.viaggioData={dest:"",quando:"",durata:"",alloggio:"",attivita:"",cibo:"",momento:"",budget:""};
   S.screen="viaggio_plan";render();
  }));
@@ -6519,7 +6519,7 @@ function renderCnsPass(){
  var card=div("dcard");card.appendChild(hdr);
  hdr.appendChild(div("dtitle","COSA NON SAI DI ME"));
  var body=div("dbody");card.appendChild(body);
- var msg=div("rlabel");msg.style.cssText="text-align:center;font-size:22px;margin:32px 0 12px;";msg.textContent="✅ Giocatore 1 ha finito!";body.appendChild(msg);
+ var msg=div("rlabel");msg.style.cssText="text-align:center;font-size:22px;margin:32px 0 12px;";msg.textContent=" Giocatore 1 ha finito!";body.appendChild(msg);
  var sub=div("rtext");sub.style.cssText="text-align:center;margin-bottom:32px;";sub.textContent="Ora passa il telefono al Giocatore 2.";body.appendChild(sub);
  var startWrap=div("");startWrap.style.cssText="text-align:center;";
  startWrap.appendChild(btn("ebtn","SONO IL GIOCATORE 2 →",function(){
@@ -6584,12 +6584,12 @@ function renderCnsPlay(){
  // Etichetta chi indovina
  var whoDiv=div("starter-phrase");
  whoDiv.style.fontSize="14px";whoDiv.style.opacity="0.85";whoDiv.style.marginBottom="8px";
- whoDiv.textContent="👤 Giocatore "+(guesserIdx+1)+" indovina";
+ whoDiv.textContent=" Giocatore "+(guesserIdx+1)+" indovina";
  chdr.appendChild(whoDiv);
  // La frase (nascosta finché non si rivela)
  var phraseDiv=div("starter-phrase");
  if(!S.cnsReveal){
-  phraseDiv.textContent="❓ Affermazione nascosta";
+  phraseDiv.textContent=" Affermazione nascosta";
   phraseDiv.style.opacity="0.5";
  } else {
   phraseDiv.textContent=phrase;
@@ -6604,20 +6604,20 @@ function renderCnsPlay(){
   // L'altro deve indovinare vero o falso
   var guessHint=div("starter-hint");guessHint.textContent="Giocatore "+(guesserIdx+1)+": è vera o falsa?";body.appendChild(guessHint);
   var btnRow=div("");btnRow.style.cssText="display:flex;gap:12px;justify-content:center;margin-top:8px;";
-  btnRow.appendChild(btn("ebtn","✅ VERA",function(){S.cnsGuess="vera";render();}));
-  btnRow.appendChild(btn("ebtn out","❌ FALSA",function(){S.cnsGuess="falsa";render();}));
+  btnRow.appendChild(btn("ebtn"," VERA",function(){S.cnsGuess="vera";render();}));
+  btnRow.appendChild(btn("ebtn out"," FALSA",function(){S.cnsGuess="falsa";render();}));
   body.appendChild(btnRow);
  } else {
   // Mostra risposta
   var ansHint=div("starter-hint");
   ansHint.textContent="Giocatore "+(writerIdx+1)+": era vera o falsa?";body.appendChild(ansHint);
   var btnRow2=div("");btnRow2.style.cssText="display:flex;gap:12px;justify-content:center;margin-top:8px;flex-wrap:wrap;";
-  btnRow2.appendChild(btn("ebtn","✅ ERA VERA",function(){
+  btnRow2.appendChild(btn("ebtn"," ERA VERA",function(){
    var correct=(S.cnsGuess==="vera");
    if(correct) S.cnsScore[guesserIdx]++;
    S.cnsIdx++;S.cnsGuess=null;S.cnsReveal=false;render();
   }));
-  btnRow2.appendChild(btn("ebtn out","❌ ERA FALSA",function(){
+  btnRow2.appendChild(btn("ebtn out"," ERA FALSA",function(){
    var correct=(S.cnsGuess==="falsa");
    if(correct) S.cnsScore[guesserIdx]++;
    S.cnsIdx++;S.cnsGuess=null;S.cnsReveal=false;render();
@@ -6637,14 +6637,14 @@ function renderCnsEnd(){
  hdr.appendChild(div("dtitle","COSA NON SAI DI ME"));
  var card=div("dcard");card.appendChild(hdr);
  var body=div("dbody");card.appendChild(body);
- var title=div("rlabel");title.style.cssText="text-align:center;font-size:24px;margin:20px 0 8px;";title.textContent="🎉 Fine del gioco!";body.appendChild(title);
+ var title=div("rlabel");title.style.cssText="text-align:center;font-size:24px;margin:20px 0 8px;";title.textContent=" Fine del gioco!";body.appendChild(title);
  var scores=S.cnsScore||[0,0];
  var s1=div("rtext");s1.style.cssText="text-align:center;font-size:20px;margin:8px 0;";s1.textContent="Giocatore 1: "+scores[0]+" / 5 indovinati";body.appendChild(s1);
  var s2=div("rtext");s2.style.cssText="text-align:center;font-size:20px;margin:8px 0;";s2.textContent="Giocatore 2: "+scores[1]+" / 5 indovinati";body.appendChild(s2);
  var winner;
- if(scores[0]>scores[1]) winner="Vince il Giocatore 1! 🏆";
- else if(scores[1]>scores[0]) winner="Vince il Giocatore 2! 🏆";
- else winner="Pareggio — vi conoscete benissimo! 💕";
+ if(scores[0]>scores[1]) winner="Vince il Giocatore 1! ";
+ else if(scores[1]>scores[0]) winner="Vince il Giocatore 2! ";
+ else winner="Pareggio — vi conoscete benissimo! ";
  var wDiv=div("rlabel");wDiv.style.cssText="text-align:center;margin:20px 0;font-size:18px;";wDiv.textContent=winner;body.appendChild(wDiv);
  var btns=div("");btns.style.cssText="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px;";
  btns.appendChild(btn("ebtn","GIOCA ANCORA",function(){
@@ -7064,7 +7064,7 @@ function showInviteBanner(inv, key){
    var nick = S.qvMyName || FILOS_NAME || "Anonimo";
    S.qvMyName = nick;
    fbJoinRoom(inv.roomCode, function(ok, err){
-    if(!ok){ alert("❌ Stanza non trovata o scaduta."); S.screen="home"; render(); return; }
+    if(!ok){ alert(" Stanza non trovata o scaduta."); S.screen="home"; render(); return; }
     try{ fbSet(fbRef(fbDB,'rooms/'+inv.roomCode+'/qv_players/'+nick), {joined:Date.now()}); }catch(e){}
     S.qvMode = 'distanza';
     S.screen = 'qv_setup';
