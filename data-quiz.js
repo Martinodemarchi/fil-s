@@ -4939,17 +4939,46 @@ function renderAnalytics(){
  // ── PIN SCREEN ──
  if(!S.pinOK){
   var panel=div("panel");root.appendChild(panel);
-  var ps=div("pin-screen");panel.appendChild(ps);
-  ps.appendChild(div("pin-title","AREA RISERVATA"));
-  ps.appendChild(div("","Inserisci il PIN per accedere."));
-  var dots=div("");dots.style.cssText="font-size:32px;color:"+(S.pinErr?"#E8571A":"#E9B949")+";margin:10px 0;font-weight:700;font-family:'Space Grotesk',sans-serif;letter-spacing:8px;";
-  var dotStr="";for(var i=0;i<4;i++)dotStr+=(i<S.pinInput.length?"":"")+" ";dots.textContent=dotStr;ps.appendChild(dots);
-  if(S.pinErr){var err=div("");err.style.cssText="color:#E8571A;font-size:14px;font-family:'Space Grotesk',sans-serif;letter-spacing:2px;";err.textContent="PIN ERRATO, RIPROVA";ps.appendChild(err);}
-  var pad=div("pin-pad");ps.appendChild(pad);
-  for(var k=1;k<=9;k++){(function(n){pad.appendChild(btn("pin-btn",String(n),function(){pinPress(n);}));})(k);}
-  pad.appendChild(div(""));
-  pad.appendChild(btn("pin-btn","0",function(){pinPress(0);}));
-  pad.appendChild(btn("pin-btn","⌫",function(){S.pinInput=S.pinInput.slice(0,-1);renderAnalytics();}));
+  // Schermata PIN stile Apple — usa tastiera nativa del telefono
+  var ps=div("");
+  ps.style.cssText="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px;padding:40px 32px;";
+  panel.appendChild(ps);
+
+  var lockIcon=div("");lockIcon.style.cssText="width:60px;height:60px;border-radius:16px;background:#1c1c1e;display:flex;align-items:center;justify-content:center;margin-bottom:4px;";
+  lockIcon.innerHTML='<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+  ps.appendChild(lockIcon);
+
+  var titleEl=div("");titleEl.style.cssText="font-family:-apple-system,'Helvetica Neue',sans-serif;font-size:22px;font-weight:700;color:var(--dark,#111);letter-spacing:-0.4px;";titleEl.textContent="Area riservata";ps.appendChild(titleEl);
+  var subEl=div("");subEl.style.cssText="font-size:14px;color:#8e8e93;margin-top:-8px;";subEl.textContent="Inserisci il PIN per continuare";ps.appendChild(subEl);
+
+  var pinInp=document.createElement("input");
+  pinInp.type="password";pinInp.inputMode="numeric";pinInp.pattern="[0-9]*";
+  pinInp.maxLength=4;pinInp.placeholder="• • • •";
+  pinInp.autocomplete="off";
+  pinInp.style.cssText=[
+   "width:160px;text-align:center;font-size:32px;letter-spacing:12px;",
+   "padding:14px 16px;border-radius:14px;border:1.5px solid "+(S.pinErr?"#ff3b30":"rgba(0,0,0,0.12)")+";",
+   "background:var(--surface,#fff);color:var(--dark,#111);outline:none;",
+   "font-family:-apple-system,sans-serif;-webkit-appearance:none;",
+   "box-shadow:0 1px 4px rgba(0,0,0,0.06);"
+  ].join("");
+  ps.appendChild(pinInp);
+
+  if(S.pinErr){
+   var errEl=div("");errEl.style.cssText="font-size:13px;color:#ff3b30;font-weight:600;margin-top:-8px;";errEl.textContent="PIN errato, riprova";ps.appendChild(errEl);
+  }
+
+  // Auto-submit quando si raggiungono 4 cifre
+  pinInp.addEventListener("input",function(){
+   this.value=this.value.replace(/[^0-9]/g,"").slice(0,4);
+   if(this.value.length===4){
+    if(this.value===PIN){S.pinOK=true;S.pinErr=false;S.pinInput="";render();}
+    else{S.pinErr=true;S.pinInput="";setTimeout(function(){S.pinErr=false;renderAnalytics();},900);renderAnalytics();}
+   }
+  });
+
+  // Focus automatico → apre tastiera numerica sul telefono
+  setTimeout(function(){try{pinInp.focus();}catch(e){}},120);
   return;
  }
 
