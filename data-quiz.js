@@ -602,7 +602,17 @@ var QUIZ_DATA={
 var ANALYTICS={plays:[],ratings:{}};
 try{var _d=localStorage.getItem("filos13");if(_d)ANALYTICS=JSON.parse(_d);}catch(e){}
 function saveA(){try{localStorage.setItem("filos13",JSON.stringify(ANALYTICS));}catch(e){}}
-function logPlay(cat,game){S._playStart=Date.now();ANALYTICS.plays.push({cat:cat,game:game,ts:Date.now(),dur:0});saveA();}
+function getPubCode(){try{return localStorage.getItem("filos_pub_code")||"";}catch(e){return "";}}
+function fbUniqueKey(){return Date.now()+"_"+Math.random().toString(36).slice(2,7);}
+function fbLogPlay(cat,game){
+ var code=getPubCode();if(!code||!fbDB||!fbSet||!fbRef)return;
+ try{fbSet(fbRef(fbDB,"filos_stats/"+code+"/plays/"+fbUniqueKey()),{cat:cat,game:game,ts:Date.now(),device:FILOS_NAME||"anonimo"});}catch(e){}
+}
+function fbLogRating(game,stars){
+ var code=getPubCode();if(!code||!fbDB||!fbSet||!fbRef)return;
+ try{fbSet(fbRef(fbDB,"filos_stats/"+code+"/ratings/"+fbUniqueKey()),{game:game,stars:stars,ts:Date.now(),device:FILOS_NAME||"anonimo"});}catch(e){}
+}
+function logPlay(cat,game){S._playStart=Date.now();ANALYTICS.plays.push({cat:cat,game:game,ts:Date.now(),dur:0});saveA();fbLogPlay(cat,game);}
 function logPlayEnd(){
  if(!S._playStart)return;
  var dur=Math.round((Date.now()-S._playStart)/1000);
@@ -614,7 +624,7 @@ function logPlayEnd(){
  S._playStart=null;
  saveA();
 }
-function logRating(game,stars){if(!ANALYTICS.ratings[game])ANALYTICS.ratings[game]={t:0,c:0};ANALYTICS.ratings[game].t+=stars;ANALYTICS.ratings[game].c++;saveA();}
+function logRating(game,stars){if(!ANALYTICS.ratings[game])ANALYTICS.ratings[game]={t:0,c:0};ANALYTICS.ratings[game].t+=stars;ANALYTICS.ratings[game].c++;saveA();fbLogRating(game,stars);}
 
 var PIN="1234";
 var logoTaps=0,logoTimer=null,idleTimer=null,IDLE_MS=5*60*1000;
@@ -5604,6 +5614,61 @@ function renderAnalytics(){
   var resetRow=div("");resetRow.style.marginTop="20px";
   resetRow.appendChild(btn("ebtn out","Reset dati",function(){if(confirm("Cancellare tutti i dati analytics?")){ANALYTICS={plays:[],ratings:{}};saveA();renderAnalytics();}}));
   content.appendChild(resetRow);
+
+  // ── SEZIONE TUTTI I TAVOLI (Firebase) ──
+  var pubCode=getPubCode();
+  if(pubCode&&fbDB&&fbGet&&fbRef){
+   var fbSec=div("sec-label","🔥 Tutti i tavoli del locale");fbSec.style.marginTop="28px";content.appendChild(fbSec);
+   var fbNote=div("");fbNote.style.cssText="font-size:12px;color:#aaa;margin-bottom:14px;";fbNote.textContent="Dati aggregati da tutti i dispositivi connessi a «"+pubCode+"»";content.appendChild(fbNote);
+   var fbLoading=div("");fbLoading.style.cssText="font-size:14px;color:#aaa;padding:12px 0;";fbLoading.textContent="⏳ Caricamento...";content.appendChild(fbLoading);
+   fbGet(fbRef(fbDB,"filos_stats/"+pubCode+"/plays")).then(function(snap){
+    fbLoading.remove();
+    var val=snap.val();
+    if(!val){var empty=div("");empty.style.cssText="font-size:14px;color:#aaa;";empty.textContent="Nessun dato Firebase ancora. Inizia a giocare!";content.appendChild(empty);return;}
+    var plays=Object.values(val);
+    // Statistiche aggregate
+    var fbTotal=plays.length;
+    var fbTodayStr=new Date().toDateString();
+    var fbToday=plays.filter(function(p){return new Date(p.ts).toDateString()===fbTodayStr;}).length;
+    var fbGc={};plays.forEach(function(p){fbGc[p.game]=(fbGc[p.game]||0)+1;});
+    var fbTop=Object.entries(fbGc).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+    var fbMaxP=fbTop.length?fbTop[0][1]:1;
+    // Orario più attivo
+    var fbHours={};plays.forEach(function(p){var h=new Date(p.ts).getHours();fbHours[h]=(fbHours[h]||0)+1;});
+    var fbPeakH=Object.entries(fbHours).sort(function(a,b){return b[1]-a[1];})[0];
+    var fbPeakStr=fbPeakH?(fbPeakH[0]+":00–"+(+fbPeakH[0]+1)+":00"):"--";
+    // Schede riassuntive
+    var fbGrid=div("agrid");content.appendChild(fbGrid);
+    function afbcard(n,l){var c=div("acard");c.appendChild(div("anum",String(n)));c.appendChild(div("alabel",l));return c;}
+    fbGrid.appendChild(afbcard(fbTotal,"Partite totali"));
+    fbGrid.appendChild(afbcard(fbToday,"Oggi"));
+    fbGrid.appendChild(afbcard(Object.keys(fbGc).length,"Giochi diversi"));
+    fbGrid.appendChild(afbcard(fbPeakStr,"Ora di punta"));
+    // Top giochi
+    var fbTopLabel=div("sec-label","Top giochi (tutti i tavoli)");fbTopLabel.style.marginTop="16px";content.appendChild(fbTopLabel);
+    fbTop.forEach(function(entry,idx){
+     var row=div("arow");
+     row.appendChild(div("ar-rank",String(idx+1)));
+     row.appendChild(div("ar-name",entry[0]));
+     var bw=div("ar-bar-wrap");var bb=div("ar-bar");bb.style.width=Math.round(entry[1]/fbMaxP*100)+"%";bw.appendChild(bb);
+     row.appendChild(bw);
+     row.appendChild(div("ar-count",entry[1]+" partite"));
+     content.appendChild(row);
+    });
+    // Ultime 10 partite
+    var fbRecentLabel=div("sec-label","Ultime partite (tutti i tavoli)");fbRecentLabel.style.marginTop="16px";content.appendChild(fbRecentLabel);
+    var fbRecent=plays.slice().sort(function(a,b){return b.ts-a.ts;}).slice(0,10);
+    fbRecent.forEach(function(p){
+     var d=new Date(p.ts);
+     var hm=d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0");
+     var row=div("arow");
+     row.appendChild(div("ar-name",p.game));
+     var ci=div("");ci.style.cssText="font-size:12px;color:var(--muted);font-style:italic;flex:1;";ci.textContent=p.device||"";row.appendChild(ci);
+     row.appendChild(div("ar-count",d.toLocaleDateString("it-IT",{day:"2-digit",month:"short"})+" "+hm));
+     content.appendChild(row);
+    });
+   }).catch(function(e){fbLoading.textContent="❌ Errore connessione Firebase";});
+  }
 
  // ── TAB LOCALE ──
  } else if(S.settingsTab==="locale"){
