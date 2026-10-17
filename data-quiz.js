@@ -4996,6 +4996,58 @@ function renderAnalytics(){
   return;
  }
 
+ // ── ONBOARDING PRIMO ACCESSO ──
+ var _pubNameOB="";try{_pubNameOB=localStorage.getItem("filos_pub_name")||"";}catch(e){}
+ var _pubCodeOB="";try{_pubCodeOB=localStorage.getItem("filos_pub_code")||"";}catch(e){}
+ if(!_pubNameOB||!_pubCodeOB){
+  // Prima volta — schermata di benvenuto e configurazione
+  var ob=div("");ob.style.cssText="max-width:480px;margin:0 auto;padding:32px 24px 48px;display:flex;flex-direction:column;gap:28px;";root.appendChild(ob);
+  // Header benvenuto
+  var obHdr=div("");obHdr.style.cssText="display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:8px;";
+  var obIcon=div("");obIcon.style.cssText="width:72px;height:72px;border-radius:20px;background:#1c1c1e;display:flex;align-items:center;justify-content:center;";
+  obIcon.innerHTML='<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
+  obHdr.appendChild(obIcon);
+  var obTitle=div("");obTitle.style.cssText="font-size:24px;font-weight:800;color:var(--dark,#111);letter-spacing:-0.5px;text-align:center;";obTitle.textContent="Benvenuto in Fil-s";obHdr.appendChild(obTitle);
+  var obSub=div("");obSub.style.cssText="font-size:15px;color:#636366;text-align:center;line-height:1.5;max-width:300px;";obSub.textContent="Configura il tuo locale in pochi passi per attivare le analytics e le funzioni gestore.";obHdr.appendChild(obSub);
+  ob.appendChild(obHdr);
+  // Form card
+  var obCard=div("");obCard.style.cssText="background:var(--surface,#fff);border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);";
+  function obField(label,placeholder,value,maxLen,filterFn){
+   var wrap=div("");wrap.style.cssText="padding:14px 18px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid rgba(0,0,0,0.07);";
+   var lbl=div("");lbl.style.cssText="font-size:11px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:0.6px;";lbl.textContent=label;
+   var inp=document.createElement("input");inp.type="text";inp.value=value||"";inp.placeholder=placeholder;inp.maxLength=maxLen||40;
+   inp.style.cssText="border:none;outline:none;background:transparent;font-size:17px;color:var(--dark,#111);font-family:inherit;width:100%;padding:0;";
+   if(filterFn){inp.addEventListener("input",function(){var c=this.selectionStart;this.value=filterFn(this.value);this.selectionStart=this.selectionEnd=c;});}
+   wrap.appendChild(lbl);wrap.appendChild(inp);inp._isField=true;
+   return wrap;
+  }
+  var fNome=obField("Nome del locale","Es. Osteria Da Mario","",40);
+  var fCode=obField("Codice pub (senza spazi)","Es. osteria_mario","",30,function(v){return v.toLowerCase().replace(/[^a-z0-9_]/g,"");});
+  // rimuovi bordo ultimo
+  fCode.style.borderBottom="none";
+  obCard.appendChild(fNome);obCard.appendChild(fCode);
+  ob.appendChild(obCard);
+  var obHint=div("");obHint.style.cssText="font-size:12px;color:#aeaeb2;text-align:center;margin-top:-12px;";obHint.textContent="Il codice pub identifica il tuo locale. Usalo nei tag NFC dei sottobicchieri.";ob.appendChild(obHint);
+  // Bottone
+  var obErr=div("");obErr.style.cssText="font-size:13px;color:#ff3b30;font-weight:600;text-align:center;min-height:18px;";ob.appendChild(obErr);
+  var obBtn=document.createElement("button");
+  obBtn.style.cssText="width:100%;padding:16px;border-radius:14px;border:none;background:#1c1c1e;color:#fff;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:-0.2px;";
+  obBtn.textContent="Attiva il mio locale";
+  obBtn.onclick=function(){
+   var nome=fNome.querySelector("input").value.trim();
+   var code=fCode.querySelector("input").value.trim();
+   if(!nome){obErr.textContent="Inserisci il nome del locale";return;}
+   if(!code||code.length<3){obErr.textContent="Il codice deve avere almeno 3 caratteri";return;}
+   try{localStorage.setItem("filos_pub_name",nome);}catch(e){}
+   try{localStorage.setItem("filos_pub_code",code);}catch(e){}
+   // Mostra conferma
+   obBtn.textContent="Fatto!";obBtn.style.background="#34c759";
+   setTimeout(function(){S.settingsTab="analytics";renderAnalytics();},800);
+  };
+  ob.appendChild(obBtn);
+  return;
+ }
+
  // ── APPLE-STYLE SETTINGS ──
  if(!S.settingsTab) S.settingsTab="analytics";
 
