@@ -59,6 +59,25 @@ try { FILOS_PUB_CODE = localStorage.getItem("filos_pub_code") || ""; } catch(e){
 var FILOS_PUB_NAME = "";
 try { FILOS_PUB_NAME = localStorage.getItem("filos_pub_name") || ""; } catch(e){}
 
+// ── TOKEN NFC ────────────────────────────────────
+var NFC_TOKEN_DURATION = 4 * 60 * 60 * 1000; // 4 ore in ms
+function getNfcToken(){try{return localStorage.getItem("filos_nfc_token")||"";}catch(e){return "";}}
+function getNfcExpiry(){try{return parseInt(localStorage.getItem("filos_nfc_expiry")||"0",10);}catch(e){return 0;}}
+function isNfcValid(){var t=getNfcToken();if(!t)return false;return Date.now()<getNfcExpiry();}
+function setNfcToken(token){try{localStorage.setItem("filos_nfc_token",token);localStorage.setItem("filos_nfc_expiry",String(Date.now()+NFC_TOKEN_DURATION));}catch(e){}}
+// Leggi token dall'URL ?t=... al caricamento
+(function(){
+ try{
+  var params=new URLSearchParams(window.location.search);
+  var t=params.get("t");
+  if(t&&t.length>=4){
+   // Verifica che il token corrisponda a quello salvato dal gestore
+   var saved=localStorage.getItem("filos_nfc_master_token")||"";
+   if(saved&&t===saved){setNfcToken(t);}
+  }
+ }catch(e){}
+})();
+
 var S={screen: "onboarding",players:0,cat:null,game:null,stars:0,prevScreen:"home",rFilter:"tutti",revealed:{},pinOK:false,pinInput:"",pinErr:false,lastGame:"",menuTab:"drink",menuEdTab:"drink",quizGame:null,quizIdx:0,quizRevealed:false,quizScore:0,quizQuestions:[],quizLevel:null,starterGame:null,starterIdx:0,fromStarter:false,bFilter:"gruppo",mwWord:"",mwSimilar:"",mwWhiteIdx:-1,mwSeen:[],mwRevealing:-1,mwNumPlayers:0,intesaLevel:"facile",intesaWords:[],intesaIdx:0,intesaScore:0,intesaTimer:0,intesaRunning:false,intesaRound:1,intesaTeamScores:[],alfaLetter:"",alfaTimer:0,alfaRunning:false,alfaScores:{},alfaNumPlayers:0,alfaTarget:5,ncLetterN:"",ncLetterC:"",ncScores:{},ncNumPlayers:0,ncTarget:5,dadoValue:0,dadoPlayers:[],dadoScores:{},dadoCurrentIdx:0,dadoTarget:15,dadoRolled:false,dadoNumPlayers:0,dadoPlayerNames:[],codicePlayers:[],codiceCodes:{},codiceFound:{},codiceAsked:{},codiceCurrentIdx:0,codiceQuestion:null,codiceWaiting:false};
 
 function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;}
@@ -155,6 +174,25 @@ function renderLangPill(){
  slot.appendChild(pill);
 }
 // ── SCHERMATA ONBOARDING (nome giocatore) ────────
+function renderNfcGate(){
+ clr();
+ var root=document.getElementById("root");
+ var wrap=div("");
+ wrap.style.cssText="min-height:calc(100vh - 68px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 32px;gap:24px;text-align:center;";
+ var icon=div("");icon.style.cssText="width:80px;height:80px;border-radius:24px;background:#1c1c1e;display:flex;align-items:center;justify-content:center;margin:0 auto;";
+ icon.innerHTML='<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><circle cx="12" cy="12" r="1" fill="#fff" stroke="none"/></svg>';
+ wrap.appendChild(icon);
+ var title=div("");title.style.cssText="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:800;color:#111;letter-spacing:-0.5px;";title.textContent="Sei al locale?";
+ wrap.appendChild(title);
+ var sub=div("");sub.style.cssText="font-size:15px;color:#636366;line-height:1.6;max-width:280px;";sub.textContent="Avvicina il telefono al sottobicchiere sul tuo tavolo per accedere a Filòs.";
+ wrap.appendChild(sub);
+ // Animazione onda NFC
+ var nfcAnim=div("");nfcAnim.style.cssText="position:relative;width:80px;height:80px;margin:8px auto;";
+ nfcAnim.innerHTML='<style>@keyframes nfc-ring{0%{transform:scale(0.4);opacity:0.8}100%{transform:scale(1.6);opacity:0}}.nfc-ring{position:absolute;inset:0;border-radius:50%;border:2px solid #FF7A45;animation:nfc-ring 1.6s ease-out infinite;}.nfc-ring:nth-child(2){animation-delay:0.5s}.nfc-ring:nth-child(3){animation-delay:1s}</style><div class="nfc-ring"></div><div class="nfc-ring"></div><div class="nfc-ring"></div>';
+ wrap.appendChild(nfcAnim);
+ root.appendChild(wrap);
+}
+
 function renderOnboarding(){
  clr();
  var root=document.getElementById("root");
@@ -5192,6 +5230,36 @@ function renderAnalytics(){
    section("Stato",[row("","#34c759","Locale configurato",pubCode,"","")]);
   }
 
+  // ── SEZIONE TOKEN NFC ──
+  var nfcMaster="";try{nfcMaster=localStorage.getItem("filos_nfc_master_token")||"";}catch(e){}
+  var nfcActive=!!nfcMaster;
+  var nfcExpiry=getNfcExpiry();
+  var nfcTogRow=toggleRow("","#ff9f0a","Blocco NFC attivo","Solo chi scansiona il tag accede all'app",nfcActive,function(on){
+   if(on){
+    if(!nfcMaster){nfcMaster=Math.random().toString(36).slice(2,10);try{localStorage.setItem("filos_nfc_master_token",nfcMaster);}catch(e){}}
+   } else {
+    try{localStorage.removeItem("filos_nfc_master_token");localStorage.removeItem("filos_nfc_token");localStorage.removeItem("filos_nfc_expiry");}catch(e){}
+    nfcMaster="";
+   }
+   renderAnalytics();
+  });
+  if(nfcActive){
+   var pubCodeForUrl=pubCode||"miopub";
+   var nfcUrl=window.location.origin+window.location.pathname+"?t="+nfcMaster;
+   var urlRow=div("");urlRow.style.cssText="padding:12px 16px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid rgba(0,0,0,0.07);";
+   var urlLbl=div("");urlLbl.style.cssText="font-size:11px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:0.6px;";urlLbl.textContent="URL per i tag NFC";
+   var urlVal=div("");urlVal.style.cssText="font-size:13px;color:#3478f6;word-break:break-all;font-family:monospace;";urlVal.textContent=nfcUrl;
+   var copyBtn=document.createElement("button");copyBtn.style.cssText="margin-top:4px;padding:8px 14px;border-radius:8px;border:1.5px solid #3478f6;background:transparent;color:#3478f6;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;width:fit-content;";copyBtn.textContent="Copia URL";
+   copyBtn.onclick=function(){try{navigator.clipboard.writeText(nfcUrl);copyBtn.textContent="Copiato!";setTimeout(function(){copyBtn.textContent="Copia URL";},2000);}catch(e){}};
+   urlRow.appendChild(urlLbl);urlRow.appendChild(urlVal);urlRow.appendChild(copyBtn);
+   var regenBtn=document.createElement("button");regenBtn.style.cssText="margin-top:4px;padding:8px 14px;border-radius:8px;border:1.5px solid #ff3b30;background:transparent;color:#ff3b30;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;width:fit-content;";regenBtn.textContent="Rigenera token (invalida i vecchi tag)";
+   regenBtn.onclick=function(){if(confirm("Rigenerare il token? Tutti i tag NFC esistenti smetteranno di funzionare.")){nfcMaster=Math.random().toString(36).slice(2,10);try{localStorage.setItem("filos_nfc_master_token",nfcMaster);}catch(e){}renderAnalytics();}};
+   urlRow.appendChild(regenBtn);
+   section("Token NFC",[nfcTogRow,urlRow]);
+  } else {
+   section("Token NFC",[nfcTogRow]);
+  }
+
  // ═══════════════════════════════════════════════
  // TAB ANALYTICS
  // ═══════════════════════════════════════════════
@@ -6755,7 +6823,12 @@ function renderCnsEnd(){
 
 function render(){
  updateHdr();resetIdle();
- renderLangPill();if(S.screen==="onboarding")renderOnboarding();
+ renderLangPill();if(S.screen==="onboarding"){
+  // Se il gestore ha attivato il token NFC e il token non è valido → schermata blocco
+  var _masterTok="";try{_masterTok=localStorage.getItem("filos_nfc_master_token")||"";}catch(e){}
+  if(_masterTok&&!isNfcValid()){renderNfcGate();return;}
+  renderOnboarding();
+ }
  else if(S.screen==="splash")renderSplash();
  else if(S.screen==="home")renderHome();
  else if(S.screen==="games")renderGames();
